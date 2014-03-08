@@ -12,7 +12,10 @@
 		displayXSLT('list_in_time.xsl', 'gamelist');
 		displayXSLT('print_stats.xsl', 'stats');
 		var canvases = document.getElementsByTagName('canvas');
+		window.alert(canvases.length);
 		for(var i = 0; i < canvases.length; i++) {
+			window.alert(canvases[i]);
+			window.alert(canvases[i].onload);
 			canvases[i].onload();
 		}
 	});
