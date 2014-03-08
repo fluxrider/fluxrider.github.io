@@ -23,21 +23,17 @@
 	 <!--<td><xsl:for-each select="/gamelist/shots/shot"><xsl:value-of select="@name"/></xsl:for-each></td>-->
 	 <!--<td><xsl:for-each select="/gamelist/shots/shot[@game=$game_id]"><xsl:value-of select="@name"/></xsl:for-each></td>-->
 	 <!--<td><script>var test = "<xsl:for-each select="/gamelist/shots/shot"><xsl:value-of select="@name"/>&#160;</xsl:for-each>";</script></td>-->
-	 <script>
-	 function canvas_init_<xsl:value-of select="$game_id"/>() { 
-		 window.alert("TEST canvas_init");
-		 canvas_<xsl:value-of select="$game_id"/> = document.getElementById("canvas_<xsl:value-of select="$game_id"/>");
-		 canvas_<xsl:value-of select="$game_id"/>.filenames = new Array();
-		 <xsl:for-each select="/gamelist/shots/shot[@game=$game_id]">
-		 canvas_<xsl:value-of select="$game_id"/>.filenames.push("images/<xsl:value-of select="$game_id"/>/<xsl:value-of select="@name"/>");
-		 </xsl:for-each>
-		 canvas_<xsl:value-of select="$game_id"/>.imageIndex = Math.floor((Math.random()*canvas_<xsl:value-of select="$game_id"/>.filenames.length));
-		 canvas_<xsl:value-of select="$game_id"/>.link = document.getElementById("canvas_link_<xsl:value-of select="$game_id"/>");
-		 setTimeout(function(){ tickCanvas(canvas_<xsl:value-of select="$game_id"/>); }, SHORT_TICK_DELAY);
-	 }
-	 </script>
-	 <td><a id="canvas_link_{$game_id}"><canvas id="canvas_{$game_id}" width="162" height="100" style="border:1px solid #000000;" onload="window.alert('TEST load ' + canvas_init_{$game_id});"/></a></td>
-	 <!--<td><a id="canvas_link_{$game_id}"><canvas id="canvas_{$game_id}" width="162" height="100" style="border:1px solid #000000;" onload="canvas_init_{$game_id}();"/></a></td>-->
+<xsl:variable name="canvas_init">
+	var canvas_<xsl:value-of select="$game_id"/> = document.getElementById("canvas_<xsl:value-of select="$game_id"/>");
+	canvas_<xsl:value-of select="$game_id"/>.filenames = new Array();
+	<xsl:for-each select="/gamelist/shots/shot[@game=$game_id]">
+	canvas_<xsl:value-of select="$game_id"/>.filenames.push("images/<xsl:value-of select="$game_id"/>/<xsl:value-of select="@name"/>");
+	</xsl:for-each>
+	canvas_<xsl:value-of select="$game_id"/>.imageIndex = Math.floor((Math.random()*canvas_<xsl:value-of select="$game_id"/>.filenames.length));
+	canvas_<xsl:value-of select="$game_id"/>.link = document.getElementById("canvas_link_<xsl:value-of select="$game_id"/>");
+	setTimeout(function(){ tickCanvas(canvas_<xsl:value-of select="$game_id"/>); }, SHORT_TICK_DELAY);
+</xsl:variable>
+	 <td><a id="canvas_link_{$game_id}"><canvas id="canvas_{$game_id}" width="162" height="100" style="border:1px solid #000000;" onload="{$canvas_init}"/></a></td>
 	 <td><xsl:if test="favorite"><img width="16" height="16" alt="Favorite" src="favorite.png"/>&#160;</xsl:if><xsl:if test="core"><img width="16" height="16" alt="Core" src="core.png"/>&#160;</xsl:if><xsl:if test="timeless"><img width="16" height="16" alt="Timeless" src="timeless.png"/>&#160;</xsl:if><xsl:choose>
 	  <xsl:when test="link != ''"><a href="{link}"><xsl:value-of select="title"/></a></xsl:when>
 	  <xsl:otherwise><xsl:value-of select="title"/></xsl:otherwise>
