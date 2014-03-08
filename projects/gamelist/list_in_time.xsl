@@ -25,6 +25,7 @@
 	 <!--<td><script>var test = "<xsl:for-each select="/gamelist/shots/shot"><xsl:value-of select="@name"/>&#160;</xsl:for-each>";</script></td>-->
 	 <td><a id="canvas_link_{$game_id}"><canvas id="canvas_{$game_id}" width="162" height="100" style="border:1px solid #000000;"/></a></td>
 	 <script>
+	 window.alert("TEST inline script");
 	 canvas_<xsl:value-of select="$game_id"/> = document.getElementById("canvas_<xsl:value-of select="$game_id"/>");
 	 canvas_<xsl:value-of select="$game_id"/>.filenames = new Array();
 	 <xsl:for-each select="/gamelist/shots/shot[@game=$game_id]">
