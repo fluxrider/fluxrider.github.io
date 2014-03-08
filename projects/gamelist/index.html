@@ -11,7 +11,10 @@
 	$( document ).ready(function() {
 		displayXSLT('list_in_time.xsl', 'gamelist');
 		displayXSLT('print_stats.xsl', 'stats');
-		window.alert(document.getElementsByTagName('canvas').length);
+		var canvases = document.getElementsByTagName('canvas');
+		for(var i = 0; i < canvases.length; i++) {
+			canvases[i].onload();
+		}
 	});
 	</script>
 </head>
