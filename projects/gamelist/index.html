@@ -11,14 +11,18 @@
 	$( document ).ready(function() {
 		displayXSLT('list_in_time.xsl', 'gamelist');
 		displayXSLT('print_stats.xsl', 'stats');
-		var canvases = document.getElementsByTagName('canvas');
-		window.alert("count: " + canvases.length);
-		for(var i = 0; i < canvases.length; i++) {
-			window.alert("canvas: " + canvases[i]);
-			window.alert("onload: " + canvases[i].onload);
-			canvases[i].onload();
-			window.alert("oh yeah");
-		}
+		window.alert("ready");
+		window.alert(tickCanvas);
+		window.alert(canvas_init_bloodnet);
+		window.alert(canvas_init_bravely_default);
+		//var canvases = document.getElementsByTagName('canvas');
+		//window.alert("count: " + canvases.length);
+		//for(var i = 0; i < canvases.length; i++) {
+		//	window.alert("canvas: " + canvases[i]);
+		//	window.alert("onload: " + canvases[i].onload);
+		//	canvases[i].onload();
+		//	window.alert("oh yeah");
+		//}
 	});
 	</script>
 </head>
