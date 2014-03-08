@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="utf-8" />
+  <meta name="robots" content="noindex,nofollow,noarchive">
+	<title>Great Games</title>
+	<link rel="stylesheet" href="../../styles.css" type="text/css"/>
+	<script src="jquery-2.1.0.min.js"></script>
+	<script src="code.js"></script>
+	<script>
+	$( document ).ready(function() {
+		displayXSLT('list_in_time.xsl', 'gamelist');
+		displayXSLT('print_stats.xsl', 'stats');
+	});
+	</script>
+</head>
+<body>
+	<p class="title">Great Games</p>
+	<div id="stats"></div>
+	<div id="gamelist"></div>
+</body>
+</html>

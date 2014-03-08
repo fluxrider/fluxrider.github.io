@@ -1,0 +1,103 @@
+body {
+ background-color: #FFFFFF;
+ font-family: "Palatino Linotype", "Book Antiqua", Palatino, serif;
+ /*background-image: url( "bg.png" );*/
+}
+
+a {
+ color: #72634D;
+ text-decoration: none;
+}
+
+a:hover {
+ color: #8F001A;
+}
+
+.section {
+ font-size: 120%;
+ color: #8F001A;
+ font-family: "Courier New", Courier, monospace;
+}
+
+.subsection {
+ font-size: 110%;
+ color: #8F001A;
+ font-style:italic;
+ font-family: "Courier New", Courier, monospace;
+}
+
+.title {
+ font-size: 150%;
+ font-family: "Courier New", Courier, monospace;
+ text-align: center;
+ color: #8F001A;
+}
+.subtitle {
+ font-size: 75%;
+ text-align: center;
+ color: #8F001A;
+ font-family: "Courier New", Courier, monospace;
+}
+
+.date {
+ font-size: 75%;
+ font-family: "Courier New", Courier, monospace;
+}
+
+.small {
+ font-size: 75%;
+ font-family: "Courier New", Courier, monospace;
+}
+
+.copyright {
+ font-size: 70%;
+ text-align: center;
+ color: #8F001A;
+ font-family: "Courier New", Courier, monospace;
+}
+
+.halfOpaque {
+}
+
+.dummy {
+background-color: #EEEEEE;
+filter:alpha(opacity=50);
+-moz-opacity:.50;
+opacity:.50;
+}
+
+.captionImg {
+ float:left;
+ text-align:center;
+ padding:2px 2px;
+}
+
+.blogNote {
+ /*font-size: 90%;*/
+ /*font-family: Arial, Helvetica, sans-serif;*/
+ font-family: "Courier New", Courier, monospace;
+ background-color: #EEEEEE;
+ color: #72634D;
+ text-align: center;
+ border-style:double;
+ border-width:5px;
+ padding:2px 2px;
+ /*margin:2px 5px;*/ 
+ width: 90%;
+ margin-left: auto;
+ margin-right: auto;
+}
+
+dl.table-display
+{
+	text-align: left;
+}
+
+.table-display dt
+{
+	font-weight: bold;
+}
+
+.table-display dd
+{
+}
