@@ -9,20 +9,15 @@
 	<script src="code.js"></script>
 	<script>
 	$( document ).ready(function() {
+		// generate page
 		displayXSLT('list_in_time.xsl', 'gamelist');
 		displayXSLT('print_stats.xsl', 'stats');
-		window.alert("ready");
+		// chrome doesn't parse xslt generated script block at all like firefox does, so instead of I'm putting the code I want executed in the onload callback of the canvas element
+		// the onload callback doesn't get called automatically for generated content, so I'm calling the code explicitly here
 		var canvases = document.getElementsByTagName('canvas');
-		window.alert("count: " + canvases.length);
 		for(var i = 0; i < canvases.length; i++) {
-			var c = canvases[i];
-			//window.alert("canvas: " + c);
-			//window.alert("id: " + c.id);
-			//window.alert("onload: " + c.onload);
-			c.onload();
-			//window.alert("oh yeah");
+			canvases[i].onload();
 		}
-		window.alert("done initializing");
 	});
 	</script>
 </head>

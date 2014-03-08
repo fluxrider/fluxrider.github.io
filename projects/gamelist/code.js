@@ -44,7 +44,6 @@ var NEXT_IMAGE_DELAY_MIN = 2000;
 var NEXT_IMAGE_DELAY_MAX = 3000;
 
 function tickCanvas(canvas) {
-	//window.alert("TEST tickCanvas " + canvas.id);
 	if(canvas.filenames.length == 0) return;
 	var g = canvas.getContext("2d");
 	var W = canvas.width;
