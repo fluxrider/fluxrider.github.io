@@ -57,6 +57,9 @@ function tickCanvas(canvas) {
 		}
 		if(canvas.images[canvas.imageIndex].complete) {
 			// draw image (respecting aspect ratio)
+			// clear first since not all games have uniform aspect ratio screenshtos
+			g.fillStyle = "#000000";
+			g.fillRect(0, 0, W, H);
 			var image = canvas.images[canvas.imageIndex];
 			var zoomW = W / image.width;
 			var zoomH = H / image.height;
