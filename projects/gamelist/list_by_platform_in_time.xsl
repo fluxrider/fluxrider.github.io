@@ -33,7 +33,7 @@
 	setTimeout(function(){ tickCanvas(canvas_<xsl:value-of select="$game_id"/>); }, SHORT_TICK_DELAY);
 	</xsl:variable>
   <xsl:choose>
-   <xsl:when test="/gamelist/shots/shot[@game=$game_id]"><td><a id="canvas_link_{$game_id}"><canvas id="canvas_{$game_id}" width="162" height="100" onload="{$canvas_init}"/></a></td></xsl:when>
+   <xsl:when test="/gamelist/shots/shot[@game=$game_id]"><td><a id="canvas_link_{$game_id}"><canvas id="canvas_{$game_id}" width="324" height="200" onload="{$canvas_init}"/></a></td></xsl:when>
    <xsl:otherwise><td></td></xsl:otherwise>	 
 	</xsl:choose>
 	 <td><xsl:if test="favorite"><img width="16" height="16" alt="Favorite" src="favorite.png"/>&#160;</xsl:if><xsl:if test="core"><img width="16" height="16" alt="Core" src="core.png"/>&#160;</xsl:if><xsl:if test="timeless"><img width="16" height="16" alt="Timeless" src="timeless.png"/>&#160;</xsl:if><xsl:choose>
