@@ -1,0 +1,64 @@
+<html>
+<head>
+  <meta name="robots" content="noindex,nofollow,noarchive">
+	<title>Google Static Map (for my bus app)</title>
+	<link rel="stylesheet" href="../../styles.css" type="text/css">
+	<script>
+	// Query String
+	function getQueryString() {
+		var result = {}, queryString = location.search.substring(1),
+		    re = /([^&=]+)=([^&]*)/g, m;
+
+		while (m = re.exec(queryString)) {
+		  result[decodeURIComponent(m[1])] = decodeURIComponent(m[2]);
+		}
+
+		return result;
+	}
+	var Q = getQueryString(); // usage: Q["myParam"];
+	
+	// Constants
+	var colors = ["red", "green", "blue"];
+	</script>
+</head>
+<body>
+
+<p class="section">Times</p>
+<p>
+<script>
+// Label for each time, color coded by index
+document.write("<span>Current Time:" + Q["timeC"] + "</span><br/>");
+var H = Q["timeC"].split(":")[0];
+var M = Q["timeC"].split(":")[1].replace("*","");
+for(i = 0; i < 3; i++) {
+	time = Q["time" + i];
+	if(time != undefined) {
+		h = time.split(":")[0];
+		m = time.split(":")[1].replace("*","");
+		ghost = time.indexOf("*") == -1
+		document.write("<span style='color:"+colors[i]+"'>"+time+"</span>");
+		document.write(" (In " + ((m - M) + 60 * (h - H)) + " minutes)");
+		if(ghost) document.write(" [Ghost]");
+		document.write("<br/>");
+	}
+}
+</script>
+</p>
+
+<p class="section">Map</p>
+<p>
+<script>
+// Google Static Map
+img = "http://maps.googleapis.com/maps/api/staticmap?center=" + Q["gpsC"];
+img += "&zoom=12&size=600x600&maptype=roadmap&sensor=false";
+if(Q["gpsH"] != undefined) img += "&markers=color:gray%7C" + Q["gpsH"]
+for(i = 0; i < 3; i++) {
+	if(Q["gps" + i] != undefined) img += "&markers=color:" + colors[i] + "%7C" + Q["gps" + i];
+}
+document.write("<img border='1' width='600' height='600' src='"+img+"'/>");
+</script>
+</p>
+
+
+</body>
+</html>

@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="utf-8"?>
+<jnlp href="http://fluxrider.com/projects/jet/jet.jnlp">
+
+	<information>
+		<title>Jet Slalom Clone</title>
+		<vendor>Flux Rider</vendor>
+		<homepage href="http://fluxrider.com" />
+		<description>Jet Slalom Clone</description>
+		<offline-allowed />
+	</information>
+	
+	<resources>
+		<j2se version="1.6+" />
+		<jar href="http://fluxrider.com/projects/jet/jet.jar" main="true" />
+		<jar href="http://fluxrider.com/projects/lib/colt.jar" />
+		<jar href="http://fluxrider.com/projects/lib/concurrent.jar" />
+		<extension name="jogl-all-noawt" href="http://download.java.net/media/jogl/jsr-231-2.x-webstart/jogl-all-noawt.jnlp" />		
+		<extension name="newt-all-noawt" href="http://download.java.net/media/jogl/jsr-231-2.x-webstart/newt-all-noawt.jnlp" />		
+	</resources>
+
+	<security>
+		<all-permissions />
+	</security>
+	
+	<application-desc main-class="flux.jet.view3D.Jet3D" />
+	
+</jnlp>

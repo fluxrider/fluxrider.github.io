@@ -1,0 +1,34 @@
+<html>
+<head>
+  <meta name="robots" content="noindex,nofollow,noarchive">
+	<title>Voxel Engine</title>
+	<link rel="stylesheet" href="../../styles.css" type="text/css">
+</head>
+<body>
+
+<p class="title">Voxel Engine</p>
+
+<p class="section">Description</p>
+<p>
+I made an engine that render voxels (i.e. 3 dimentional frame buffer). This is not to be confused with projects that use cubes as 3D primitives and still support transformations.
+</p>
+
+<p class="section">Implementation Details</p>
+<p>
+<ul>
+	<li>OpenGL-based.</li>
+	<li>One RGBA 3D Texture stores the voxels.</li>
+	<li>Fixed amount of 2D geometry quads sheet render the slices of the voxel scene.</li>
+	<li>Pixel Buffer Objects (PBO) for fast transfer of texture data.</li>
+</ul>
+The result unfortunatly shows a lot of aliasing at voxel boundaries from certain angles.
+</p>
+
+<p class="section">Screenshots</p>
+<img border="1" width="400" height="300" alt="Tron" src="tron.png">
+<img border="1" width="400" height="300" alt="Jet Slalom" src="jet.png">
+<img border="1" width="400" height="300" alt="Bomb 30" src="bomb30.png">
+<img border="1" width="400" height="300" alt="Debug Cube" src="cube.png">
+
+</body>
+</html>

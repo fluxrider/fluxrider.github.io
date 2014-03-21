@@ -1,0 +1,129 @@
+<html>
+<head>
+ <meta name="robots" content="noindex,nofollow,noarchive">
+ <title>Mage Wars</title>
+ <link rel="stylesheet" href="../../styles.css" type="text/css">
+</head>
+<body>
+
+<p class="title">Mage Wars</p>
+
+<p class="section">Game description</p>
+<p>
+Imagine a land of hills and valleys where wizards compete in a deadly spell tournament hurling fireballs and other spells at each other. 
+Featuring turn-based gameplay, hot seat multi-player mode, dynamic terrain generation, custom designed characters and key frame animation.
+Mage War is a feature-reduced clone of the classic Tank Wars game.
+</p>
+
+<p class="section">Goals</p>
+<p>
+The primary goal of this project was to pass my Computer Graphics class with it. 
+Therefore, it meant trying out a bunch of graphic related feature. 
+This meant not spending time on complex gameplay or non-graphical feature like sound or network play.
+</p>
+<p>
+A sad consequence is that there is no option menu for the many commands.
+You need to use the console to do simple things like changing the number of players, or changing the map dimension.
+</p>
+
+<p class="section">Screenshots</p>
+<table border="0" align="center" cellSpacing="0" cellPadding="5">
+<tr>
+<td><a href="map.png"><img width="200" height="150" alt="Map" src="map_s.png"></a></td>
+<td><a href="play.png"><img width="200" height="150" alt="Play" src="play_s.png"></a></td>
+<td><a href="bomb.png"><img width="200" height="150" alt="Bomb" src="bomb_s.png"></a></td>
+</tr>
+<tr>
+<td><a href="mages.png"><img width="200" height="150" alt="Mages" src="mages_s.png"></a></td>
+<td><a href="nostalgia.png"><img width="200" height="150" alt="Nostalgia" src="nostalgia_s.png"></a></td>
+<td><a href="debug.png"><img width="200" height="150" alt="Debug" src="debug_s.png"></a></td>
+</tr>
+</table>
+
+<p class="section">Inspiration</p>
+<p>
+Inspired from games such as Tank Wars, Scoch Earth, Worms, and even the QBasic demo Gorilla.
+</p>
+<table border="0" align="center" cellSpacing="0" cellPadding="5">
+<tr><td><img width="640" height="350" alt="Gorilla" src="gorilla.gif"></td></tr>
+<tr><td align="center"><img width="320" height"200" alt="Tank Wars" src="tankwars.gif"></td></tr>
+</tr>
+</table>
+
+<p class="section">Credits</p>
+<p>
+ Ming Tang's contribution
+ <ul>
+  <li>Models and Model's animations</li>
+  <li>VRML reader</li>
+  <li>Scene Graph</li>
+ </ul>
+ David Lareau's contribution
+ <ul>
+  <li>Game logic</li>
+  <li>Dynamic animations</li>
+  <li>Input</li>
+  <li>Bring it all together (View)</li>
+ </ul>
+</p>
+
+<p class="section">Download</p>
+<p>
+<a href="magewars.zip">Mage Wars</a><br>
+Release Date: 2006-04-07
+</p>
+
+<p class="section">Keyboard / Mouse Commands</p>
+  <TABLE BORDER="1">
+    <TR><TD>Input</TD><TD>Description</TD></TR>
+    <TR><TD>Mouse</TD><TD>move the lookAt point of the camera.</TD></TR>
+    <TR><TD>Up Arrow</TD><TD>Increase the attack angle.</TD></TR>
+    <TR><TD>Down Arrow</TD><TD>Decrease the attack angle.</TD></TR>
+    <TR><TD>Left Arrow</TD><TD>Rotate the avatar counter clockwise.</TD></TR>
+    <TR><TD>Right Arrow</TD><TD>Rotate the avatar clockwise.</TD></TR>
+    <TR><TD>Page Up</TD><TD>Increase attack power (longer distance).</TD></TR>
+    <TR><TD>Page Down</TD><TD>Decrease attack power (shorter distance).</TD></TR>
+    <TR><TD>A</TD><TD>Pan camera to the left.</TD></TR>
+    <TR><TD>D</TD><TD>Pan camera to the right.</TD></TR>
+    <TR><TD>W</TD><TD>Move camera forward.</TD></TR>
+    <TR><TD>S</TD><TD>Move camera backward.</TD></TR>
+    <TR><TD>V</TD><TD>Move camera lookAt to origin.</TD></TR>
+    <TR><TD>1</TD><TD>Activate weapon fireball.</TD></TR>
+    <TR><TD>2</TD><TD>Activate weapon cyclone.</TD></TR>
+    <TR><TD>3</TD><TD>Activate weapon Nova.</TD></TR>
+    <TR><TD>`</TD><TD>Open console.</TD></TR>
+    <TR><TD>F</TD><TD>Shows frame rate and triangle count</TD></TR>
+    <TR><TD>R</TD><TD>Reset the game (generate a new map, restore all players)</TD></TR>
+  </TABLE>
+
+<p class="section">Console commands</p>
+<p>Misusing the console may cause unpredicatable results</p>
+<DL>
+  <DT>help</DT><DD>Prints all the available console commands on standard output</DD>
+
+  <DT>set radius_bomb_size <i>size</i></DT><DD>Changes the size of the bomb</DD>
+  <DT>enable/disable lighting</DT><DD>Toggles if we are considering lighting</DD>
+  <DT>enable/disable light1</DT><DD>Toggles if we are using GL_LIGHT1</DD>
+  <DT>enable/disable material</DT><DD>Toggles if we are using GL_MATERIAL</DD>
+  <DT>enable/disable debug</DT><DD>Toggles debug mode view</DD>
+  <DT>enable/disable normalize</DT><DD>Toggles if we are using GL_NORMALIZE</DD>
+  <DT>enable/disable displaylist</DT><DD>Toggles if we are using display list optimization or not</DD>
+
+  <DT>set light1 ambient/diffuse <i>r g b a</i></DT><DD>Set a color of light1</DD>
+  <DT>set shading flat/smooth</DT><DD>Selects which type of shading to use</DD>
+  <DT>set material back/front/front_back emission/ambient/specular/diffuse/ambient_diffuse</DT><DD>Change the material properties</DD>
+  <DT>set speed <i>speedValue</i></DT><DD>Change the speed of the game</DD>
+  <DT>animate <I>player_number animation_name time</I></DT><DD>This will make the specified player execute the specified animation in the specified number of milisecond.<br> animation_name cast, hurt, death</DD>
+
+  <DT>set players <i>numberOfPlayers width height cannon-dx cannon-dy cannon-dz cannon-length</i></DT><DD>Change players detailed properties</DD>
+  <DT>set players <i>numberOfPlayers scale</i></DT><DD>Change the number of players, and their overal size</DD>
+  <DT>set player <i>id name</i></DT><DD>Change the name of a player</DD>
+  <DT>set grid <i>width depth height</i></DT><DD>Change the terrain grid dimension</DD>
+  <DT>set gravity <i>x y z</i></DT><DD>Set gravity</DD>
+  <DT>set wind <i>x y z</i></DT><DD>Set wind</DD>
+  <DT>enable/disable wind</DT><DD>Toggles if we consider wind or not</DD>
+</DL>
+
+
+</body>
+</html>

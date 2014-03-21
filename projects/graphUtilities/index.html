@@ -1,0 +1,78 @@
+<html>
+<head>
+ <meta name="robots" content="noindex,nofollow,noarchive">
+ <title>GraphUtilities</title>
+ <link rel="stylesheet" href="../../styles.css" type="text/css">
+</head>
+<body>
+
+<p class="title">Graph Utilities</p>
+
+<p class="section">Description</p>
+<p>
+This application allows the user to quickly find cool Polynomials with Neville's method of interpolation.
+</p>
+
+<p class="section">Screenshots</p>
+<table border="0" align="center" cellSpacing="0" cellPadding="5">
+<tr>
+<td><a href="scale.jpg"><img width=150 height=142 alt="Scale" src="scale_s.gif"></a></td>
+<td><a href="power.jpg"><img width=150 height=142 alt="Power" src="power_s.gif"></a></td>
+<td><a href="graph.jpg"><img width=149 height=134 alt="Graph" src="graph_s.gif"></a></td>
+</tr>
+</table>
+
+<p class="section">Goals</p>
+<p>
+The major goal was to program an easy to use Graph class to test what I've learned in mathematics.
+The minor goal was to finally use what I've been dreaming about since september 2002, dynamic loading of class.
+</p>
+
+<p class="section">Dependencies</p>
+<p>
+This project was written in Java and compiled with JSE v1.4, therefore the appropriate
+Runtime Environment is required.
+</p>
+
+<p class="section">Bugs & Thoughts</p>
+<p>
+The wicked cool method of loading class at run-time is so twisted, it's changing all my perception of programmation.
+Before, I was considering C++ to be my favorite language (for it's, oh so delicious, pointers) though I prefered Java's syntax.
+But now, Java is the best. Think about it, by loading class dynamicly, Java can be the script for game events. 
+Later, though very cool, long to work with lex & yacc.
+</p>
+<p>
+I had planned to add another panel that would have allowed parsing an expression
+supplied by the user in the form of: ( 3 * cos( x ) / ( 2x^4 - atan( x ) ) ), but I
+was getting bored of the project so I never made it. I do plan adding the feature in 
+a later release, when interest will kick back.
+</p>
+<p>
+The formulas aren't buffered individually, but in group. Which means that on every
+rescale or when a formula is removed, every formulas are re-evaluated.
+Perhaps I could have design this in another way, but it's fine like this to me.
+</p>
+
+<p class="section">Credits</p>
+<p>I will thank Neville for his Polynomial interpolation method. 
+Of course, the application was made by me, David Lareau.</p>
+
+<p class="section">Download</p>
+<p>
+<a href="GraphUtilities.jar">GraphUtilities (2003-01-12)</a>
+</p>
+
+<p class="section">Instruction</p>
+<p>
+To run as an application, you have to do: java -jar GraphUtilities.jar<br>
+To run as an applet, click here: <a href="GraphUtilities.html">GraphUtilities</a> 
+</p>
+
+<p class="section">Dependencies download links</p>
+<p>
+<a href="http://java.sun.com">http://java.sun.com</a>
+</p>
+
+
+</body>
+</html>

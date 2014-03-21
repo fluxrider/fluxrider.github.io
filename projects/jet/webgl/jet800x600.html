@@ -1,0 +1,682 @@
+<html> 
+<head> 
+<meta name="robots" content="noindex,nofollow,noarchive">
+<!--<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">-->
+<title>Testing WebGL Env</title> 
+ 
+<!-- The Shaders are embeded because that the only way I found that worked when testing localy. It would be nicer if I could have shader files instead but whatever. -->
+<script id="shader-vs" type="x-shader/x-vertex">
+// in: uniform from app
+uniform mat4 projection;
+uniform mat4 model;
+uniform vec4 color;
+// in: attribute from app
+attribute vec3 position;
+attribute vec2 textureCoordinates;
+// out
+varying vec4 x_position;
+varying vec4 x_color;
+varying vec2 x_texture;
+// main
+void main(void) {
+	x_position =  projection * model * vec4(position, 1.0);
+	x_color = color;
+	x_texture = textureCoordinates;
+	gl_Position = x_position;
+}
+</script>
+
+<script id="shader-fs" type="x-shader/x-fragment">
+precision highp float;
+// in: uniform from app
+uniform sampler2D activeTexture;
+uniform vec3 eye;
+uniform vec4 fogColor;
+uniform float fogStart;
+uniform float fogDepth;
+// in: from vertex shader
+varying vec4 x_position;
+varying vec4 x_color;
+varying vec2 x_texture;
+// out (implicit in this version: gl_FragColor)
+// out vec4 frag_color;
+void main(void) {
+	//frag_color = x_color;
+	//frag_color = texture2D(activeTexture, x_texture);
+	
+	// I add the texture to the color.
+	// When no texture is bound, the sum is only the color.
+	// When a texture is bound, I send a color value of (0,0,0,0) so that the result is only the texture.
+	gl_FragColor = texture2D(activeTexture, x_texture) + x_color;
+	
+	// add fog color effect according to distance from eye 
+	float d = distance(x_position.xyz, eye);
+	float p;
+	d = d - fogStart;
+	if(d < 0.0) p = 0.0;
+	else if(d > fogDepth) p = 1.0;
+	else {
+		p = d / fogDepth;
+	}
+	gl_FragColor = vec4((1.0 - p)*gl_FragColor.rgb + p*fogColor.rgb, gl_FragColor.a); // take care not to make the object more opaque due to fog
+}
+</script>
+
+<script type="text/javascript" src="stdlib.js"></script> 
+<script type="text/javascript" src="stddata.js"></script> 
+<script type="text/javascript" src="input.js"></script> 
+<script type="text/javascript" src="matrix.js"></script>
+<script type="text/javascript" src="shader.js"></script>
+<script type="text/javascript" src="jetmodel.js"></script> 
+<script type="text/javascript" src="font/awt_sans_serif_30/font.js"></script>
+ 
+<script type="text/javascript"> 
+	// Embeded Shader
+	function getEmbededCode(id) {
+		var code = document.getElementById(id);
+		if (!code) return null;
+		var str = "";
+		var k = code.firstChild;
+		while (k) {
+			if (k.nodeType == 3) str += k.textContent;
+			k = k.nextSibling;
+		}
+		return str;
+	}
+	
+	// WebGL App
+	// Constants
+	var deltaZPerSecond = 40;
+	var ratioDX_DZ = .4; // how fast you can move in the x position compared to that forward motion (deltaZPerSecond)
+
+	// Attributes
+	var model = null;
+	var playerDirection = 0; // input left=-1/right=1/straight=0
+
+	var colorTable = null; // for obstacles
+
+	var t = null;
+	var deltaZ = 0; // member variable only because of debug display. It would be a local variable to tick() otherwise
+
+	var accumulatedDeltaX = 0; // for rotating camera effect
+
+	var dead = false;
+	var deadAnimation = 0;
+	var deathAnimationLength = .3;
+
+	var showDebug = false;
+  var touchEventList = "none";
+
+	var texture1 = 0;
+	var texture2 = 0;
+
+	var paused = false;
+	var userTriggeredPaused = false;
+
+	var modelGroundVertexBuffer = 0;
+	var modelPlayerVertexBuffer = 0;
+	var modelPlayerTextureBuffer = 0;
+	var modelObstacleVertexBuffer = 0;
+
+	var modelExplosion = null;
+	var modelCube = null; // for indexBuffer test
+
+	var fps = null;
+
+	var font = null;
+	
+	var canvas = null;
+	
+	// Input
+	var polledInput = null;
+	
+	function keyPressed(e) { polledInput.keyPressed(e);	}
+	function keyReleased(e) { polledInput.keyReleased(e);	}
+  
+	function touchStart(e) {
+    touchEventList = "s ";
+    canvas = document.getElementById("canvas");
+    var W = canvas.width; // document.documentElement.clientWidth;
+    var H = canvas.height; // document.documentElement.clientHeight;
+    touchEventList += W + "x" + H + " ";
+    touchEventList += e.changedTouches.length + " ";
+    for(var  i = 0; i < e.changedTouches.length; i++) {
+      var touch = e.changedTouches[i];
+      var x = touch.pageX - canvas.offsetLeft; //touch.clientX;
+      var y = touch.pageY - canvas.offsetTop; //touch.clientY;
+      touchEventList += x + ", " + y;
+      if (x < W/2 && y < H/2)  polledInput.setKey(VK_TOUCH_UPPER_LEFT_QUADRANT, true);
+      if (x > W/2 && y < H/2)  polledInput.setKey(VK_TOUCH_UPPER_RIGHT_QUADRANT, true);
+      if (x < W/2 && y > H/2)  polledInput.setKey(VK_TOUCH_LOWER_LEFT_QUADRANT, true);
+      if (x > W/2 && y > H/2)  polledInput.setKey(VK_TOUCH_LOWER_RIGHT_QUADRANT, true);
+    }
+  }
+	function touchEnd(e) { 
+    touchEventList = "e ";
+    canvas = document.getElementById("canvas");
+    var W = canvas.width; // document.documentElement.clientWidth;
+    var H = canvas.height; // document.documentElement.clientHeight;
+    touchEventList += W + "x" + H + " ";
+    touchEventList += e.changedTouches.length + " ";
+    for(var  i = 0; i < e.changedTouches.length; i++) {
+      var touch = e.changedTouches[i];
+      var x = touch.pageX - canvas.offsetLeft; //touch.clientX;
+      var y = touch.pageY - canvas.offsetTop; //touch.clientY;
+      touchEventList += x + ", " + y;
+      if (x < W/2 && y < H/2)  polledInput.setKey(VK_TOUCH_UPPER_LEFT_QUADRANT, false);
+      if (x > W/2 && y < H/2)  polledInput.setKey(VK_TOUCH_UPPER_RIGHT_QUADRANT, false);
+      if (x < W/2 && y > H/2)  polledInput.setKey(VK_TOUCH_LOWER_LEFT_QUADRANT, false);
+      if (x > W/2 && y > H/2)  polledInput.setKey(VK_TOUCH_LOWER_RIGHT_QUADRANT, false);
+    }
+  }
+	
+	// Main
+	function webGLStart() {
+		canvas = document.getElementById("canvas");
+    
+		// Input
+		polledInput = new PolledInput();
+		document.onkeydown = keyPressed;
+    document.onkeyup = keyReleased;
+    canvas.addEventListener('touchstart', touchStart, false);
+    canvas.addEventListener('touchend', touchEnd, false);
+		//document.body.addEventListener('touchmove', function(event) { event.preventDefault(); }, false); // disable page scroll
+
+		model = new JetModel(64, 128, .4, 200, 1, 2, .5, 10);
+		fps = new FPS();
+
+		// Color table for random obstacle colors
+		colorTable = new Array(50);
+		for (var i = 0; i < colorTable.length; i++) {
+			colorTable[i] = new RGB(uniformD(.5, 1), uniformD(.5, 1), uniformD(.5, 1));
+		}
+
+		showDebug = false;
+
+		t = new Timer();
+	
+		var gl = initGL();
+		S.loadShader(gl, getEmbededCode("shader-vs"), getEmbededCode("shader-fs"));
+
+		gl.clearColor(.5, .5, .5, 1); // with fog of same color, obstacle appear gradually
+		
+		// Culling
+		gl.frontFace(gl.CCW);
+		gl.enable(gl.CULL_FACE);
+		gl.cullFace(gl.BACK);
+
+		gl.clearDepth(1.0);
+		gl.enable(gl.DEPTH_TEST);
+		gl.depthFunc(gl.LEQUAL);
+
+		// Alpha using blending
+		gl.enable(gl.BLEND);
+		gl.blendFunc(gl.SRC_ALPHA, gl.ONE_MINUS_SRC_ALPHA);
+
+		// Texture
+		gl.enable(gl.TEXTURE_2D);
+		texture1 = loadTexture(gl, "jet.png");
+		texture2 = loadTexture(gl, "jet2.png");
+
+		// Models
+		modelGroundVertexBuffer = createGroundModel(gl);
+		var playerModel = createPlayerModel(gl);
+		modelPlayerVertexBuffer = playerModel.vertexBuffer;
+		modelPlayerTextureBuffer = playerModel.textureBuffer;
+		modelObstacleVertexBuffer = createObstacleModel(gl);
+		modelExplosion = createExplosionModel(gl);
+		modelCube = testCube(gl);
+
+		font = new AWTSansSerif_30_Font(gl);
+		
+		// Main Loop
+		setInterval(mainLoop, 10);
+	}
+	
+	function mainLoop() {
+		input();
+		tick();
+		display();
+	}
+	
+	function initGL() {
+		//gl = canvas.getContext("experimental-webgl");
+		gl = canvas.getContext("experimental-webgl", {antialias : true}); // antialias is true by default, but I write it explicitly
+		//gl.viewportWidth = canvas.width;
+		//gl.viewportHeight = canvas.height;
+		gl.viewport(0, 0, canvas.width, canvas.height);
+		return gl;
+	}
+	
+	function input() {
+		// Control Jet
+		playerDirection = 0;
+		if (polledInput.held(VK_LEFT) || polledInput.held(VK_A) || polledInput.held(VK_TOUCH_LOWER_LEFT_QUADRANT)) {
+			playerDirection -= 1;
+		}
+		if (polledInput.held(VK_RIGHT) || polledInput.held(VK_D) || polledInput.held(VK_TOUCH_LOWER_RIGHT_QUADRANT)) {
+			playerDirection += 1;
+		}
+		// Quit
+		if (polledInput.typed(VK_ESCAPE) || polledInput.destroyed()) {
+			main_running = false; // stop main loop, which will quit application
+		}
+		// Pause
+		if (polledInput.typed(VK_BACK_QUOTE) || polledInput.typed(VK_PAUSE) || polledInput.typed(VK_P)) {
+			paused = !paused;
+			userTriggeredPaused = paused;
+			t.reset();
+		}
+		if (!paused && !polledInput.focused()) {
+			paused = true;
+		}
+		if (paused && polledInput.focused() && !userTriggeredPaused) {
+			paused = false;
+			t.reset();
+		}
+		// Reset
+		if (polledInput.typed(VK_BACK_SPACE) || (dead && (polledInput.typed(VK_SPACE) || polledInput.typed(VK_ENTER) || polledInput.typed(VK_TOUCH_UPPER_LEFT_QUADRANT)))) {
+			reset();
+		}
+		// Debug
+		if (polledInput.typed(VK_L) || polledInput.typed(VK_TOUCH_UPPER_RIGHT_QUADRANT)) {
+			showDebug = !showDebug;
+		}
+		polledInput.polled();
+	}
+	
+	function tick() {
+		if (paused) return;
+		if (t.deltaCheckPassive() < 5) return; // this filter is not necessary, but I prefer not to do very small ticks
+		if (t.deltaCheckPassive() > 100) {
+			//System.out.println("Busted delta t threshold: " + t.deltaCheckPassive());
+			deltaZ = deltaZPerSecond * 100 / 1000;
+			t.deltaCheck();
+		} else {
+			deltaZ = deltaZPerSecond * t.deltaCheck() / 1000;
+		}
+
+		if (deltaZ != 0) {
+			var x = model.getPlayerX();
+			// Death animation
+			if (dead) {
+				deadAnimation += deltaZ;
+				if (deadAnimation > deathAnimationLength * deltaZPerSecond) deadAnimation = deathAnimationLength * deltaZPerSecond;
+			}
+			// Normal tick
+			else {
+				dead = !model.tick(playerDirection * deltaZ * ratioDX_DZ, deltaZ);
+				if (dead) deadAnimation = 0;
+			}
+
+			// attenuation of horizon rotation (not sure if I made it tick rate independant)
+			var attenuation = -Math.log(.9);
+			accumulatedDeltaX = accumulatedDeltaX * Math.exp(-attenuation * deltaZ);
+			accumulatedDeltaX += (model.getPlayerX() - x);
+			var max = 10;
+			if (accumulatedDeltaX < -max) accumulatedDeltaX = -max;
+			if (accumulatedDeltaX > max) accumulatedDeltaX = max;
+		}
+	}
+
+	function vector3_length(x, y, z) {
+		return Math.sqrt(x * x + y * y + z * z);
+	}
+	
+	function display() {
+		// Background
+		gl.clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT);
+			
+		// Get Player position
+		var px = model.getPlayerX();
+		var pz = model.getPlayerZ();
+		var pr = model.getPlayerRadius();
+		var Z_ORIGIN = pz;
+
+		// Camera
+		var fovy = 60.0;
+		var near = 0.1;
+		var far = 1000.0;
+		var width = canvas.width;
+		var height = canvas.height;
+		var eyeY = 2;
+		var atY = 0;
+		var ux = accumulatedDeltaX / 30;
+		var uy = 1;
+		var uz = 0;
+		var length = vector3_length(ux, uy, uz);
+		ux /= length;
+		uy /= length;
+		uz /= length;
+		gl.viewport(0, 0, width, height);
+		S.projectionView.identity();
+		S.projectionView.perspective(fovy, width / height, near, far);
+		S.projectionView.lookAt(px, eyeY, model.getPassedThreshold(), px, atY, 0, ux, uy, uz);
+		S.projectionView.commit(gl);
+		S.modelView.identity();
+		S.modelView.commit(gl);
+		
+		// Fog
+		S.eye(gl, 0, eyeY, model.getPassedThreshold());
+		S.fog(gl, .5, .5, .5, 1, .2 * model.getLevelDepth(), .7 * model.getLevelDepth()); // I give a 10% margin because object can actually appear in the last deltaZ before levelDepth
+		
+		// Ground
+		S.modelView.push();
+		S.modelView.translate(px, 0, 0);
+		S.modelView.commit(gl);
+		S.color(gl, 0, .35, 0, 1);
+		S.position(gl, modelGroundVertexBuffer);
+		gl.drawArrays(gl.TRIANGLE_STRIP, 0, modelGroundVertexBuffer.numItems);
+		S.modelView.pop();
+
+		// Obstacles
+		var n = model.getObstacleCount();
+		var color = model.getObstaclePassed() % colorTable.length;
+		if (n > 0) {
+			for (var i = 0; i < n; i++) {
+				var ox = model.getObstacleX(i);
+				var oz = model.getObstacleZ(i);
+				var or = model.getObstacleRadius(i);
+				S.modelView.push();
+				S.modelView.translate(ox, 0, -(oz - Z_ORIGIN));
+				S.modelView.scale(or, or, 1);
+				S.modelView.commit(gl);
+				S.color(gl, colorTable[color].r, colorTable[color].g, colorTable[color].b, 1);
+				S.position(gl, modelObstacleVertexBuffer);
+				gl.drawArrays(gl.TRIANGLE_STRIP, 0, modelObstacleVertexBuffer.numItems);
+				color = (color + 1) % colorTable.length;
+				S.modelView.pop();
+			}
+		}
+
+		// Player
+		if(modelPlayerVertexBuffer) {
+			var dy = cast_int(pz / 10) % 2 == 0 ? 0 : .1;
+			var texture = cast_int(pz / 5) % 2 == 0 ? texture1 : texture2;
+			S.modelView.push();
+			S.modelView.translate(px, dy, 0);
+			S.modelView.rotate(toDegrees(Math.atan2(uy, ux)) - 90, Axis.Z);
+			S.modelView.scale(pr, 1, 1);
+			S.modelView.commit(gl);
+			S.color(gl, 0, 0, 0, 0);
+			S.texturedModel(gl, modelPlayerVertexBuffer, modelPlayerTextureBuffer, texture);
+			gl.drawArrays(gl.TRIANGLE_STRIP, 0, modelPlayerVertexBuffer.numItems);
+			S.textureClear(gl);
+			S.modelView.pop();
+		}
+
+		// Death animation
+		if(modelExplosion) {
+			if (dead) {
+				var t = deadAnimation / (deltaZPerSecond * deathAnimationLength);
+				var s = t * 6 * pr;
+				S.modelView.push();
+				S.modelView.translate(px, 0, 0);
+				S.modelView.scale(s, s, s);
+				S.modelView.commit(gl);
+				S.color(gl, 1, .33, 0, 1);
+				// GL3: gl.multiDrawElements(gl.TRIANGLE_STRIP, modelExplosionVertexBuffer.stripCounts, 0, gl.UNSIGNED_SHORT, modelExplosionVertexBuffer.indices, modelExplosionVertexBuffer.stripCount);
+				S.position(gl, modelExplosion.vertex);
+				for(var i = 0; i < modelExplosion.indices.length; i++) {
+					gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER, modelExplosion.indices[i]);
+					gl.drawElements(gl.TRIANGLE_STRIP, modelExplosion.indices[i].numItems, gl.UNSIGNED_SHORT, 0);
+				}
+				S.modelView.pop();
+			}
+		}
+				
+		// HUD (just text)
+		// Go in orthographic view for text
+		S.projectionView.push();
+		S.projectionView.identity();
+		S.projectionView.orthographicProjection(0, width, 0, height, 1, -1);
+		S.projectionView.commit(gl);
+		S.modelView.push();
+		S.modelView.identity();
+		S.modelView.commit(gl);
+		
+		var x = 10;
+		var y = font.getDescent();
+		var r = 1;
+		var g = 1;
+		var b = 1;
+		if (showDebug) {
+			font.print(gl, "Dir: " + playerDirection, x, y, 0, r,g,b);
+			y += font.getInterLineSpacing() + font.getHeight();
+			font.print(gl, "DZ: " + round(deltaZ,3), x, y, 0, r,g,b);
+			y += font.getInterLineSpacing() + font.getHeight();
+			font.print(gl, "FPS: " + round(fps.get(),1) + " (min=" + round(fps.min(),1) + ",max=" + round(fps.max(),1) + " stddev:" + round(fps.stddev(),1) + ")", x, y, 0, r,g,b);
+			y += font.getInterLineSpacing() + font.getHeight();
+			font.print(gl, "Obstacle: " + model.getObstacleCount() + " " + model.isCapacityReached(), x, y, 0, r,g,b);
+			y += font.getInterLineSpacing() + font.getHeight();
+			font.print(gl, "Touch: " + touchEventList, x, y, 0, r,g,b);
+			y += font.getInterLineSpacing() + font.getHeight();
+		}
+		font.print(gl, "Millage: " + round(model.getPlayerZ(),1), x, y, 0, r,g,b);
+		y += font.getInterLineSpacing() + font.getHeight();
+		
+		S.modelView.pop();
+		S.projectionView.pop();
+
+		fps.frame();
+	}
+	
+	function reset() {
+		model.reset();
+    polledInput.clearKeys();
+		dead = false;
+	}	
+
+	function createGroundModel(gl) {
+		var hw = cast_int(model.getLevelWidth() / 2);
+		var v = [
+			-hw, 0, model.getPassedThreshold(),
+			hw, 0, model.getPassedThreshold(),
+			-hw, 0, -model.getLevelDepth(),
+			hw, 0, -model.getLevelDepth()
+		];
+		var vertexBuffer = gl.createBuffer();
+		gl.bindBuffer(gl.ARRAY_BUFFER, vertexBuffer);
+		gl.bufferData(gl.ARRAY_BUFFER, new Float32Array(v), gl.STATIC_DRAW);
+		vertexBuffer.itemSize = 3;
+		vertexBuffer.numItems = 4;
+		return vertexBuffer;
+	}	
+	
+	function createObstacleModel(gl) {
+		var v = [
+			-1, 0, 0,
+			1, 0, 0,
+			0, 1.732, 0
+		];
+		var vertexBuffer = gl.createBuffer();
+		gl.bindBuffer(gl.ARRAY_BUFFER, vertexBuffer);
+		gl.bufferData(gl.ARRAY_BUFFER, new Float32Array(v), gl.STATIC_DRAW);
+		vertexBuffer.itemSize = 3;
+		vertexBuffer.numItems = 3;
+		return vertexBuffer;
+	}
+	
+	function createPlayerModel(gl) {
+		var v = [
+			-1, 0, 0,
+			1, 0, 0,
+			-1, .5, 0,
+			1, .5, 0
+		];
+		var t = [
+			0, 0,
+			1, 0,
+			0, 1,
+			1, 1
+		];
+
+		var vertexBuffer = gl.createBuffer();
+		gl.bindBuffer(gl.ARRAY_BUFFER, vertexBuffer);
+		gl.bufferData(gl.ARRAY_BUFFER, new Float32Array(v), gl.STATIC_DRAW);
+		vertexBuffer.itemSize = 3;
+		vertexBuffer.numItems = 4;
+		
+		var textureBuffer = gl.createBuffer();
+		gl.bindBuffer(gl.ARRAY_BUFFER, textureBuffer);
+		gl.bufferData(gl.ARRAY_BUFFER, new Float32Array(t), gl.STATIC_DRAW);
+		textureBuffer.itemSize = 2;
+		textureBuffer.numItems = 4;
+		
+		return {vertexBuffer : vertexBuffer, textureBuffer: textureBuffer};
+	}
+	
+	function createExplosionModel(gl) {
+		// sphere
+		var nStacks = 25;
+		var nSlices = 25;
+		var nVertex = nSlices * (nStacks - 1) + 2; // the +2 is for the poles, the nStacks - 1 is to ignore the poles of each slices
+		// store the vertex of the two poles
+		var v = [
+			0, 1, 0,
+			0, -1, 0
+		];
+		// for each slice (x-z)
+		var vector = new Vector3();
+		for (var slice = 0; slice < nSlices; slice++) {
+			var xzAngle = (Math.PI * 2) / nSlices * slice;
+			var x = Math.cos(xzAngle);
+			var z = Math.sin(xzAngle);
+			// for each stack (y)
+			for (var stack = 1; stack < nStacks; stack++) {
+				var yAngle = Math.PI / nStacks * stack + (Math.PI / 2);
+				var y = Math.sin(yAngle);
+				// normalize vector so that its length is the radius (radius=1)
+				vector.set(x, y, z);
+				vector.normalize();
+				// That vector is one of the vertex, store it
+				v = v.concat([ vector.x, vector.y, vector.z ]);
+			}
+		}
+
+		var vertex = gl.createBuffer();
+		gl.bindBuffer(gl.ARRAY_BUFFER, vertex);
+		gl.bufferData(gl.ARRAY_BUFFER, new Float32Array(v), gl.STATIC_DRAW);
+		vertex.itemSize = 3;
+		vertex.numItems = v.length / vertex.itemSize;
+		//alert("v: " + v);
+
+		// Create several triangle strip arrays (one for each slice)
+		var LIMIT = vertex.numItems;
+		var NORTH_POLE = 0;
+		var SOUTH_POLE = 1;
+		var BASE = 2;
+		var OFFSET = (nStacks - 1);
+		var stripCount = nSlices; // out
+		var indices = new Array(nSlices); // out
+		for (var i = 0; i < nSlices; i++) {
+			indices[i] = Array();
+			indices[i].push(NORTH_POLE);
+			for (var j = i * OFFSET; j < (i + 1) * OFFSET; j++) {
+				// current + offset (circular)
+				if (BASE + j + OFFSET < LIMIT) {
+					indices[i].push(BASE + j + OFFSET);
+				} else {
+					indices[i].push((BASE + j + OFFSET) % LIMIT + BASE);
+				}
+				// current
+				indices[i].push(BASE + j);
+			}
+			indices[i].push(SOUTH_POLE);
+			
+			// Convert indices to index buffer
+			var index = gl.createBuffer();
+			gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER, index);
+			gl.bufferData(gl.ELEMENT_ARRAY_BUFFER, new Uint16Array(indices[i]), gl.STATIC_DRAW);
+			//alert("i: " + i + "=" + indices[i]);
+			indices[i] = index;
+			indices[i].numItems = nStacks * 2;
+		}
+		
+		return { vertex : vertex, indices : indices };
+	}
+	
+	function testCube(gl) {
+        var vertex = gl.createBuffer();
+        gl.bindBuffer(gl.ARRAY_BUFFER, vertex);
+        var v = [
+            // Front face
+            -1.0, -1.0,  1.0,
+             1.0, -1.0,  1.0,
+             1.0,  1.0,  1.0,
+            -1.0,  1.0,  1.0,
+
+            // Back face
+            -1.0, -1.0, -1.0,
+            -1.0,  1.0, -1.0,
+             1.0,  1.0, -1.0,
+             1.0, -1.0, -1.0,
+
+            // Top face
+            -1.0,  1.0, -1.0,
+            -1.0,  1.0,  1.0,
+             1.0,  1.0,  1.0,
+             1.0,  1.0, -1.0,
+
+            // Bottom face
+            -1.0, -1.0, -1.0,
+             1.0, -1.0, -1.0,
+             1.0, -1.0,  1.0,
+            -1.0, -1.0,  1.0,
+
+            // Right face
+             1.0, -1.0, -1.0,
+             1.0,  1.0, -1.0,
+             1.0,  1.0,  1.0,
+             1.0, -1.0,  1.0,
+
+            // Left face
+            -1.0, -1.0, -1.0,
+            -1.0, -1.0,  1.0,
+            -1.0,  1.0,  1.0,
+            -1.0,  1.0, -1.0
+        ];
+        gl.bufferData(gl.ARRAY_BUFFER, new Float32Array(v), gl.STATIC_DRAW);
+        vertex.itemSize = 3;
+        vertex.numItems = 24;
+
+        var index = gl.createBuffer();
+        gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER, index);
+        var i = [
+            0, 1, 2,      0, 2, 3,    // Front face
+            4, 5, 6,      4, 6, 7,    // Back face
+            8, 9, 10,     8, 10, 11,  // Top face
+            12, 13, 14,   12, 14, 15, // Bottom face
+            16, 17, 18,   16, 18, 19, // Right face
+            20, 21, 22,   20, 22, 23  // Left face
+        ];
+        gl.bufferData(gl.ELEMENT_ARRAY_BUFFER, new Uint16Array(i), gl.STATIC_DRAW);
+        index.itemSize = 1;
+        index.numItems = 36;	
+				
+				return { vertex : vertex, index : index };
+	}
+	
+	
+	// Texture
+	function loadTexture(gl, src) {
+    var texture = gl.createTexture();
+    texture.image = new Image();
+    texture.image.onload = function() {
+			gl.bindTexture(gl.TEXTURE_2D, texture);
+			gl.pixelStorei(gl.UNPACK_FLIP_Y_WEBGL, true);
+			gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGBA, gl.RGBA, gl.UNSIGNED_BYTE, texture.image);
+			gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MAG_FILTER, gl.NEAREST);
+			gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MIN_FILTER, gl.NEAREST);
+			gl.bindTexture(gl.TEXTURE_2D, null);
+    }
+    texture.image.src = src;
+		return texture;
+  }	
+	
+</script> 
+</head> 
+<body onload="webGLStart();"> 
+<canvas id="canvas" style="border: none;" width="800" height="600"></canvas> 
+</body> 
+</html> 
