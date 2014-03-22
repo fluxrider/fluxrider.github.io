@@ -6,9 +6,8 @@
 	<div style="text-align:center;">
 	<!-- Game List (in time) -->
 	<xsl:for-each select="/gamelist/games/game">
-	<!-- sort on time and then alphabetically -->
-	<xsl:sort select="year" order="descending"/>
-	<xsl:sort select="title" order="ascending"/>
+	<!-- sort randomly -->
+	<xsl:sort select="generate-id(.)"/>
 <xsl:if test="timeless">
 	<!-- game id -->
 	<xsl:variable name="game_id" select="id"/>
