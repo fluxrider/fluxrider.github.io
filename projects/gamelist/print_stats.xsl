@@ -4,6 +4,7 @@
 <xsl:template match="/">
 	<p class="small" align="center">
 	Total (<xsl:value-of select="count(/gamelist/games/game)"/>)<br/>
+	<a style="cursor:pointer" onclick="displayXSLT('list_random.xsl', 'gamelist'); init_canvases();">Random Grid</a>&#160;|&#160;
 	<a style="cursor:pointer" onclick="displayXSLT('list_in_time.xsl', 'gamelist'); init_canvases();">In Time</a>&#160;|&#160;
 	<a style="cursor:pointer" onclick="displayXSLT('list_alpha.xsl', 'gamelist'); init_canvases();">Alphabetic</a>&#160;|&#160;
 	<a style="cursor:pointer" onclick="displayXSLT('list_by_platform_in_time.xsl', 'gamelist'); init_canvases();">By Platform in Time</a>&#160;|&#160;
