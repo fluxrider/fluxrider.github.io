@@ -29,6 +29,13 @@ function displayXSLT(xls_file, div_id) {
 	}
 }
 
+//+ Jonas Raoni Soares Silva
+//@ http://jsfromhell.com/array/shuffle [v1.0]
+function array_shuffle(o){ //v1.0
+    for(var j, x, i = o.length; i; j = Math.floor(Math.random() * i), x = o[--i], o[i] = o[j], o[j] = x);
+    return o;
+};
+
 // Slide Show
 function isScrolledIntoView(elem) {
   var docViewTop = $(window).scrollTop();
@@ -72,7 +79,8 @@ function tickCanvas(canvas) {
 			// preload next image, switch to it but delay paint for a little while
 			var previous = canvas.imageIndex;
 			while(previous == canvas.imageIndex && canvas.filenames.length > 1) {
-				canvas.imageIndex = Math.floor((Math.random()*canvas.filenames.length));
+				// canvas.imageIndex = Math.floor((Math.random()*canvas.filenames.length)); // true random
+				canvas.imageIndex = (canvas.imageIndex + 1) % canvas.filenames.length; // next one cyclic
 			}
 			if(!canvas.images[canvas.imageIndex]) {
 				canvas.images[canvas.imageIndex] = document.createElement('img');

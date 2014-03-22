@@ -27,7 +27,8 @@
 	<xsl:for-each select="/gamelist/shots/shot[@game=$game_id]">
 	canvas_<xsl:value-of select="$game_id"/>.filenames.push("images/<xsl:value-of select="$game_id"/>/<xsl:value-of select="@name"/>");
 	</xsl:for-each>
-	canvas_<xsl:value-of select="$game_id"/>.imageIndex = Math.floor((Math.random()*canvas_<xsl:value-of select="$game_id"/>.filenames.length));
+	array_shuffle(canvas_<xsl:value-of select="$game_id"/>.filenames);
+	canvas_<xsl:value-of select="$game_id"/>.imageIndex = 0;
 	canvas_<xsl:value-of select="$game_id"/>.link = document.getElementById("canvas_link_<xsl:value-of select="$game_id"/>");
 	setTimeout(function(){ tickCanvas(canvas_<xsl:value-of select="$game_id"/>); }, SHORT_TICK_DELAY);
 	</xsl:variable>

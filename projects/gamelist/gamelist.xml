@@ -738,7 +738,6 @@
 <shot game="street_rod" name="sr_001.png"/>
 <shot game="street_rod" name="sr_014.png"/>
 <shot game="ff_xi" name="face.png"/>
-<shot game="ff_xi" name="goblin_explosion.png"/>
 <shot game="bart_vs_the_world" name="simpsons_bart_vs_the_world-27.png"/>
 <shot game="bart_vs_the_world" name="simpsons_bart_vs_the_world-29.png"/>
 <shot game="bart_vs_the_world" name="simpsons_bart_vs_the_world-7.png"/>
@@ -1127,7 +1126,6 @@
 <shot game="breath_of_fire_4" name="2012-10-10-211011_642x505_scrot.png.crop.png"/>
 <shot game="breath_of_fire_4" name="2012-10-11-182319_642x505_scrot.png.crop.png"/>
 <shot game="breath_of_fire_4" name="2012-10-10-212839_642x505_scrot.png.crop.png"/>
-<shot game="fe10" name="ikefe10portrait_hero.png"/>
 <shot game="arcana" name="arcana067.png"/>
 <shot game="arcana" name="arcana007.png"/>
 <shot game="arcana" name="arcana144.png"/>
@@ -1949,7 +1947,6 @@
 <shot game="monster_hunter_3" name="5.jpg"/>
 <shot game="monster_hunter_3" name="4.jpg"/>
 <shot game="monster_hunter_3" name="3.jpg"/>
-<shot game="vampire_masquerade_2" name="vampire_2_4.jpg"/>
 <shot game="dragon_age" name="screenshot20100212141007796.jpg_2.jpg"/>
 <shot game="dragon_age" name="screenshot20100212161437752.jpg_2.jpg"/>
 <shot game="dragon_age" name="screenshot20100205171815156.jpg_2.jpg"/>
@@ -1976,7 +1973,6 @@
 <shot game="skyrim" name="10.jpg"/>
 <shot game="tatsunoko_capcom" name="2.jpg"/>
 <shot game="tatsunoko_capcom" name="6.jpg"/>
-<shot game="tatsunoko_capcom" name="0.jpg"/>
 <shot game="tatsunoko_capcom" name="1.jpg"/>
 <shot game="tatsunoko_capcom" name="5.jpg"/>
 <shot game="tatsunoko_capcom" name="4.jpg"/>
@@ -2010,7 +2006,6 @@
 <shot game="ff_xi" name="h.jpg"/>
 <shot game="ff_xi" name="b.jpg"/>
 <shot game="ff_xi" name="d.jpg"/>
-<shot game="ff_xi" name="a.jpg"/>
 <shot game="ff_xi" name="e.jpg"/>
 <shot game="ff_xi" name="j.jpg"/>
 <shot game="ff_xi" name="f.jpg"/>
@@ -2022,21 +2017,12 @@
 <shot game="unreal_tournament" name="1.jpg"/>
 <shot game="unreal_tournament" name="4.jpg"/>
 <shot game="unreal_tournament" name="3.jpg"/>
-<shot game="izuna" name="wp_izuna_l.jpg"/>
-<shot game="izuna" name="izuna062908.jpg"/>
 <shot game="kof11" name="kof3-4.jpg"/>
 <shot game="kof11" name="1759.jpg"/>
-<shot game="kof11" name="361px-kensouxi.jpg"/>
-<shot game="kof11" name="kof3-5.jpg"/>
-<shot game="kof11" name="kof3-8.jpg"/>
 <shot game="kof11" name="kof3-3.jpg"/>
 <shot game="kof11" name="kof3-0.jpg"/>
-<shot game="kof11" name="blue_mary.jpg"/>
-<shot game="kof11" name="kof3-7.jpg"/>
 <shot game="kof11" name="kof3-2.jpg"/>
 <shot game="kof11" name="kof3-1.jpg"/>
-<shot game="kof11" name="kof3-6.jpg"/>
-<shot game="kof11" name="200px-250px-king.jpg"/>
 <shot game="kof11" name="kof3.jpg"/>
 <shot game="ff_fables_chocobo_dungeon" name="chocobos-dungeon-toki-wasure-no-meikyuu-20071102014613092_640w.jpg"/>
 <shot game="ff_fables_chocobo_dungeon" name="chocobos-dungeon-toki-wasure-no-meikyuu-20071102014612748_640w.jpg"/>
@@ -2053,13 +2039,6 @@
 <shot game="heroes5" name="3.jpg"/>
 <shot game="heroes5" name="9.jpg"/>
 <shot game="heroes5" name="8.jpg"/>
-<shot game="fe10" name="250px-fepr-shinon.jpg"/>
-<shot game="fe10" name="22.jpg"/>
-<shot game="fe10" name="makalov10.jpg"/>
-<shot game="fe10" name="01.jpg"/>
-<shot game="fe10" name="nephenee.jpg"/>
-<shot game="fe10" name="ike_and_his_army.jpg"/>
-<shot game="fe10" name="80.jpg"/>
 <shot game="conan" name="2008-05-24_lydda.jpg"/>
 <shot game="conan" name="2008-05-22_rymma.jpg"/>
 <shot game="conan" name="2008-05-24_rymma.jpg"/>
@@ -2074,10 +2053,6 @@
 <shot game="wow" name="shirt-3.jpg"/>
 <shot game="wow" name="shirt-1.jpg"/>
 <shot game="punch_out_wii" name="48e52039bf32c_featured_without_text_punchout.jpg"/>
-<shot game="punch_out_wii" name="209086-1.jpg"/>
-<shot game="ffX_2" name="Wall_X-2_13.jpg"/>
-<shot game="ffX_2" name="[large[AnimePaper]wallpapers_Final-Fantasy-X2_JamesInfirmary_-edit655.jpg"/>
-<shot game="ffX_2" name="Final Fantasy X-2.jpg"/>
 <shot game="lost_kingdoms" name="2.jpg"/>
 <shot game="lost_kingdoms" name="6.jpg"/>
 <shot game="lost_kingdoms" name="0.jpg"/>
@@ -2095,14 +2070,11 @@
 <shot game="lotr_mmo" name="screenshot00016.jpg"/>
 <shot game="sims_2" name="apartment.jpg"/>
 <shot game="shin_megami_tensei_devil_survivor" name="959434-76031020090422_185545_1_big.jpg"/>
-<shot game="shin_megami_tensei_devil_survivor" name="1070174-amane.jpg"/>
 <shot game="shin_megami_tensei_devil_survivor" name="izuna-akasaka-tunnel.jpg"/>
 <shot game="shin_megami_tensei_devil_survivor" name="1038908-devilsurvivor_screens_13.jpg"/>
 <shot game="shin_megami_tensei_devil_survivor" name="1038913-devilsurvivor_screens_18.jpg"/>
 <shot game="shin_megami_tensei_devil_survivor" name="948754-devilsurvivor_screens_08.jpg"/>
 <shot game="shin_megami_tensei_devil_survivor" name="1038909-devilsurvivor_screens_14.jpg"/>
-<shot game="shin_megami_tensei_devil_survivor" name="1448550-pixiesmt3.jpg"/>
-<shot game="shin_megami_tensei_devil_survivor" name="hecatesmt2.jpg"/>
 <shot game="lotr_3rd_age" name="0.jpg"/>
 <shot game="lotr_3rd_age" name="1.jpg"/>
 <shot game="paper_mario2" name="2.jpg"/>
