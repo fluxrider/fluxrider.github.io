@@ -22,6 +22,7 @@
 	<tr>
 	<xsl:variable name="canvas_init">
 	var canvas_<xsl:value-of select="$game_id"/> = document.getElementById("canvas_<xsl:value-of select="$game_id"/>");
+	canvas_<xsl:value-of select="$game_id"/>.no_longer_needed = false;
 	canvas_<xsl:value-of select="$game_id"/>.filenames = new Array();
 	<xsl:for-each select="/gamelist/shots/shot[@game=$game_id]">
 	canvas_<xsl:value-of select="$game_id"/>.filenames.push("images/<xsl:value-of select="$game_id"/>/<xsl:value-of select="@name"/>");

@@ -16,6 +16,12 @@
 			canvases[i].onload();
 		}
 	}
+	function terminate_canvases_thread() {
+		var canvases = document.getElementsByTagName('canvas');
+		for(var i = 0; i < canvases.length; i++) {
+			canvases[i].no_longer_needed = true;
+		}
+	}
 	$( document ).ready(function() {
 		// generate page
 		displayXSLT('list_random.xsl', 'gamelist');

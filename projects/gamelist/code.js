@@ -51,6 +51,7 @@ var NEXT_IMAGE_DELAY_MIN = 2000;
 var NEXT_IMAGE_DELAY_MAX = 3000;
 
 function tickCanvas(canvas) {
+	if(canvas.no_longer_needed) return;
 	if(canvas.filenames.length == 0) return;
 	var g = canvas.getContext("2d");
 	var W = canvas.width;
