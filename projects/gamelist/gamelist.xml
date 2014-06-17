@@ -346,6 +346,9 @@
 <game><id>injustice</id><title>Injustice: Gods Among Us</title><platform>PlayStation 3</platform><year>2013</year><company>NetherRealm Studios</company><link>http://en.wikipedia.org/wiki/Injustice:_Gods_Among_Us</link><weight value="1"/></game>
 <game><id>zelda3_2</id><title>The Legend of Zelda: A Link Between Worlds</title><platform>3DS</platform><year>2013</year><company>Monolith Soft</company><link>http://en.wikipedia.org/wiki/The_Legend_of_Zelda:_A_Link_Between_Worlds</link><weight value="1"/></game>
 <game><id>bravely_default</id><title>Bravely Default</title><platform>3DS</platform><year>2014</year><company>Silicon Studio</company><link>http://en.wikipedia.org/wiki/Bravely_Default</link><weight value="1"/></game>
+<game><id>rune_factory</id><title>Rune Factory: Tides of Destiny</title><platform>PS3</platform><year>2011</year><company>Neverland Co.</company><link>http://en.wikipedia.org/wiki/Rune_Factory:_Tides_of_Destiny</link><weight value="1"/></game>
+<game><id>mario_3ds</id><title>Super Mario 3D Land</title><platform>3DS</platform><year>2011</year><company>Nintendo</company><link>http://en.wikipedia.org/wiki/Super_Mario_3D_Land</link><weight value="1"/></game>
+<game><id>code_princess</id><title>Code of Princess</title><platform>3DS</platform><year>2012</year><company>Agatsuma Entertainment</company><link>http://en.wikipedia.org/wiki/Code_of_Princess</link><weight value="1"/></game>
 </games>
 
 <shots>
