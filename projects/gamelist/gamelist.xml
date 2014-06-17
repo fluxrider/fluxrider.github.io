@@ -349,6 +349,7 @@
 <game><id>rune_factory</id><title>Rune Factory: Tides of Destiny</title><platform>PS3</platform><year>2011</year><company>Neverland Co.</company><link>http://en.wikipedia.org/wiki/Rune_Factory:_Tides_of_Destiny</link><weight value="1"/></game>
 <game><id>mario_3ds</id><title>Super Mario 3D Land</title><platform>3DS</platform><year>2011</year><company>Nintendo</company><link>http://en.wikipedia.org/wiki/Super_Mario_3D_Land</link><weight value="1"/></game>
 <game><id>code_princess</id><title>Code of Princess</title><platform>3DS</platform><year>2012</year><company>Agatsuma Entertainment</company><link>http://en.wikipedia.org/wiki/Code_of_Princess</link><weight value="1"/></game>
+<game><id>pokemon_x</id><title>Pokémon X</title><platform>3DS</platform><year>2013</year><company>Game Freak</company><link>http://en.wikipedia.org/wiki/Pok%C3%A9mon_X_and_Y</link><weight value="1"/></game>
 </games>
 
 <shots>
