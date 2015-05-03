@@ -9,6 +9,8 @@
 
 <!-- Util: Platform list order -->
 <platforms>
+<platform>Wii U</platform>
+<platform>PC</platform>
 <platform>PlayStation 3</platform>
 <platform>PlayStation 3 PSN</platform>
 <platform>PlayStation 2</platform>
@@ -350,6 +352,15 @@
 <game><id>mario_3ds</id><title>Super Mario 3D Land</title><platform>3DS</platform><year>2011</year><company>Nintendo</company><link>http://en.wikipedia.org/wiki/Super_Mario_3D_Land</link><weight value="1"/></game>
 <game><id>code_princess</id><title>Code of Princess</title><platform>3DS</platform><year>2012</year><company>Agatsuma Entertainment</company><link>http://en.wikipedia.org/wiki/Code_of_Princess</link><weight value="1"/></game>
 <game><id>pokemon_x</id><title>Pokémon X</title><platform>3DS</platform><year>2013</year><company>Game Freak</company><link>http://en.wikipedia.org/wiki/Pok%C3%A9mon_X_and_Y</link><weight value="1"/></game>
+<game><id>shadowrun_returns</id><title>Shadowrun Returns</title><platform>PC</platform><year>2013</year><company>Harebrained Schemes</company><link>http://en.wikipedia.org/wiki/Shadowrun_Returns</link><weight value="1"/></game>
+<game><id>shadowrun_dragonfall</id><title>Shadowrun: Dragonfall</title><platform>PC</platform><year>2014</year><company>Harebrained Schemes</company><link>http://harebrained-schemes.com/shadowrun/dragonfall/</link><weight value="1"/></game>
+<game><id>games_and_wario</id><title>Game &amp; Wario</title><platform>Wii U</platform><year>2013</year><company>Intelligent Systems</company><link>http://en.wikipedia.org/wiki/Game_%26_Wario</link><weight value="1"/></game>
+<game><id>mario_3d_world</id><title>Super Mario 3D World</title><platform>Wii U</platform><year>2013</year><company>Nintendo</company><link>http://www.mariowiki.com/Super_Mario_3D_World</link><weight value="1"/></game>
+<game><id>fire_emblem_path_of_radiance</id><title>Fire Emblem: Path of Radiance</title><platform>Gamecube</platform><year>2005</year><company>Intelligent Systems</company><link>http://en.wikipedia.org/wiki/Fire_Emblem:_Path_of_Radiance</link><weight value="1"/></game>
+<game><id>costume_quest</id><title>Costume Quest</title><platform>PC</platform><year>2011</year><company>Double Fine Productions</company><link>http://en.wikipedia.org/wiki/Costume_Quest</link><weight value="1"/></game>
+<game><id>pokemon_shuffle</id><title>Pok&#233;mon Shuffle</title><platform>3DS</platform><year>2015</year><company>Genius Sonority</company><link>http://en.wikipedia.org/wiki/Pok%C3%A9mon_Shuffle</link><weight value="1"/></game>
+
+
 </games>
 
 <shots>
