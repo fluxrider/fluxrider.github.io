@@ -360,6 +360,8 @@
 <game><id>costume_quest</id><title>Costume Quest</title><platform>PC</platform><year>2011</year><company>Double Fine Productions</company><link>http://en.wikipedia.org/wiki/Costume_Quest</link><weight value="1"/></game>
 <game><id>pokemon_shuffle</id><title>Pok&#233;mon Shuffle</title><platform>3DS</platform><year>2015</year><company>Genius Sonority</company><link>http://en.wikipedia.org/wiki/Pok%C3%A9mon_Shuffle</link><weight value="1"/></game>
 <game><id>casino</id><title>4 Queens Computer Casino</title><platform>DOS</platform><year>1992</year><company>Applications Plus, Inc.</company><link>http://www.mobygames.com/game/dos/4-queens-computer-casino</link><weight value="1"/></game>
+<!-- Deadstorm Pirates -->
+<!-- Zelda WiiU -->
 </games>
 
 <shots>
