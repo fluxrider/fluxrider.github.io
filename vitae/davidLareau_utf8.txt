@@ -1,0 +1,81 @@
+David Lareau
+Ottawa (Ontario)
+lareau.david@gmail.com
+
+Education
+
+Master of Applied Science in Biomedical Engineering
+University of Ottawa, Ontario, 2011 (2 years)
+- Thesis: Haptic Image Exploration.
+- Involved Image Processing, 3D Graphics, Haptics (touch), Real-Time Computing, C/C++, Java.
+
+Honours Bachelor of Computer Science CO-OP
+University of Ottawa, Ontario, 2006 (4 years)
+- Graduated Summa Cum Laude (DGPA: 93%, CGPA: 87%).
+- Honours: Platform-independent layer for Input, Audio and 2D Graphics.
+
+Computer Engineering Technology CO-OP
+La Cité collégiale, Ottawa, Ontario, 2002 (3 years)
+- Graduated with Great Honours (CGPA 98.25%).
+
+Skills
+
+- 9 years of experience in programming jobs.
+- 18 months of experience as a teaching assistant and substitute professor.
+- Very strong knowledge of C/C++ and Java.
+- Loves working in team with git, but can also work with svn and cvs.
+- Expert in image processing, 2D and 3D graphics and OpenGL.
+- Professional experience with mobile platforms (Android, iOS, J2ME, Brew).
+- Worked with many web technologies (WebGL, javascript, XSLT, HTML, CSS, PHP, ASP).
+- Used various relational database with SQL.
+- Capable of designing special purpose data structure and algorithms.
+- Competent with the Python and Ruby scripting languages.
+- Familiar with many game development framework and libraries like Unity, LibGDX and SDL.
+- Experienced with Eclipse, the GNU toolchain, Xcode and Microsoft Visual Studio.
+- I am a Linux user, but I can also work with Mac OS X and Windows.
+- Fluent in English and French.
+
+Personal Interests
+
+- Try new technologies through personal programming projects like game demos and tools.
+- Publish small video games (http://twitter.com/gamer_lips).
+
+Work Experience
+
+QNX, Ottawa, Ontario
+OS Kernel Developer, 2015-05 to present (6+ months)
+- File Systems, 64-bit compatibility and general kernel work.
+
+Fuel Industries, Ottawa, Ontario
+Software Developer, 2012-12 to 2015-04 (2.5 years)
+- Develop cross-platform libraries for iOS and Android game development.
+- Write games for clients using their IP (e.g. Lego, Batman, McDonalds, Furby).
+
+Algonquin College, Ottawa, Ontario
+Substitute Professor, 2014-03 to 2014-04 (2 months)
+- Taught practical C++ game programming to first year students (12 hours a week).
+
+Espial, Ottawa, Ontario
+Developer, 2012-05 to 2012-09 (5 months)
+- Added features to an internet browser for televisions (Webkit-based).
+- Developed series of graphics tests for identifying platform specific issues.
+
+University of Ottawa, Ottawa, Ontario
+Teaching Assistant, 2010-09 to 2012-04 (16 months throughout my studies)
+- Designed assignments, correction.
+- Ran labs, substitute teacher, and proctored exams.
+- Courses: Data Structures and Algorithms, Concept of Programming Languages, Introduction to Programming I and II.
+
+Magmic Games, Ottawa, Ontario
+Video Game Developer, 2007-01 to 2008-11 (2 years)
+- Developed many video games for mobile devices (2D/3D).
+- Built tools and utilities (e.g. map editor, file compression, file archives).
+
+Various, Ottawa Region
+CO-OP Placements, 2000 to 2006
+- Platform Developer, Magmic Games (4 months)
+- Programmer, National Research Council Canada (8 months)
+- Web Programmer, Industry Canada (4 months)
+- Web Programmer, LC&D Internet Publishing (4 months)
+- Web Programmer, Public Service Commission of Canada (8 months)
+

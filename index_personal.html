@@ -1,0 +1,345 @@
+<html>
+<head>
+<link rel="stylesheet" href="styles.css"> 
+<title>David Lareau</title>
+<script>
+// Determine best function for repaint()
+var repaintCanvas = (function(callback) {
+	return window.requestAnimationFrame || 
+	window.webkitRequestAnimationFrame || 
+	window.mozRequestAnimationFrame || 
+	window.oRequestAnimationFrame || 
+	window.msRequestAnimationFrame ||
+	function(callback) {
+	  window.setTimeout(callback, 1000 / 60);
+	};
+})();
+
+// Time
+function currentTimeMillis() {
+	var now = new Date();
+	return Date.UTC(now.getUTCFullYear(), now.getUTCMonth(), now.getUTCDate(),  now.getUTCHours(), now.getUTCMinutes(), now.getUTCSeconds(), now.getUTCMilliseconds());
+}
+
+// Structures
+function Item(imageSrc, linkHREF, label, sublabel, loadedImage) {
+	this.src = imageSrc;
+	this.link = linkHREF;
+	this.label = label;
+	this.sublabel = sublabel;
+	this.image = loadedImage;
+}
+
+// Constants
+var ITEM_INTERVAL = 2000;
+var TRANSITION_DURATION = 500;
+
+// Attributes
+var items = new Array(); // items of the slideshow
+var t0;
+var currentItem;
+var toLoad = new Array();
+
+// Data
+toLoad.push(new Item("professional/fuel/yoohoo_00.png", "http://fluxrider.github.io/professional/fuel/index.html", "YooHoo", "2013", null));
+toLoad.push(new Item("professional/fuel/shaun_the_sheep_00.png", "http://fluxrider.github.io/professional/fuel/index.html", "Shaun the Sheep", "2013", null));
+toLoad.push(new Item("professional/fuel/lego_tower_03.png", "http://fluxrider.github.io/professional/fuel/index.html", "Lego Tower", "2014", null));
+toLoad.push(new Item("professional/fuel/colouring_01.png", "http://fluxrider.github.io/professional/fuel/index.html", "Colouring (McDonalds)", "2013", null));
+toLoad.push(new Item("professional/fuel/furby_03.png", "http://fluxrider.github.io/professional/fuel/index.html", "Furby Dance Party", "2013", null));
+toLoad.push(new Item("professional/fuel/batman_01.png", "http://fluxrider.github.io/professional/fuel/index.html", "Batman Defender", "2013", null));
+toLoad.push(new Item("professional/fuel/creativity_02.png", "http://fluxrider.github.io/professional/fuel/index.html", "Creativity", "2013", null));
+toLoad.push(new Item("projects/tarot/three_s.png", "http://fluxrider.github.io/projects/tarot/index.html", "Tarot Reader", "2012", null));
+toLoad.push(new Item("projects/ray/final_hq_256x256_ttl1_m150_a_438m38s.png", "http://fluxrider.github.io/projects/ray/index.html", "Ray Tracer", "2012", null));
+toLoad.push(new Item("projects/voxel/jet.png", "http://fluxrider.github.io/projects/voxel/index.html", "Voxel Engine", "2011", null));
+toLoad.push(new Item("projects/jet/clone_play.png", "http://fluxrider.github.io/projects/jet/index.html", "Jet Slalom Clone", "2010", null));
+toLoad.push(new Item("education/masters/phantom_user_mine.png", "http://fluxrider.github.io/education/masters/index.html", "Haptic Image Exploration", "2011", null));
+toLoad.push(new Item("education/masters/dominant_mode_s.png", "http://fluxrider.github.io/education/masters/index.html", "Weighted Isotropic Filter", "2011", null));
+toLoad.push(new Item("education/masters/delaunay_s.png", "http://fluxrider.github.io/education/masters/index.html", "Delaunay Triangulation", "2010", null));
+toLoad.push(new Item("education/masters/surveillance_complex.png", "http://fluxrider.github.io/education/masters/index.html", "Background Subtraction", "2010", null));
+toLoad.push(new Item("professional/magmic/kahuna_03.jpg", "http://fluxrider.github.io/professional/magmic/index.html", "Big Kahuna Words", "2008", null));
+toLoad.push(new Item("professional/magmic/phase10_00.jpg", "http://fluxrider.github.io/professional/magmic/index.html" , "Phase 10", "2008", null));
+toLoad.push(new Item("professional/magmic/daytona_05.jpg", "http://fluxrider.github.io/professional/magmic/index.html", "Daytona", "2008", null));
+toLoad.push(new Item("professional/magmic/curse_02.jpg", "http://fluxrider.github.io/professional/magmic/index.html", "Cursed", "2007", null));
+toLoad.push(new Item("professional/magmic/eagle_eye_03.jpg", "http://fluxrider.github.io/professional/magmic/index.html", "Eagle Eye", "2008", null));
+toLoad.push(new Item("projects/magewars/bomb.png", "http://fluxrider.github.io/projects/magewars/index.html", "Mage Wars", "2006", null));
+toLoad.push(new Item("projects/sokoban/puzzle.jpg", "http://fluxrider.github.io/projects/sokoban/index.html", "Sokoban Clone", "2005", null));
+toLoad.push(new Item("projects/memoryGame/play.jpg", "http://fluxrider.github.io/projects/memoryGame/index.html", "Memory Game", "2005", null));
+toLoad.push(new Item("projects/ticTacToe/thwart.jpg", "http://fluxrider.github.io/projects/ticTacToe/index.html", "Tic Tac Toe", "2002", null));
+toLoad.push(new Item("projects/magicNumber/randomJoe.jpg", "http://fluxrider.github.io/projects/magicNumber/index.html", "Magic Number", "2002", null));
+toLoad.push(new Item("projects/magicNumber/magic00.gif", "http://fluxrider.github.io/projects/magicNumber/index.html", "Magic Number", "1999", null));
+toLoad.push(new Item("projects/past/pong00.jpg", "http://fluxrider.github.io/projects/past/index.html", "Pong Clone", "2001", null));
+toLoad.push(new Item("projects/past/bvsb307.gif", "http://fluxrider.github.io/projects/past/index.html", "Bob VS Bob III", "1997", null));
+
+// Resource Management (preloads the images of slideshow sequentially)
+var loadingIndex;
+function preloadImages() {
+	loadingIndex = -1;
+	preloadImage(0);
+}
+function preloadImage(index) {
+	if(index < toLoad.length) {
+		// verify if the image for this index is loaded, if so, move on to the next
+		if(index == loadingIndex) {
+			if(toLoad[index].image.complete) {
+				// store the image
+				items.push(toLoad[index]);
+				// load next image
+				preloadImage(index + 1);
+			} 
+			// if still loading check back in a few
+			else {
+				setTimeout(function(){ preloadImage(index); }, 100);
+			}
+		}
+		// start loading the image at this index 
+		else {
+			loadingIndex = index;
+			toLoad[index].image = document.createElement('img');
+			toLoad[index].image.src = toLoad[index].src;
+			// check back in a few
+			setTimeout(function(){ preloadImage(index); }, 100);
+		}
+
+	}
+}
+
+// Onload: substitute the splash image for a canvas, and begin paint loop
+function initializeSlideshow() {
+	var link = document.getElementById("splashLink");
+	var splash = document.getElementById("splash");
+
+	// if splash image is loaded, substitute it with a canvas
+	var img = document.getElementById("splashImage");
+	if(img.complete) {
+		items.push(new Item(img.src, "david.jpg", null, null, img));
+		var canvas = document.createElement('canvas');
+		canvas.width = 256; //275;
+		canvas.height = 158; //175;
+		canvas.id = "slideshow";
+		splash.innerHTML = null; // remove image
+		splash.appendChild(canvas); // add the canvas instead
+		// start preloading images
+		preloadImages();
+		// initialize paint states
+		t0 = currentTimeMillis();
+		currentItem = 0;
+		startChangeItemAnimation(currentItem, 0);
+		repaintCanvas(function() { paintCanvas(); }); // repaint loop
+	} 
+	// else retry later
+	else {
+		setTimeout(function(){ initializeSlideshow(); }, 1000);
+	}
+}
+
+// SlideShow
+function paintCanvas() {
+	var link = document.getElementById("splashLink");
+	var canvas = document.getElementById("slideshow");
+	var W = canvas.width;
+	var H = canvas.height;
+	var g = canvas.getContext("2d");
+
+	// TODO get real font metrics (also see plan in font rendering section to move text to html)
+	/* OLD CANVAS TEXT SOLUTION 
+	var realFontSize = 15; 
+	var font = realFontSize + "px Arial";
+	var th = realFontSize + 1;
+	var tdescent = realFontSize / 4;
+
+	var srealFontSize = 12; 
+	var sfont = srealFontSize + "px Arial";
+	var sth = srealFontSize + 1;
+	var stdescent = srealFontSize / 4;
+
+	g.font = font;
+	g.fillStyle="#000000";
+	*/
+
+  // clear
+	g.clearRect(0, 0, W, H);
+
+  // tick
+	var t = currentTimeMillis();
+	if(t > t0 + ITEM_INTERVAL) {
+		currentItem = (currentItem + 1) % items.length;
+		t0 = t; // interval aren't precise, they begin when we detect the change
+		// change link behavior
+		if(currentItem < items.length) link.href = items[currentItem].link;
+		// start transition animation
+		startChangeItemAnimation(currentItem, TRANSITION_DURATION);
+	}
+
+	// render
+	if(currentItem < items.length) {
+		// get progress of transition animation
+		var s = Math.max(0, Math.min(1, (t - itemChangeT0) / itemChangeDuration));
+		// draw previous item image
+		if(fromItem != undefined) {
+			var w = W;
+			var h = H; // OLD CANVAS TEXT SOLUTION var h = H - (items[fromItem].label? (sth + th) : 0);
+			if(1-s > 0) {
+				var iw = w * (1-s);
+				var ih = h * (1-s);
+				var ix = (w - iw) / 2;
+				var iy = (h - ih) / 2;
+				 drawImageToFit(g, items[fromItem].image, ix, iy, iw,  ih);
+			}
+		}
+		// draw current item image
+		var w = W;
+		var h = H; // OLD CANVAS TEXT SOLUTION var h = H - (items[toItem].label? th * 2 : 0);
+		if(s > 0) {
+			iw = w * s;
+			ih = h * s;
+			ix = (w - iw) / 2;
+			iy = (h - ih) / 2;
+			drawImageToFit(g, items[toItem].image, ix, iy, iw,  ih);
+		}
+
+		// render text (using html)
+		var label = document.getElementById("splashLabel");
+		var sublabel = document.getElementById("splashSubLabel");
+		label.innerHTML = items[toItem].label? items[toItem].label : "&nbsp;";
+		sublabel.innerHTML = items[toItem].sublabel? items[toItem].sublabel : "&nbsp;";
+		/* // OLD CANVAS TEXT SOLUTION (zoom was ugly, font metrics inacessible, and my ipod touch has issues with font on canvas)
+		if(items[toItem].label) {
+			g.font = sfont;
+			var text = items[toItem].sublabel;
+			var tw = g.measureText(text).width;
+			g.fillText(text, (W - tw) / 2, H - stdescent);
+
+			g.font = font;
+			text = items[toItem].label;
+			tw = g.measureText(text).width;
+			g.fillText(text, (W - tw) / 2, H - stdescent - sth);
+		}
+		*/
+	}
+
+  // repaint (continuous repaint)
+	repaintCanvas(function() { paintCanvas(); });
+}
+
+// Transition Manager
+var fromItem;
+var toItem;
+var itemChangeT0;
+var itemChangeDuration;
+function startChangeItemAnimation(newItem, duration) {
+	if(newItem == toItem) return;
+	fromItem = toItem;
+	toItem = newItem;
+	itemChangeT0 = currentTimeMillis();
+	itemChangeDuration = duration;
+}
+
+// Image Util
+function drawImageToFit(g, image, x, y, w, h) {
+	var iw = image.width;
+	var ih = image.height;
+	var zoom = Math.min(w / iw, h / ih);
+	var panX = (w - (iw * zoom)) / 2;
+	var panY = (h - (ih * zoom)) / 2;
+	g.drawImage(image, x + panX, y + panY, iw * zoom, ih * zoom);
+}
+
+</script>
+</head>
+<body onload="initializeSlideshow();">
+
+<table border="0" cellPadding="1" cellSpacing="5" align="center" height="600"><tr>
+
+<td width="20%" height="100%" align="right" valign="top">
+	<table border="0" cellPadding="0" cellSpacing="0" width="100%" height="100%">
+	 <tr><td valign="top">
+		<p class="section" align="right">Side Projects</p>
+		<p align="right">
+		<!--<a href="http://fluxrider.github.io/projects/tarot/index.html">Tarot Reader<span class="date"><br/>2012-10</span></a><br>-->
+		<a href="http://fluxrider.github.io/projects/ray/index.html">Ray Tracer<span class="date"><br/>2012-Q1</span></a><br>
+		<a href="http://fluxrider.github.io/projects/voxel/index.html">Voxel Engine<span class="date"><br/>2011</span></a><br>
+		<a href="http://fluxrider.github.io/projects/jet/index.html">Jet Slalom Clone<span class="date"><br>2010-03-23</span></a><br>
+		<a href="http://fluxrider.github.io/projects/ffxi-mmm/index.html">Rymma's Rune Placer<span class="date"><br/>2009-04-07</span></a><br/>
+		<a href="http://fluxrider.github.io/projects/magewars/index.html">Mage Wars<span class="date"><br>2006-04-07</span></a><br>
+		<a href="http://fluxrider.github.io/projects/sokoban/index.html">Sokoban Clone<span class="date"><br>2005-10-29</span></a><br>
+		<a href="http://fluxrider.github.io/projects/memoryGame/index.html">Memory Game<span class="date"><br>2005-07-29</span></a><br>
+		<a href="http://fluxrider.github.io/projects/graphUtilities/index.html">Graph Utilities<span class="date"><br/>2003-01-12</span></a><br/>
+		<a href="http://fluxrider.github.io/projects/ticTacToe/index.html">TicTacToe<span class="date"><br>2002-12-09</span></a><br>
+		<a href="http://fluxrider.github.io/projects/magicNumber/index.html">Magic Number<span class="date"><br>2002-09-15</span></span></a><br>
+		<a href="http://fluxrider.github.io/projects/past/index.html">Past Projects<span class="date"><br>1995 &mdash; 2001</span></a><br>
+		</p>
+	 </td></tr>
+	</table>
+</td>
+
+<td width="60%" height="100%" align="center" valign="top">
+	<table border="0" cellPadding="0" cellSpacing="0" width="100%" height="100%">
+		<tr><td align="center" valign="top">
+			<a href="david.jpg" id="splashLink"><div id="splash"><img width="256" height="158" alt="David Lareau" src="splash.png" id="splashImage"></div><span id="splashLabel">Test</span><br/><span id="splashSubLabel" class="date">test</span></a>
+			<!--style="border:1px solid #000000;height:158px;width:256px;"-->
+			<p class="title">David Lareau</p>
+		</td></tr>
+		<tr><td align="center" valign="center">
+			<p class="section">Occupations</p>
+			<p>
+			<a href="http://www.qnx.com/">Kernel Developer<span class="date"><br/>QNX / BlackBerry<br/>2015-05 &mdash; Present</span></a><br/>
+			<a href="http://fluxrider.github.io/professional/fuel/index.html">Video Game Developer<span class="date"><br/>Fuel Industries<br/>2012-12 &mdash; 2015-04</span></a><br/>
+			<a href="">Developer<span class="date"><br/>Espial<br/>2012-05 &mdash; 2012-09</span></a><br/>
+			<a href="">Ph.D.&nbsp;student in Computer Science<span class="date"><br/>University of Ottawa<br/>2012-01 &mdash; 2012-04</span></a><br/>
+			<a href="http://fluxrider.github.io/education/masters/index.html">M.A.Sc.&nbsp;in Biomedical Engineering<span class="date"><br/>University of Ottawa<br/>2009 &mdash; 2011</span></a><br/>
+			<a href="http://fluxrider.github.io/professional/magmic/index.html">Video Game Developer<span class="date"><br/>Magmic Games<br/>2007 &mdash; 2008</span></a><br>
+			<a href="http://fluxrider.github.io/education/ottawaUniversity/index.html">B.Sc.&nbsp;in Computer Science<span class="date"><br/>University of Ottawa<br/>2002 &mdash; 2006</span></a><br/>
+			<a href="http://fluxrider.github.io/education/laCiteCollegiale/index.html">D.C.S.&nbsp;in Computer Engineering Technology<span class="date"><br/>La Cit&eacute; coll&eacute;giale<br/>1999 &mdash; 2002</span></a><br/>
+			</p>
+			<!--
+			http://www.ocibme.ca/programs/
+			http://www.uottawa.ca/academic/info/regist/calendars/programs/105.html
+			http://www.lacitec.on.ca/programmes/61001.htm
+			-->
+		</td></tr>
+	</table>
+</td>
+
+<td width="20%" height="100%" align="left" valign="top">
+	<table border="0" cellPadding="0" cellSpacing="0" width="100%" height="100%">
+	 <tr><td valign="top">
+		<p class="section" align="left">Miscelaneous</p>
+		<p align="left">
+		<a href="http://fluxrider.github.io/projects/gamelist">Great Game List</a><br>
+		<a href="http://fluxrider.github.io/projects/letters/index.html">Letters</a><br>
+		<a href="http://fluxrider.github.io/projects/blog/index.html">Blog</a><br>
+		</p>
+	 </td></tr>
+<!--
+	 <tr><td valign="center">
+		<p class="section" align="left">Interests</p>
+		<p align="left">
+		Computer&nbsp;Graphics<br/>
+    Visualization<br/>
+    Video&nbsp;Games<br/>
+    Data&nbsp;Structures<br/>
+    Algorithms<br/>
+    Input&nbsp;Devices<br/>
+    Computer&nbsp;Languages<br/>
+		</p>
+	 </td></tr>
+-->
+	 <tr><td valign="center">
+		<p class="section" align="left">Curriculum<br/>Vitae</p>
+		<p align="left">
+		<a href="vitae/davidLareau.pdf">PDF</a> <span class="date"><a href="vitae/davidLareau_fr.pdf">(fran&ccedil;ais)</a></span><br>
+		<a href="vitae/davidLareau_iso8859-15.txt">TXT</a> <span class="date"><a href="vitae/davidLareau_fr_iso8859-15.txt">(fran&ccedil;ais)</a></span><br>
+		</p>
+	 </td></tr>
+	</table>
+</td>
+
+</tr><tr><td colspan="3"><hr width="100%"/></td></tr></table>
+
+<p class="copyright">
+David Lareau 2014 &copy;<br/>
+doompilot@gmail.com
+</p>
+
+</body>
+</html>
