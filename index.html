@@ -1,24 +1,90 @@
+<!DOCTYPE html>
 <html>
-<head>
 <link rel="stylesheet" href="styles.css"> 
-<title>Gamer Lips</title>
-</head>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<style>
+
+/* image size down instead horizontal scroll */
+img {
+  max-width: 100%;
+  height: auto;
+}
+
+/* min-max-font-size trick */
+html { font-size: 12pt; }
+:root {
+  --size-rel: 2.7vw;
+  --size-abs: 18pt;
+}
+@media (min-width: 600px) {
+  p { font-size: var(--size-rel); }
+  .box { font-size: var(--size-rel); }
+}
+@media (min-width: 900px) {
+  p { font-size: var(--size-abs); }
+  .box { font-size: var(--size-abs); }
+}
+
+.grid-container {
+  max-width: 100%;
+  height: auto;
+  display: grid;
+  grid-template-columns: repeat(6, 15.62vw);
+  grid-template-rows: repeat(3, 15.62vw);
+  grid-gap: 1vw;
+}
+
+.box {
+  border-radius: 5px;
+  padding: 20px;
+  text-align: center;
+}
+
+.boxSlideshow {
+  grid-area: 1 / 3 / 2 / 5;
+  background-color: #fff;
+  color: #000;
+}
+
+:root {
+  --color-a: #444;
+  --color-a-t: #fff;
+  --color-b: #aaa;
+  --color-b-t: #000;
+}
+
+.boxResume { background-color: var(--color-a); color: var(--color-a-t); grid-area: 1 / 2 / 2 / 3; }
+.boxGameList { background-color: var(--color-b); color: var(--color-b-t); grid-area: 1 / 5 / 2 / 6; }
+.boxFuel { background-color: var(--color-b); color: var(--color-b-t); grid-area: 2 / 2 / 3 / 3; }
+.boxMagmic { background-color: var(--color-a); color: var(--color-a-t); grid-area: 2 / 5 / 3 / 6; }
+.boxMasters { background-color: var(--color-b); color: var(--color-b-t); grid-area: 1 / 1 / 2 / 2; }
+.boxUndergrads { background-color: var(--color-a); color: var(--color-a-t); grid-area: 2 / 1 / 3 / 2; }
+.boxCollege { background-color: var(--color-b); color: var(--color-b-t); grid-area: 3 / 1 / 4 / 2; }
+
+</style>
+
 <body>
 
-<p style=" position: absolute; bottom: 0; left: 0; width: 100%; text-align: right;"><a href="school/">&pi;</a></p>
 
-<table border="0" cellPadding="2" cellSpacing="5" align="center">
+<div class="grid-container">
+  <div class="box boxSlideshow">Slideshow</div>
+  <div class="box boxResume">Resume</div>
+  <div class="box boxFuel">Fuel</div>
+  <div class="box boxMagmic">Magmic</div>
+  <div class="box boxGameList">Great Game List</div>
+  <div class="box boxMasters">Masters</div>
+  <div class="box boxUndergrads">Undergrads</div>
+  <div class="box boxCollege">College</div>
+  <div class="box">9</div>
+  <div class="box">10</div>
+  <div class="box">11</div>
+  <div class="box">12</div>
+</div>
 
-<tr>
- <td><a href="http://fluxrider.github.io/gamer_lips/index.html"><img src="lipsc00.png" width="256" height="256"></a></td>
- <td><a href="index_personal.html"><img src="splash.png" width="256" height="158"></a></td>
-</tr>
-<tr>
- <td align="center"><a href="http://fluxrider.github.io/gamer_lips/index.html">Gamer Lips<br/>Video Games</a></td>
- <td align="center"><a href="index_personal.html">David Lareau<br/>Personal Website</a></td>
-</tr>
-
-</table>
+<p class="copyright">
+David Lareau 2014 &copy;<br/>
+doompilot@gmail.com
+</p>
 
 </body>
 </html>
