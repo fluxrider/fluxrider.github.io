@@ -1,5 +1,8 @@
 <!DOCTYPE html>
 <html>
+<head>
+<meta charset="utf-8">
+<title>David Lareau</title>
 <link rel="stylesheet" href="styles.css"> 
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <style>
@@ -11,74 +14,218 @@ img {
 }
 
 /* min-max-font-size trick */
-html { font-size: 12pt; }
+html { font-size: 11pt; }
+.date { font-size: 6.6pt; }
 :root {
-  --size-rel: 2.7vw;
+  --size-rel: 2.3vw;
+  --size-rel-small: 1.38vw;
   --size-abs: 18pt;
+  --size-abs-small: 10.8pt;
 }
-@media (min-width: 600px) {
-  p { font-size: var(--size-rel); }
+/* At that size, I should really switch layout */
+@media screen and (min-width: 640px) {
+  html { font-size: var(--size-rel); }
   .box { font-size: var(--size-rel); }
+  .date { font-size: var(--size-rel-small); }
 }
-@media (min-width: 900px) {
-  p { font-size: var(--size-abs); }
+@media screen and (min-width: 1025px) {
+  html { font-size: var(--size-abs); }
   .box { font-size: var(--size-abs); }
-}
-
-.grid-container {
-  max-width: 100%;
-  height: auto;
-  display: grid;
-  grid-template-columns: repeat(6, 15.62vw);
-  grid-template-rows: repeat(3, 15.62vw);
-  grid-gap: 1vw;
-}
-
-.box {
-  border-radius: 5px;
-  padding: 20px;
-  text-align: center;
-}
-
-.boxSlideshow {
-  grid-area: 1 / 3 / 2 / 5;
-  background-color: #fff;
-  color: #000;
+  .date { font-size: var(--size-abs-small); }
 }
 
 :root {
+/* Grays
   --color-a: #444;
   --color-a-t: #fff;
+  --color-ah-t: #ccc;
   --color-b: #aaa;
   --color-b-t: #000;
+  --color-bh-t: #ccc;
+  --color-slide: #fff;
+  --color-slide-t: #000;
+*/
+  --color-a: #b9936c;
+  --color-a-t: #fff;
+  --color-ah-t: #ddd;
+  --color-b: #c4b7a6;
+  --color-b-t: #000;
+  --color-bh-t: #555;
+  --color-slide: #e6e2d3;
+  --color-slide-t: #000;
+/* 
+fff dac292
+fff b9936c
+e6e2d3
+c4b7a6
+*/
 }
 
-.boxResume { background-color: var(--color-a); color: var(--color-a-t); grid-area: 1 / 2 / 2 / 3; }
-.boxGameList { background-color: var(--color-b); color: var(--color-b-t); grid-area: 1 / 5 / 2 / 6; }
-.boxFuel { background-color: var(--color-b); color: var(--color-b-t); grid-area: 2 / 2 / 3 / 3; }
-.boxMagmic { background-color: var(--color-a); color: var(--color-a-t); grid-area: 2 / 5 / 3 / 6; }
-.boxMasters { background-color: var(--color-b); color: var(--color-b-t); grid-area: 1 / 1 / 2 / 2; }
-.boxUndergrads { background-color: var(--color-a); color: var(--color-a-t); grid-area: 2 / 1 / 3 / 2; }
-.boxCollege { background-color: var(--color-b); color: var(--color-b-t); grid-area: 3 / 1 / 4 / 2; }
+
+
+/* phone */
+@media not screen and (min-width: 1025px) {
+  .box {
+    border-radius: 5px;
+    padding: 5px;
+    text-align: center;
+    /* vertical-align: middle; I wish this would work */ 
+  }
+  .box > a > img {
+    max-height: 60%;
+  }
+  .grid-container {
+    max-width: 100%;
+    height: auto;
+    display: grid;
+    grid-template-columns: repeat(4, 23.43vw);
+    grid-template-rows: repeat(7, 23.43vw);
+    grid-gap: 1vw;
+  }
+  .boxSlideshow {
+    grid-area: 1 / 2 / 3 / 4;
+    background-color: var(--color-slide);
+    color: var(--color-slide-t);
+  }
+  .boxResume { background-color: var(--color-a); color: var(--color-a-t); grid-area: 1 / 1 / 2 / 2; }
+  .boxResume > a { color: var(--color-a-t); }
+  .boxResume > a:hover { color: var(--color-ah-t); }
+  .svgResume { background-color: var(--color-a-t); mask: url(icons/resume.svg) no-repeat center; mask-size: 100%; }
+  .svgResume:hover { background-color: var(--color-ah-t); }
+  .boxOrientation { background-color: var(--color-a); color: var(--color-a-t); grid-area: 4 / 2 / 5 / 3; }
+  .boxOrientation > a { color: var(--color-a-t); }
+  .boxOrientation > a:hover { color: var(--color-ah-t); }
+  .svgOrientation { background-color: var(--color-a-t); mask: url(icons/orientation.svg) no-repeat center; mask-size: 100%; }
+  .svgOrientation:hover { background-color: var(--color-ah-t); }
+  .boxLetters { background-color: var(--color-a); color: var(--color-a-t); grid-area: 3 / 3 / 4 / 4; }
+  .boxLetters > a { color: var(--color-a-t); }
+  .boxLetters > a:hover { color: var(--color-ah-t); }
+  .svgLetters { background-color: var(--color-a-t); mask: url(icons/letters.svg) no-repeat center; mask-size: 100%; }
+  .svgLetters:hover { background-color: var(--color-ah-t); }
+  .boxVolume { background-color: var(--color-b); color: var(--color-b-t); grid-area: 4 / 3 / 5 / 4; }
+  .boxVolume > a { color: var(--color-b-t); }
+  .boxVolume > a:hover { color: var(--color-bh-t); }
+  .svgVolume { background-color: var(--color-b-t); mask: url(icons/volume.svg) no-repeat center; mask-size: 100%; }
+  .svgVolume:hover { background-color: var(--color-bh-t); }
+
+  .boxGameList { background-color: var(--color-b); color: var(--color-b-t); grid-area: 1 / 4 / 2 / 5; }
+  .boxFuel { background-color: var(--color-b); color: var(--color-b-t); grid-area: 2 / 1 / 3 / 2; }
+  .boxMagmic { background-color: var(--color-a); color: var(--color-a-t); grid-area: 2 / 4 / 3 / 5; }
+  .boxMasters { background-color: var(--color-a); color: var(--color-a-t); grid-area: 3 / 1 / 4 / 2; }
+  .boxUndergrads { background-color: var(--color-b); color: var(--color-b-t); grid-area: 3 / 2 / 4 / 3; }
+  .boxCollege { background-color: var(--color-b); color: var(--color-b-t); grid-area: 3 / 4 / 4 / 5; }
+
+  .boxLunacy { background-color: var(--color-b); color: var(--color-b-t); }
+  .boxCat { background-color: var(--color-a); color: var(--color-a-t); }
+  .boxVoxel { background-color: var(--color-a); color: var(--color-a-t); }
+  .boxJet { background-color: var(--color-b); color: var(--color-b-t); }
+  .boxMage { background-color: var(--color-a); color: var(--color-a-t); }
+  .boxRay { background-color: var(--color-b); color: var(--color-b-t); }
+  .boxSoko { background-color: var(--color-b); color: var(--color-b-t); }
+  .boxMemory { background-color: var(--color-a); color: var(--color-a-t); }
+  .boxGraph { background-color: var(--color-b); color: var(--color-b-t); }
+  .boxTic { background-color: var(--color-a); color: var(--color-a-t); }
+  .boxMagic { background-color: var(--color-a); color: var(--color-a-t); }
+  .boxBVSB { background-color: var(--color-b); color: var(--color-b-t); }
+  .boxPong { background-color: var(--color-a); color: var(--color-a-t); }
+}
+/* computer */
+@media screen and (min-width: 1025px) {
+  .box {
+    border-radius: 5px;
+    padding: 20px;
+    text-align: center;
+  }
+  .box > a > img {
+    max-height: 60%;
+  }
+  .grid-container {
+    max-width: 100%;
+    height: auto;
+    display: grid;
+    grid-template-columns: repeat(6, 15.62vw);
+    grid-template-rows: repeat(5, 15.62vw);
+    grid-gap: 1vw;
+  }
+  .boxSlideshow {
+    grid-area: 1 / 3 / 3 / 5;
+    background-color: var(--color-slide);
+    color: var(--color-slide-t);
+  }
+  .boxResume { background-color: var(--color-a); color: var(--color-a-t); grid-area: 1 / 2 / 2 / 3; }
+  .boxResume > a { color: var(--color-a-t); }
+  .boxResume > a:hover { color: var(--color-ah-t); }
+  .svgResume { background-color: var(--color-a-t); mask: url(icons/resume.svg) no-repeat center; mask-size: 100%; }
+  .svgResume:hover { background-color: var(--color-ah-t); }
+  .boxOrientation { background-color: var(--color-b); color: var(--color-b-t); grid-area: 2 / 6 / 3 / 7; }
+  .boxOrientation > a { color: var(--color-b-t); }
+  .boxOrientation > a:hover { color: var(--color-bh-t); }
+  .svgOrientation { background-color: var(--color-b-t); mask: url(icons/orientation.svg) no-repeat center; mask-size: 100%; }
+  .svgOrientation:hover { background-color: var(--color-bh-t); }
+  .boxLetters { background-color: var(--color-a); color: var(--color-a-t); grid-area: 1 / 6 / 2 / 7; }
+  .boxLetters > a { color: var(--color-a-t); }
+  .boxLetters > a:hover { color: var(--color-ah-t); }
+  .svgLetters { background-color: var(--color-a-t); mask: url(icons/letters.svg) no-repeat center; mask-size: 100%; }
+  .svgLetters:hover { background-color: var(--color-ah-t); }
+  .boxVolume { background-color: var(--color-a); color: var(--color-a-t); grid-area: 3 / 6 / 4 / 7; }
+  .boxVolume > a { color: var(--color-a-t); }
+  .boxVolume > a:hover { color: var(--color-ah-t); }
+  .svgVolume { background-color: var(--color-a-t); mask: url(icons/volume.svg) no-repeat center; mask-size: 100%; }
+  .svgVolume:hover { background-color: var(--color-ah-t); }
+
+  .boxGameList { background-color: var(--color-b); color: var(--color-b-t); grid-area: 1 / 5 / 2 / 6; }
+  .boxFuel { background-color: var(--color-b); color: var(--color-b-t); grid-area: 2 / 2 / 3 / 3; }
+  .boxMagmic { background-color: var(--color-a); color: var(--color-a-t); grid-area: 2 / 5 / 3 / 6; }
+  .boxMasters { background-color: var(--color-b); color: var(--color-b-t); grid-area: 1 / 1 / 2 / 2; }
+  .boxUndergrads { background-color: var(--color-a); color: var(--color-a-t); grid-area: 2 / 1 / 3 / 2; }
+  .boxCollege { background-color: var(--color-b); color: var(--color-b-t); grid-area: 3 / 1 / 4 / 2; }
+
+  .boxLunacy { background-color: var(--color-a); color: var(--color-a-t); }
+  .boxCat { background-color: var(--color-b); color: var(--color-b-t); }
+  .boxVoxel { background-color: var(--color-a); color: var(--color-a-t); }
+  .boxJet { background-color: var(--color-b); color: var(--color-b-t); }
+  .boxMage { background-color: var(--color-a); color: var(--color-a-t); }
+  .boxRay { background-color: var(--color-b); color: var(--color-b-t); }
+  .boxSoko { background-color: var(--color-a); color: var(--color-a-t); }
+  .boxMemory { background-color: var(--color-b); color: var(--color-b-t); }
+  .boxGraph { background-color: var(--color-a); color: var(--color-a-t); }
+  .boxTic { background-color: var(--color-b); color: var(--color-b-t); }
+  .boxMagic { background-color: var(--color-a); color: var(--color-a-t); }
+  .boxBVSB { background-color: var(--color-b); color: var(--color-b-t); }
+  .boxPong { background-color: var(--color-a); color: var(--color-a-t); }
+}
 
 </style>
+</head>
 
 <body>
 
 
 <div class="grid-container">
-  <div class="box boxSlideshow">Slideshow</div>
-  <div class="box boxResume">Resume</div>
-  <div class="box boxFuel">Fuel</div>
-  <div class="box boxMagmic">Magmic</div>
-  <div class="box boxGameList">Great Game List</div>
-  <div class="box boxMasters">Masters</div>
-  <div class="box boxUndergrads">Undergrads</div>
-  <div class="box boxCollege">College</div>
-  <div class="box">9</div>
-  <div class="box">10</div>
-  <div class="box">11</div>
-  <div class="box">12</div>
+<div class="box boxSlideshow">Slideshow</div>
+<div class="box boxResume"><a href="vitae/davidLareau.html"><img class="svgResume" src="icons/empty.png"/><br/>Resume<br/><span class="date">2017</span></a></div>
+<div class="box boxFuel">Fuel</div>
+<div class="box boxMagmic">Magmic</div>
+<div class="box boxGameList">Great Game List</div>
+<div class="box boxMasters">Masters</div>
+<div class="box boxUndergrads">Undergrads</div>
+<div class="box boxCollege">College</div>
+<div class="box boxOrientation"><a href="projects/blog/index.html"><img class="svgOrientation" src="icons/empty.png"/><br/>Orientation<br/><span class="date">2012-01-19</span></a></div>
+<div class="box boxLetters"><a href="projects/letters/index.html"><img class="svgLetters" src="icons/empty.png"/><br/>Letters<br/><span class="date">2009 / 2010</span></a></div>
+<div class="box boxVolume"><a href="projects/blog/index.html"><img class="svgVolume" src="icons/empty.png"/><br/>Volume<br/><span class="date">2016-12-28</span></a></div>
+<div class="box boxLunacy">Moderm Lunacy</div>
+<div class="box boxCat">Cat Story</div>
+<div class="box boxVoxel">Voxel Engine</div>
+<div class="box boxJet">Jet Slalom</div>
+<div class="box boxMage">Mage Wars</div>
+<div class="box boxRay">Ray Tracer</div>
+<div class="box boxSoko">Sokoban</div>
+<div class="box boxMemory">Memory Game</div>
+<div class="box boxGraph">Graph Utility</div>
+<div class="box boxTic">Tic Tac Toe</div>
+<div class="box boxMagic">Magic Number</div>
+<div class="box boxBVSB">Bob VS Bob</div>
+<div class="box boxPong">Pong</div>
 </div>
 
 <p class="copyright">
