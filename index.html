@@ -71,15 +71,16 @@ c4b7a6
     text-align: center;
     /* vertical-align: middle; I wish this would work */ 
   }
-  .box > a > img {
-    max-height: 60%;
+  :root {
+    --cell-size: 23.43vw;
+    --icon-height: 14.058vw;
   }
   .grid-container {
     max-width: 100%;
     height: auto;
     display: grid;
-    grid-template-columns: repeat(4, 23.43vw);
-    grid-template-rows: repeat(7, 23.43vw);
+    grid-template-columns: repeat(4, var(--cell-size));
+    grid-template-rows: repeat(7, var(--cell-size));
     grid-gap: 1vw;
   }
   .boxSlideshow {
@@ -98,8 +99,8 @@ c4b7a6
   .svgOrientation { background-color: var(--color-a-t); mask: url(icons/orientation.svg) no-repeat center; mask-size: 100%; }
   .svgOrientation:hover { background-color: var(--color-ah-t); }
   .boxLetters { background-color: var(--color-a); color: var(--color-a-t); grid-area: 3 / 3 / 4 / 4; }
-  .boxLetters > a { color: var(--color-a-t); }
-  .boxLetters > a:hover { color: var(--color-ah-t); }
+  .boxLetters > table > tr > td > a { color: var(--color-a-t); }
+  .boxLetters > table > tr > td > a:hover { color: var(--color-ah-t); }
   .svgLetters { background-color: var(--color-a-t); mask: url(icons/letters.svg) no-repeat center; mask-size: 100%; }
   .svgLetters:hover { background-color: var(--color-ah-t); }
   .boxVolume { background-color: var(--color-b); color: var(--color-b-t); grid-area: 4 / 3 / 5 / 4; }
@@ -136,15 +137,16 @@ c4b7a6
     padding: 20px;
     text-align: center;
   }
-  .box > a > img {
-    max-height: 60%;
+  :root {
+    --cell-size: 15.62vw;
+    --icon-height: 9.372vw;
   }
   .grid-container {
     max-width: 100%;
     height: auto;
     display: grid;
-    grid-template-columns: repeat(6, 15.62vw);
-    grid-template-rows: repeat(5, 15.62vw);
+    grid-template-columns: repeat(6, var(--cell-size));
+    grid-template-rows: repeat(5, var(--cell-size));
     grid-gap: 1vw;
   }
   .boxSlideshow {
@@ -163,8 +165,8 @@ c4b7a6
   .svgOrientation { background-color: var(--color-b-t); mask: url(icons/orientation.svg) no-repeat center; mask-size: 100%; }
   .svgOrientation:hover { background-color: var(--color-bh-t); }
   .boxLetters { background-color: var(--color-a); color: var(--color-a-t); grid-area: 1 / 6 / 2 / 7; }
-  .boxLetters > a { color: var(--color-a-t); }
-  .boxLetters > a:hover { color: var(--color-ah-t); }
+  .boxLettersA { color: var(--color-a-t); }
+  .boxLettersA:hover { color: var(--color-ah-t); }
   .svgLetters { background-color: var(--color-a-t); mask: url(icons/letters.svg) no-repeat center; mask-size: 100%; }
   .svgLetters:hover { background-color: var(--color-ah-t); }
   .boxVolume { background-color: var(--color-a); color: var(--color-a-t); grid-area: 3 / 6 / 4 / 7; }
@@ -180,6 +182,7 @@ c4b7a6
   .boxUndergrads { background-color: var(--color-a); color: var(--color-a-t); grid-area: 2 / 1 / 3 / 2; }
   .boxCollege { background-color: var(--color-b); color: var(--color-b-t); grid-area: 3 / 1 / 4 / 2; }
 
+  /* TODO td, th { } is a thing, try it */
   .boxLunacy { background-color: var(--color-a); color: var(--color-a-t); }
   .boxCat { background-color: var(--color-b); color: var(--color-b-t); }
   .boxVoxel { background-color: var(--color-a); color: var(--color-a-t); }
@@ -194,6 +197,9 @@ c4b7a6
   .boxBVSB { background-color: var(--color-b); color: var(--color-b-t); }
   .boxPong { background-color: var(--color-a); color: var(--color-a-t); }
 }
+.box > a > img {
+  max-height: 60%;
+} /* TODO remove */
 
 </style>
 </head>
@@ -211,7 +217,12 @@ c4b7a6
 <div class="box boxUndergrads">Undergrads</div>
 <div class="box boxCollege">College</div>
 <div class="box boxOrientation"><a href="projects/blog/index.html"><img class="svgOrientation" src="icons/empty.png"/><br/>Orientation<br/><span class="date">2012-01-19</span></a></div>
-<div class="box boxLetters"><a href="projects/letters/index.html"><img class="svgLetters" src="icons/empty.png"/><br/>Letters<br/><span class="date">2009 / 2010</span></a></div>
+
+<div class="box boxLetters"><table width="100%" height="100%"><tr><td><a class="boxLettersA" href="projects/letters/index.html">
+<img class="svgLetters" src="icons/empty.png" style="max-height: var(--icon-height);"/><br/>
+Letters<br/><span class="date">2009 / 2010</span>
+</a></td></tr></table></div>
+
 <div class="box boxVolume"><a href="projects/blog/index.html"><img class="svgVolume" src="icons/empty.png"/><br/>Volume<br/><span class="date">2016-12-28</span></a></div>
 <div class="box boxLunacy">Moderm Lunacy</div>
 <div class="box boxCat">Cat Story</div>
