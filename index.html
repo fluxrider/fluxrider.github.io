@@ -211,10 +211,11 @@ c4b7a6
     background-color: var(--color-b);
     color: var(--color-b-t);
   }
-
-  .boxOrientationA
+  .boxOrientationA,
+  .boxRayA
   { color: var(--color-b-t); }
-  .boxOrientationA:hover
+  .boxOrientationA:hover,
+  .boxRayA:hover
   { color: var(--color-bh-t); }
   .svgOrientation:hover 
   { background-color: var(--color-bh-t); }
@@ -256,6 +257,7 @@ let items = [
   ["Orientation", "projects/blog/index.html", "empty.png", "Orientation", "2012-01-19"],
   ["Letters", "projects/letters/index.html", "empty.png", "Letters", "2009 / 2010"],
   ["Volume", "projects/blog/index.html", "empty.png", "Volume", "2016-12-28"],
+  ["Ray", "projects/ray/index.html", "cornell.jpg", "Ray Tracer", "2012-Q1"],
 ];
 for (let item of items) {
   let id = item[0];
@@ -275,7 +277,6 @@ for (let item of items) {
 <div class="box boxVoxel">Voxel Engine</div>
 <div class="box boxJet">Jet Slalom</div>
 <div class="box boxMage">Mage Wars</div>
-<div class="box boxRay">Ray Tracer</div>
 <div class="box boxSoko">Sokoban</div>
 <div class="box boxMemory">Memory Game</div>
 <div class="box boxGraph">Graph Utility</div>
