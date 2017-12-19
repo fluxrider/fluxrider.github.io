@@ -89,8 +89,8 @@ c4b7a6
     color: var(--color-slide-t);
   }
   .boxResume { background-color: var(--color-a); color: var(--color-a-t); grid-area: 1 / 1 / 2 / 2; }
-  .boxResume > a { color: var(--color-a-t); }
-  .boxResume > a:hover { color: var(--color-ah-t); }
+  .boxResumeA { color: var(--color-a-t); }
+  .boxResumeA:hover { color: var(--color-ah-t); }
   .svgResume { background-color: var(--color-a-t); mask: url(icons/resume.svg) no-repeat center; mask-size: 100%; }
   .svgResume:hover { background-color: var(--color-ah-t); }
   .boxOrientation { background-color: var(--color-a); color: var(--color-a-t); grid-area: 4 / 2 / 5 / 3; }
@@ -155,8 +155,8 @@ c4b7a6
     color: var(--color-slide-t);
   }
   .boxResume { background-color: var(--color-a); color: var(--color-a-t); grid-area: 1 / 2 / 2 / 3; }
-  .boxResume > a { color: var(--color-a-t); }
-  .boxResume > a:hover { color: var(--color-ah-t); }
+  .boxResumeA { color: var(--color-a-t); }
+  .boxResumeA:hover { color: var(--color-ah-t); }
   .svgResume { background-color: var(--color-a-t); mask: url(icons/resume.svg) no-repeat center; mask-size: 100%; }
   .svgResume:hover { background-color: var(--color-ah-t); }
   .boxOrientation { background-color: var(--color-b); color: var(--color-b-t); grid-area: 2 / 6 / 3 / 7; }
@@ -215,27 +215,31 @@ a > img {
 
 <div class="grid-container">
 <div class="box boxSlideshow">Slideshow</div>
-<div class="box boxResume"><a href="vitae/davidLareau.html"><img class="svgResume" src="icons/empty.png"/><br/>Resume<br/><span class="date">2017</span></a></div>
 <div class="box boxFuel">Fuel</div>
 <div class="box boxMagmic">Magmic</div>
 <div class="box boxGameList">Great Game List</div>
 <div class="box boxMasters">Masters</div>
 <div class="box boxUndergrads">Undergrads</div>
 <div class="box boxCollege">College</div>
-<div class="box boxOrientation"><a href="projects/blog/index.html"><img class="svgOrientation" src="icons/empty.png"/><br/>Orientation<br/><span class="date">2012-01-19</span></a></div>
 
 <script>
 // id, href, icon_name, name, date
-var item = ["Letters", "projects/letters/index.html", "empty.png", "Letters", "2009 / 2010"];
-var id = item[0];
-var href = item[1];
-var img = item[2];
-var name = item[3];
-var date = item[4];
-var div = "<div class=\"box box" + id + "\"><table><tr><td><a class=\"box" + id + "A\" href=\"" + href + "\">\n";
-div += "<img class=\"svg" + id + "\" src=\"icons/" + img + "\"/><br/>" + name + "<br/><span class=\"date\">" + date + "</span>\n";
-div += "</a></td></tr></table></div>\n";
-document.write(div);
+let items = [
+  ["Resume", "vitae/davidLareau.html", "empty.png", "Resume", "2017"],
+  ["Orientation", "projects/blog/index.html", "empty.png", "Orientation", "2012-01-19"],
+  ["Letters", "projects/letters/index.html", "empty.png", "Letters", "2009 / 2010"],
+];
+for (let item of items) {
+  let id = item[0];
+  let href = item[1];
+  let img = item[2];
+  let name = item[3];
+  let date = item[4];
+  let div = "<div class=\"box box" + id + "\"><table><tr><td><a class=\"box" + id + "A\" href=\"" + href + "\">\n";
+  div += "<img class=\"svg" + id + "\" src=\"icons/" + img + "\"/><br/>" + name + "<br/><span class=\"date\">" + date + "</span>\n";
+  div += "</a></td></tr></table></div>\n";
+  document.write(div);
+}
 </script>
 
 <div class="box boxVolume"><a href="projects/blog/index.html"><img class="svgVolume" src="icons/empty.png"/><br/>Volume<br/><span class="date">2016-12-28</span></a></div>
