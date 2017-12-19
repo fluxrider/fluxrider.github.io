@@ -85,8 +85,6 @@ c4b7a6
   }
   .boxSlideshow {
     grid-area: 1 / 2 / 3 / 4;
-    background-color: var(--color-slide);
-    color: var(--color-slide-t);
   }
   .boxResume { background-color: var(--color-a); color: var(--color-a-t); grid-area: 1 / 1 / 2 / 2; }
   .boxResumeA { color: var(--color-a-t); }
@@ -149,63 +147,92 @@ c4b7a6
     grid-template-rows: repeat(5, var(--cell-size));
     grid-gap: 1vw;
   }
-  .boxSlideshow {
-    grid-area: 1 / 3 / 3 / 5;
-    background-color: var(--color-slide);
-    color: var(--color-slide-t);
+
+  /* positions */
+  .boxSlideshow { grid-area: 1 / 3 / 3 / 5; }
+  .boxResume { grid-area: 1 / 2 / 2 / 3; }
+  .boxGameList { grid-area: 1 / 5 / 2 / 6; }
+  .boxFuel { grid-area: 2 / 2 / 3 / 3; }
+  .boxMagmic { grid-area: 2 / 5 / 3 / 6; }
+  .boxMasters { grid-area: 1 / 1 / 2 / 2; }
+  .boxUndergrads { grid-area: 2 / 1 / 3 / 2; }
+  .boxCollege { grid-area: 3 / 1 / 4 / 2; }
+  .boxOrientation { grid-area: 2 / 6 / 3 / 7; }
+  .boxLetters { grid-area: 1 / 6 / 2 / 7; }
+  .boxVolume { grid-area: 3 / 6 / 4 / 7; }
+
+  /* box colors */
+  .boxResume,
+  .boxLunacy,
+  .boxVoxel,
+  .boxMage,
+  .boxSoko,
+  .boxGraph,
+  .boxBVSB,
+  .boxMagmic,
+  .boxUndergrads,
+  .boxLetters,
+  .boxVolume
+  {
+    background-color: var(--color-a);
+    color: var(--color-a-t);
   }
-  .boxResume { background-color: var(--color-a); color: var(--color-a-t); grid-area: 1 / 2 / 2 / 3; }
-  .boxResumeA { color: var(--color-a-t); }
-  .boxResumeA:hover { color: var(--color-ah-t); }
+  .boxResumeA,
+  .boxLettersA,
+  .boxVolumeA
+  { color: var(--color-a-t); }
+  .boxResumeA:hover,
+  .boxLettersA:hover,
+  .boxVolumeA:hover
+  { color: var(--color-ah-t); }
+
+  /* svg masks or raster image (first color group) */
   .svgResume { background-color: var(--color-a-t); mask: url(icons/resume.svg) no-repeat center; mask-size: 100%; }
-  .svgResume:hover { background-color: var(--color-ah-t); }
-  .boxOrientation { background-color: var(--color-b); color: var(--color-b-t); grid-area: 2 / 6 / 3 / 7; }
-  .boxOrientation > a { color: var(--color-b-t); }
-  .boxOrientation > a:hover { color: var(--color-bh-t); }
-  .svgOrientation { background-color: var(--color-b-t); mask: url(icons/orientation.svg) no-repeat center; mask-size: 100%; }
-  .svgOrientation:hover { background-color: var(--color-bh-t); }
-  .boxLetters { background-color: var(--color-a); color: var(--color-a-t); grid-area: 1 / 6 / 2 / 7; }
-  .boxLettersA { color: var(--color-a-t); }
-  .boxLettersA:hover { color: var(--color-ah-t); }
   .svgLetters { background-color: var(--color-a-t); mask: url(icons/letters.svg) no-repeat center; mask-size: 100%; }
-  .svgLetters:hover { background-color: var(--color-ah-t); }
-  .boxVolume { background-color: var(--color-a); color: var(--color-a-t); grid-area: 3 / 6 / 4 / 7; }
-  .boxVolume > a { color: var(--color-a-t); }
-  .boxVolume > a:hover { color: var(--color-ah-t); }
   .svgVolume { background-color: var(--color-a-t); mask: url(icons/volume.svg) no-repeat center; mask-size: 100%; }
-  .svgVolume:hover { background-color: var(--color-ah-t); }
+  .svgResume:hover,
+  .svgLetters:hover,
+  .svgVolume:hover
+  { background-color: var(--color-ah-t); }
 
-  .boxGameList { background-color: var(--color-b); color: var(--color-b-t); grid-area: 1 / 5 / 2 / 6; }
-  .boxFuel { background-color: var(--color-b); color: var(--color-b-t); grid-area: 2 / 2 / 3 / 3; }
-  .boxMagmic { background-color: var(--color-a); color: var(--color-a-t); grid-area: 2 / 5 / 3 / 6; }
-  .boxMasters { background-color: var(--color-b); color: var(--color-b-t); grid-area: 1 / 1 / 2 / 2; }
-  .boxUndergrads { background-color: var(--color-a); color: var(--color-a-t); grid-area: 2 / 1 / 3 / 2; }
-  .boxCollege { background-color: var(--color-b); color: var(--color-b-t); grid-area: 3 / 1 / 4 / 2; }
+  .boxCat,
+  .boxJet,
+  .boxRay,
+  .boxMemory,
+  .boxTic,
+  .boxMagic,
+  .boxPong,
+  .boxGameList,
+  .boxFuel,
+  .boxMasters,
+  .boxCollege,
+  .boxOrientation
+  {
+    background-color: var(--color-b);
+    color: var(--color-b-t);
+  }
 
-  /* TODO td, th { } is a thing, try it */
-  .boxLunacy { background-color: var(--color-a); color: var(--color-a-t); }
-  .boxCat { background-color: var(--color-b); color: var(--color-b-t); }
-  .boxVoxel { background-color: var(--color-a); color: var(--color-a-t); }
-  .boxJet { background-color: var(--color-b); color: var(--color-b-t); }
-  .boxMage { background-color: var(--color-a); color: var(--color-a-t); }
-  .boxRay { background-color: var(--color-b); color: var(--color-b-t); }
-  .boxSoko { background-color: var(--color-a); color: var(--color-a-t); }
-  .boxMemory { background-color: var(--color-b); color: var(--color-b-t); }
-  .boxGraph { background-color: var(--color-a); color: var(--color-a-t); }
-  .boxTic { background-color: var(--color-b); color: var(--color-b-t); }
-  .boxMagic { background-color: var(--color-a); color: var(--color-a-t); }
-  .boxBVSB { background-color: var(--color-b); color: var(--color-b-t); }
-  .boxPong { background-color: var(--color-a); color: var(--color-a-t); }
+  .boxOrientationA
+  { color: var(--color-b-t); }
+  .boxOrientationA:hover
+  { color: var(--color-bh-t); }
+  .svgOrientation:hover 
+  { background-color: var(--color-bh-t); }
+
+  /* svg mask or raster image (second color group) */
+  .svgOrientation { background-color: var(--color-b-t); mask: url(icons/orientation.svg) no-repeat center; mask-size: 100%; }
+
 }
-.box > a > img {
-  max-height: 60%;
-} /* TODO remove */
 .box > table {
   width: 100%;
   height: 100%;
 }
 a > img {
   max-height: var(--icon-height);
+}
+.boxSlideshow {
+  background-color: var(--color-slide);
+  color: var(--color-slide-t);
 }
 </style>
 </head>
@@ -228,6 +255,7 @@ let items = [
   ["Resume", "vitae/davidLareau.html", "empty.png", "Resume", "2017"],
   ["Orientation", "projects/blog/index.html", "empty.png", "Orientation", "2012-01-19"],
   ["Letters", "projects/letters/index.html", "empty.png", "Letters", "2009 / 2010"],
+  ["Volume", "projects/blog/index.html", "empty.png", "Volume", "2016-12-28"],
 ];
 for (let item of items) {
   let id = item[0];
@@ -242,7 +270,6 @@ for (let item of items) {
 }
 </script>
 
-<div class="box boxVolume"><a href="projects/blog/index.html"><img class="svgVolume" src="icons/empty.png"/><br/>Volume<br/><span class="date">2016-12-28</span></a></div>
 <div class="box boxLunacy">Moderm Lunacy</div>
 <div class="box boxCat">Cat Story</div>
 <div class="box boxVoxel">Voxel Engine</div>
