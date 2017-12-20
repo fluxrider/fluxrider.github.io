@@ -8,10 +8,7 @@
 <style>
 
 /* image size down instead horizontal scroll */
-img {
-  max-width: 100%;
-  height: auto;
-}
+img { max-width: 100%; height: auto; }
 
 /* min-max-font-size trick */
 html { font-size: 11pt; }
@@ -22,7 +19,6 @@ html { font-size: 11pt; }
   --size-abs: 18pt;
   --size-abs-small: 10.8pt;
 }
-/* At that size, I should really switch layout */
 @media screen and (min-width: 640px) {
   html { font-size: var(--size-rel); }
   .box { font-size: var(--size-rel); }
@@ -36,17 +32,6 @@ html { font-size: 11pt; }
 
 /* color scheme */
 :root {
-/* Grays
-  --color-a: #444;
-  --color-a-t: #fff;
-  --color-ah-t: #ccc;
-  --color-b: #aaa;
-  --color-b-t: #000;
-  --color-bh-t: #ccc;
-  --color-slide: #fff;
-  --color-slide-t: #000;
-*/
-/* Fancy 2017 */
   --color-a: #b9936c; /* goes with white */
   --color-a-t: #fff;
   --color-ah-t: #ddd;
@@ -55,19 +40,18 @@ html { font-size: 11pt; }
   --color-bh-t: #555;
   --color-slide: #e6e2d3; /* goes with black */
   --color-slide-t: #000;
-/* 
-this color could be used too: dac292 goes with white
-*/
-}
-.box > table {
-  width: 100%;
-  height: 100%;
+/* this color could be used too: dac292 goes with white */
 }
 .boxSlideshow {
   background-color: var(--color-slide);
   color: var(--color-slide-t);
 }
 
+/* vertical centering */
+.box > table {
+  width: 100%;
+  height: 100%;
+}
 
 /* positions */
 @media not screen and (min-width: 1025px) {
@@ -99,6 +83,7 @@ this color could be used too: dac292 goes with white
 </style>
 
 <script>
+// color pattern function
 function style_group(list, list_svg, group) {
   let style = "";
 
@@ -129,6 +114,7 @@ function style_group(list, list_svg, group) {
   }
   style += "  { color: var(--color-" + group + "h-t); }\n";
 
+  // svg mask hack to color non-embeded svg resource
   for (let i = 0; i < list_svg.length; i += 2) {
     let id = list_svg[i];
     let src = list_svg[i + 1];
@@ -139,6 +125,7 @@ function style_group(list, list_svg, group) {
   return style;
 }
 
+// responsive css
 function style_media(min_width_prefix, min_width, padding, cell_size, icon_height, column, rows, a, a_svg, b, b_svg) {
   let style = "";
   style += "<style>\n";
@@ -160,85 +147,33 @@ function style_media(min_width_prefix, min_width, padding, cell_size, icon_heigh
   style += "    grid-template-rows: repeat(" + rows + ", var(--cell-size));\n";
   style += "    grid-gap: 1vw;\n";
   style += "  }\n";
-
   style += style_group(a, a_svg, "a");
   style += style_group(b, b_svg, "b");
-
   style += "}\n";
   style += "</style>\n";
   return style;
 }
 
-/* phone */
-let low_a = [
-  "Resume",
-  "Orientation",
-  "Letters",
-  "Magmic",
-  "Masters",
-  "Pong",
-  "Cat",
-  "Voxel",
-  "Mage",
-  "Memory",
-  "Tic",
-  "Magic",
-];
+// phone
+let low_a = [ "Resume", "Orientation", "Letters", "Magmic", "Masters", "Pong", "Cat", "Voxel", "Mage", "Memory", "Tic", "Magic" ];
 let low_a_svg = [
   "Resume", "resume.svg",
   "Letters", "letters.svg",
   "Orientation", "orientation.svg",
 ];
-let low_b = [
-  "BVSB",
-  "Volume",
-  "Graph",
-  "GameList",
-  "Jet",
-  "Ray",
-  "Soko",
-  "Fuel",
-  "Undergrads",
-  "College",
-  "Lunacy",
-];
+let low_b = [ "BVSB", "Volume", "Graph", "GameList", "Jet", "Ray", "Soko", "Fuel", "Undergrads", "College", "Lunacy" ];
 let low_b_svg = [
   "Volume", "volume.svg",
 ];
 
-/* computer */
-let a = [
-  "Resume",
-  "Lunacy",
-  "Voxel",
-  "Mage",
-  "Soko",
-  "Graph",
-  "BVSB",
-  "Magmic",
-  "Undergrads",
-  "Letters",
-  "Volume",
-];
+// computer
+let a = [ "Resume", "Lunacy", "Voxel", "Mage", "Soko", "Graph", "BVSB", "Magmic", "Undergrads", "Letters", "Volume" ];
 let a_svg = [
   "Resume", "resume.svg",
   "Letters", "letters.svg",
   "Volume", "volume.svg",
 ];
-let b = [
-  "Cat",
-  "Jet",
-  "Ray",
-  "Memory",
-  "Tic",
-  "Magic",
-  "Pong",
-  "GameList",
-  "Fuel",
-  "Masters",
-  "College",
-  "Orientation",
-];
+let b = [ "Cat", "Jet", "Ray", "Memory", "Tic", "Magic", "Pong", "GameList", "Fuel", "Masters", "College", "Orientation" ];
 let b_svg = [
   "Orientation", "orientation.svg",
 ];
@@ -246,21 +181,30 @@ let b_svg = [
 document.write(style_media("not", "1025px", "5px",  "23.43vw", "9.372vw", 4, 7, low_a, low_a_svg, low_b, low_b_svg));
 document.write(style_media("",    "1025px", "20px", "15.62vw", "6.248vw", 6, 5, a, a_svg, b, b_svg));
 </script>
-
 <style>
+
+/* layout */
 a > img {
   max-height: var(--icon-height);
 }
+
+/* mundane styles */
+.copyright {
+  border-radius: 5px;
+  font-weight: bold;
+  text-align: center;
+  color: #fff;
+  background-color: #dac292;
+  font-family: "Courier New", Courier, monospace;
+}
+body { font-family: Comic Sans MS; /* controversy is hilarious */ }
 </style>
 </head>
 
 <body>
-
-
 <div class="grid-container">
 <div class="box boxSlideshow">Slideshow</div>
 <script>
-// id, href, icon_name, name, date
 let items = [
   ["Fuel", "html", "empty.png", "Fuel", "2017"],
   ["Magmic", "html", "empty.png", "Magmic", "2017"],

@@ -1,6 +1,6 @@
 body {
  background-color: #FFFFFF;
- font-family: "Palatino Linotype", "Book Antiqua", Palatino, serif;
+ font-family: Palatino;
  /*background-image: url( "bg.png" );*/
 }
 
@@ -46,13 +46,6 @@ a:hover {
 
 .small {
  font-size: 75%;
- font-family: "Courier New", Courier, monospace;
-}
-
-.copyright {
- font-weight: bold;
- text-align: center;
- color: #8F001A;
  font-family: "Courier New", Courier, monospace;
 }
 
