@@ -34,6 +34,7 @@ html { font-size: 11pt; }
   .date { font-size: var(--size-abs-small); }
 }
 
+/* color scheme */
 :root {
 /* Grays
   --color-a: #444;
@@ -58,7 +59,30 @@ html { font-size: 11pt; }
 this color could be used too: dac292 goes with white
 */
 }
+.box > table {
+  width: 100%;
+  height: 100%;
+}
+.boxSlideshow {
+  background-color: var(--color-slide);
+  color: var(--color-slide-t);
+}
 
+
+/* positions */
+@media screen and (min-width: 1025px) {
+  .boxSlideshow { grid-area: 1 / 3 / 3 / 5; }
+  .boxResume { grid-area: 1 / 2 / 2 / 3; }
+  .boxGameList { grid-area: 1 / 5 / 2 / 6; }
+  .boxFuel { grid-area: 2 / 2 / 3 / 3; }
+  .boxMagmic { grid-area: 2 / 5 / 3 / 6; }
+  .boxMasters { grid-area: 1 / 1 / 2 / 2; }
+  .boxUndergrads { grid-area: 2 / 1 / 3 / 2; }
+  .boxCollege { grid-area: 3 / 1 / 4 / 2; }
+  .boxOrientation { grid-area: 2 / 6 / 3 / 7; }
+  .boxLetters { grid-area: 1 / 6 / 2 / 7; }
+  .boxVolume { grid-area: 3 / 6 / 4 / 7; }
+}
 </style>
 
 <style>
@@ -127,38 +151,10 @@ this color could be used too: dac292 goes with white
   .boxBVSB { background-color: var(--color-b); color: var(--color-b-t); }
   .boxPong { background-color: var(--color-a); color: var(--color-a-t); }
 }
-/*
-padding 20px
---cell-size: 15.62vw;
---icon-height: 6.248vw;
-6 columns
-5 rows
-group a raster
-group b raster
-group a svg
-group b svg
- */
-
-/* computer */
 
 </style>
 
-<style>
-@media screen and (min-width: 1025px) {
-  /* positions */
-  .boxSlideshow { grid-area: 1 / 3 / 3 / 5; }
-  .boxResume { grid-area: 1 / 2 / 2 / 3; }
-  .boxGameList { grid-area: 1 / 5 / 2 / 6; }
-  .boxFuel { grid-area: 2 / 2 / 3 / 3; }
-  .boxMagmic { grid-area: 2 / 5 / 3 / 6; }
-  .boxMasters { grid-area: 1 / 1 / 2 / 2; }
-  .boxUndergrads { grid-area: 2 / 1 / 3 / 2; }
-  .boxCollege { grid-area: 3 / 1 / 4 / 2; }
-  .boxOrientation { grid-area: 2 / 6 / 3 / 7; }
-  .boxLetters { grid-area: 1 / 6 / 2 / 7; }
-  .boxVolume { grid-area: 3 / 6 / 4 / 7; }
-}
-</style>
+
 
 <script>
 let min_width = "1025px";
@@ -265,21 +261,12 @@ style_group(b, b_svg, "b");
 
 style += "}\n";
 style += "</style>\n";
-//alert(style);
 document.write(style);
 </script>
 
 <style>
-.box > table {
-  width: 100%;
-  height: 100%;
-}
 a > img {
   max-height: var(--icon-height);
-}
-.boxSlideshow {
-  background-color: var(--color-slide);
-  color: var(--color-slide-t);
 }
 </style>
 </head>
