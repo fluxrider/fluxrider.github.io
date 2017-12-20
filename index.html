@@ -120,6 +120,8 @@ function style_group(list, list_svg, group) {
     let src = list_svg[i + 1];
     style += "  .svg" + id + " { background-color: var(--color-" + group + "-t); mask: url(icons/" + src + ") no-repeat center; mask-size: 100%; }\n";
     style += "  .svg" + id + ":hover { background-color: var(--color-" + group + "h-t); }\n";
+    // webkit silly experimental syntax
+    style += "  .svg" + id + " { -webkit-mask: url(icons/" + src + ") no-repeat center; -webkit-mask-size: 100%; }\n";
   }
 
   return style;
@@ -164,6 +166,9 @@ let low_a_svg = [
 let low_b = [ "BVSB", "Volume", "Graph", "GameList", "Jet", "Ray", "Soko", "Fuel", "Undergrads", "College", "Lunacy" ];
 let low_b_svg = [
   "Volume", "volume.svg",
+  "College", "college.svg",
+  "Graph", "graph.svg",
+  "Undergrads", "undergrads.svg",
 ];
 
 // computer
@@ -172,10 +177,13 @@ let a_svg = [
   "Resume", "resume.svg",
   "Letters", "letters.svg",
   "Volume", "volume.svg",
+  "Graph", "graph.svg",
+  "Undergrads", "undergrads.svg",
 ];
 let b = [ "Cat", "Jet", "Ray", "Memory", "Tic", "Magic", "Pong", "GameList", "Fuel", "Masters", "College", "Orientation" ];
 let b_svg = [
   "Orientation", "orientation.svg",
+  "College", "college.svg",
 ];
 
 document.write(style_media("not", "1025px", "5px",  "23.43vw", "9.372vw", 4, 7, low_a, low_a_svg, low_b, low_b_svg));
@@ -206,29 +214,29 @@ body { font-family: Comic Sans MS; /* controversy is hilarious */ }
 <div class="box boxSlideshow">Slideshow</div>
 <script>
 let items = [
-  ["Fuel", "html", "empty.png", "Fuel", "2017"],
-  ["Magmic", "html", "empty.png", "Magmic", "2017"],
-  ["GameList", "html", "empty.png", "Great Game List", "2017"],
-  ["Masters", "html", "empty.png", "Masters", "2017"],
-  ["Undergrads", "html", "empty.png", "Undergrads", "2017"],
-  ["College", "html", "empty.png", "College", "2017"],
+  ["Fuel", "html", "fuel.jpg", "Fuel Youth", "2012-12 — 2015-04"],
+  ["Magmic", "html", "magmic.png", "Magmic Games", "2007 — 2008"],
+  ["GameList", "html", "empty.png", "Great Game List", ""],
+  ["Masters", "html", "lenna.jpg", "M.A.Sc. in Biomedical Engineering", "2009 — 2011"],
+  ["Undergrads", "html", "empty.png", "B.Sc. in Computer Science", "2002 — 2006"],
+  ["College", "html", "empty.png", "D.C.S. in Computer Engineering Technology", "1999 — 2002"],
   ["Resume", "vitae/davidLareau.html", "empty.png", "Resume", "2017"],
   ["Orientation", "projects/blog/index.html", "empty.png", "Orientation", "2012-01-19"],
   ["Letters", "projects/letters/index.html", "empty.png", "Letters", "2009 / 2010"],
   ["Volume", "projects/blog/index.html", "empty.png", "Volume", "2016-12-28"],
-  ["Lunacy", "html", "empty.png", "Moderm Lunacy", "2017"],
-  ["Cat", "html", "empty.png", "Cat Story", "2017"],
-  ["Voxel", "html", "empty.png", "Voxel Engine", "2017"],
+  ["Lunacy", "html", "empty.png", "Moderm Lunacy", "2015"],
+  ["Cat", "html", "empty.png", "Cat Story", "2015"],
+  ["Voxel", "html", "empty.png", "Voxel Engine", "2011"],
   ["Ray", "projects/ray/index.html", "cornell.jpg", "Ray Tracer", "2012-Q1"],
-  ["Mage", "html", "empty.png", "Mage Wars", "2017"],
-  ["Jet", "html", "empty.png", "Jet Slalom", "2017"],
-  ["Soko", "html", "empty.png", "Sokoban", "2017"],
-  ["Memory", "html", "empty.png", "Memory Game", "2017"],
-  ["Graph", "html", "empty.png", "Graph Utility", "2017"],
-  ["Tic", "html", "empty.png", "Tic Tac Toe", "2017"],
-  ["Magic", "html", "empty.png", "Magic Number", "2017"],
-  ["BVSB", "html", "empty.png", "Bob VS Bob", "2017"],
-  ["Pong", "html", "empty.png", "Pong", "2017"],
+  ["Mage", "html", "empty.png", "Mage Wars", "2006-04-07"],
+  ["Jet", "html", "empty.png", "WebGL Game", "2010-03-23"],
+  ["Soko", "html", "empty.png", "Sokoban", "2005-10-29"],
+  ["Memory", "html", "empty.png", "Memory Game", "2005-07-29"],
+  ["Graph", "html", "empty.png", "Graph Utility", "2003-01-12"],
+  ["Tic", "html", "empty.png", "Tic Tac Toe", "2002-12-09"],
+  ["Magic", "html", "empty.png", "Magic Number", "2002-09-15"],
+  ["BVSB", "html", "empty.png", "Bob VS Bob", "1995 — 1997"],
+  ["Pong", "html", "empty.png", "Pong", "2001"],
 ];
 for (let item of items) {
   let id = item[0];
