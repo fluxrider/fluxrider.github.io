@@ -70,6 +70,19 @@ this color could be used too: dac292 goes with white
 
 
 /* positions */
+@media not screen and (min-width: 1025px) {
+  .boxSlideshow { grid-area: 1 / 2 / 3 / 4; }
+  .boxResume { grid-area: 1 / 1 / 2 / 2; }
+  .boxOrientation { grid-area: 4 / 2 / 5 / 3; }
+  .boxLetters { grid-area: 3 / 3 / 4 / 4; }
+  .boxVolume { grid-area: 4 / 3 / 5 / 4; }
+  .boxGameList { grid-area: 1 / 4 / 2 / 5; }
+  .boxFuel { grid-area: 2 / 1 / 3 / 2; }
+  .boxMagmic { grid-area: 2 / 4 / 3 / 5; }
+  .boxMasters { grid-area: 3 / 1 / 4 / 2; }
+  .boxUndergrads { grid-area: 3 / 2 / 4 / 3; }
+  .boxCollege { grid-area: 3 / 4 / 4 / 5; }
+}
 @media screen and (min-width: 1025px) {
   .boxSlideshow { grid-area: 1 / 3 / 3 / 5; }
   .boxResume { grid-area: 1 / 2 / 2 / 3; }
@@ -85,84 +98,115 @@ this color could be used too: dac292 goes with white
 }
 </style>
 
-<style>
-/* phone */
-@media not screen and (min-width: 1025px) {
-  .box {
-    border-radius: 5px;
-    padding: 5px;
-    text-align: center;
-    /* vertical-align: middle; I wish this would work */ 
-  }
-  :root {
-    --cell-size: 23.43vw;
-    --icon-height: 9.372vw;
-  }
-  .grid-container {
-    max-width: 100%;
-    height: auto;
-    display: grid;
-    grid-template-columns: repeat(4, var(--cell-size));
-    grid-template-rows: repeat(7, var(--cell-size));
-    grid-gap: 1vw;
-  }
-  .boxSlideshow {
-    grid-area: 1 / 2 / 3 / 4;
-  }
-  .boxResume { background-color: var(--color-a); color: var(--color-a-t); grid-area: 1 / 1 / 2 / 2; }
-  .boxResumeA { color: var(--color-a-t); }
-  .boxResumeA:hover { color: var(--color-ah-t); }
-  .svgResume { background-color: var(--color-a-t); mask: url(icons/resume.svg) no-repeat center; mask-size: 100%; }
-  .svgResume:hover { background-color: var(--color-ah-t); }
-  .boxOrientation { background-color: var(--color-a); color: var(--color-a-t); grid-area: 4 / 2 / 5 / 3; }
-  .boxOrientation > a { color: var(--color-a-t); }
-  .boxOrientation > a:hover { color: var(--color-ah-t); }
-  .svgOrientation { background-color: var(--color-a-t); mask: url(icons/orientation.svg) no-repeat center; mask-size: 100%; }
-  .svgOrientation:hover { background-color: var(--color-ah-t); }
-  .boxLetters { background-color: var(--color-a); color: var(--color-a-t); grid-area: 3 / 3 / 4 / 4; }
-  .boxLettersA { color: var(--color-a-t); }
-  .boxLettersA:hover { color: var(--color-ah-t); }
-  .svgLetters { background-color: var(--color-a-t); mask: url(icons/letters.svg) no-repeat center; mask-size: 100%; }
-  .svgLetters:hover { background-color: var(--color-ah-t); }
-  .boxVolume { background-color: var(--color-b); color: var(--color-b-t); grid-area: 4 / 3 / 5 / 4; }
-  .boxVolume > a { color: var(--color-b-t); }
-  .boxVolume > a:hover { color: var(--color-bh-t); }
-  .svgVolume { background-color: var(--color-b-t); mask: url(icons/volume.svg) no-repeat center; mask-size: 100%; }
-  .svgVolume:hover { background-color: var(--color-bh-t); }
+<script>
+function style_group(list, list_svg, group) {
+  let style = "";
 
-  .boxGameList { background-color: var(--color-b); color: var(--color-b-t); grid-area: 1 / 4 / 2 / 5; }
-  .boxFuel { background-color: var(--color-b); color: var(--color-b-t); grid-area: 2 / 1 / 3 / 2; }
-  .boxMagmic { background-color: var(--color-a); color: var(--color-a-t); grid-area: 2 / 4 / 3 / 5; }
-  .boxMasters { background-color: var(--color-a); color: var(--color-a-t); grid-area: 3 / 1 / 4 / 2; }
-  .boxUndergrads { background-color: var(--color-b); color: var(--color-b-t); grid-area: 3 / 2 / 4 / 3; }
-  .boxCollege { background-color: var(--color-b); color: var(--color-b-t); grid-area: 3 / 4 / 4 / 5; }
+  for (let i = 0; i < list.length; i++) {
+    var id = list[i];
+    style += "  .box" + id + "";
+    if(i != list.length - 1) style += ",";
+    style += "\n";
+  }
+  style += "  {\n";
+  style += "    background-color: var(--color-" + group + ");\n";
+  style += "    color: var(--color-" + group + "-t);\n";
+  style += "  }\n";
 
-  .boxLunacy { background-color: var(--color-b); color: var(--color-b-t); }
-  .boxCat { background-color: var(--color-a); color: var(--color-a-t); }
-  .boxVoxel { background-color: var(--color-a); color: var(--color-a-t); }
-  .boxJet { background-color: var(--color-b); color: var(--color-b-t); }
-  .boxMage { background-color: var(--color-a); color: var(--color-a-t); }
-  .boxRay { background-color: var(--color-b); color: var(--color-b-t); }
-  .boxSoko { background-color: var(--color-b); color: var(--color-b-t); }
-  .boxMemory { background-color: var(--color-a); color: var(--color-a-t); }
-  .boxGraph { background-color: var(--color-b); color: var(--color-b-t); }
-  .boxTic { background-color: var(--color-a); color: var(--color-a-t); }
-  .boxMagic { background-color: var(--color-a); color: var(--color-a-t); }
-  .boxBVSB { background-color: var(--color-b); color: var(--color-b-t); }
-  .boxPong { background-color: var(--color-a); color: var(--color-a-t); }
+  for (let i = 0; i < list.length; i++) {
+    var id = list[i];
+    style += "  .box" + id + "A";
+    if(i != list.length - 1) style += ",";
+    style += "\n";
+  }
+  style += "  { color: var(--color-" + group + "-t); }\n";
+
+  for (let i = 0; i < list.length; i++) {
+    var id = list[i];
+    style += "  .box" + id + "A:hover";
+    if(i != list.length - 1) style += ",";
+    style += "\n";
+  }
+  style += "  { color: var(--color-" + group + "h-t); }\n";
+
+  for (let i = 0; i < list_svg.length; i += 2) {
+    let id = list_svg[i];
+    let src = list_svg[i + 1];
+    style += "  .svg" + id + " { background-color: var(--color-" + group + "-t); mask: url(icons/" + src + ") no-repeat center; mask-size: 100%; }\n";
+    style += "  .svg" + id + ":hover { background-color: var(--color-" + group + "h-t); }\n";
+  }
+
+  return style;
 }
 
-</style>
+function style_media(min_width_prefix, min_width, padding, cell_size, icon_height, column, rows, a, a_svg, b, b_svg) {
+  let style = "";
+  style += "<style>\n";
+  style += "@media " + min_width_prefix + " screen and (min-width: " + min_width + ") {\n";
+  style += "  .box {\n";
+  style += "    border-radius: 5px;\n";
+  style += "    padding: " + padding + ";\n";
+  style += "    text-align: center;\n";
+  style += "  }\n";
+  style += "  :root {\n";
+  style += "    --cell-size: " + cell_size + ";\n";
+  style += "    --icon-height: " + icon_height + ";\n";
+  style += "  }\n";
+  style += "  .grid-container {\n";
+  style += "    max-width: 100%;\n";
+  style += "    height: auto;\n";
+  style += "    display: grid;\n";
+  style += "    grid-template-columns: repeat(" + column + ", var(--cell-size));\n";
+  style += "    grid-template-rows: repeat(" + rows + ", var(--cell-size));\n";
+  style += "    grid-gap: 1vw;\n";
+  style += "  }\n";
 
+  style += style_group(a, a_svg, "a");
+  style += style_group(b, b_svg, "b");
 
+  style += "}\n";
+  style += "</style>\n";
+  return style;
+}
 
-<script>
-let min_width = "1025px";
-let padding = "20px";
-let cell_size = "15.62vw";
-let icon_height = "6.248vw";
-let column = 6;
-let rows = 5;
+/* phone */
+let low_a = [
+  "Resume",
+  "Orientation",
+  "Letters",
+  "Magmic",
+  "Masters",
+  "Pong",
+  "Cat",
+  "Voxel",
+  "Mage",
+  "Memory",
+  "Tic",
+  "Magic",
+];
+let low_a_svg = [
+  "Resume", "resume.svg",
+  "Letters", "letters.svg",
+  "Orientation", "orientation.svg",
+];
+let low_b = [
+  "BVSB",
+  "Volume",
+  "Graph",
+  "GameList",
+  "Jet",
+  "Ray",
+  "Soko",
+  "Fuel",
+  "Undergrads",
+  "College",
+  "Lunacy",
+];
+let low_b_svg = [
+  "Volume", "volume.svg",
+];
+
+/* computer */
 let a = [
   "Resume",
   "Lunacy",
@@ -199,69 +243,8 @@ let b_svg = [
   "Orientation", "orientation.svg",
 ];
 
-let style = "";
-style += "<style>\n";
-style += "@media screen and (min-width: " + min_width + ") {\n";
-style += "  .box {\n";
-style += "    border-radius: 5px;\n";
-style += "    padding: " + padding + ";\n";
-style += "    text-align: center;\n";
-style += "  }\n";
-style += "  :root {\n";
-style += "    --cell-size: " + cell_size + ";\n";
-style += "    --icon-height: " + icon_height + ";\n";
-style += "  }\n";
-style += "  .grid-container {\n";
-style += "    max-width: 100%;\n";
-style += "    height: auto;\n";
-style += "    display: grid;\n";
-style += "    grid-template-columns: repeat(" + column + ", var(--cell-size));\n";
-style += "    grid-template-rows: repeat(" + rows + ", var(--cell-size));\n";
-style += "    grid-gap: 1vw;\n";
-style += "  }\n";
-
-function style_group(list, list_svg, group) {
-  for (let i = 0; i < list.length; i++) {
-    var id = list[i];
-    style += "  .box" + id + "";
-    if(i != list.length - 1) style += ",";
-    style += "\n";
-  }
-  style += "  {\n";
-  style += "    background-color: var(--color-" + group + ");\n";
-  style += "    color: var(--color-" + group + "-t);\n";
-  style += "  }\n";
-
-  for (let i = 0; i < list.length; i++) {
-    var id = list[i];
-    style += "  .box" + id + "A";
-    if(i != list.length - 1) style += ",";
-    style += "\n";
-  }
-  style += "  { color: var(--color-" + group + "-t); }\n";
-
-  for (let i = 0; i < list.length; i++) {
-    var id = list[i];
-    style += "  .box" + id + "A:hover";
-    if(i != list.length - 1) style += ",";
-    style += "\n";
-  }
-  style += "  { color: var(--color-" + group + "h-t); }\n";
-
-  for (let i = 0; i < list_svg.length; i += 2) {
-    let id = list_svg[i];
-    let src = list_svg[i + 1];
-    style += "  .svg" + id + " { background-color: var(--color-" + group + "-t); mask: url(icons/" + src + ") no-repeat center; mask-size: 100%; }\n";
-    style += "  .svg" + id + ":hover { background-color: var(--color-" + group + "h-t); }\n";
-  }
-}
-
-style_group(a, a_svg, "a");
-style_group(b, b_svg, "b");
-
-style += "}\n";
-style += "</style>\n";
-document.write(style);
+document.write(style_media("not", "1025px", "5px",  "23.43vw", "9.372vw", 4, 7, low_a, low_a_svg, low_b, low_b_svg));
+document.write(style_media("",    "1025px", "20px", "15.62vw", "6.248vw", 6, 5, a, a_svg, b, b_svg));
 </script>
 
 <style>
