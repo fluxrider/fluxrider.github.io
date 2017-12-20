@@ -45,24 +45,23 @@ html { font-size: 11pt; }
   --color-slide: #fff;
   --color-slide-t: #000;
 */
-  --color-a: #b9936c;
+/* Fancy 2017 */
+  --color-a: #b9936c; /* goes with white */
   --color-a-t: #fff;
   --color-ah-t: #ddd;
-  --color-b: #c4b7a6;
+  --color-b: #c4b7a6; /* goes with black */
   --color-b-t: #000;
   --color-bh-t: #555;
-  --color-slide: #e6e2d3;
+  --color-slide: #e6e2d3; /* goes with black */
   --color-slide-t: #000;
 /* 
-fff dac292
-fff b9936c
-e6e2d3
-c4b7a6
+this color could be used too: dac292 goes with white
 */
 }
 
+</style>
 
-
+<style>
 /* phone */
 @media not screen and (min-width: 1025px) {
   .box {
@@ -128,26 +127,24 @@ c4b7a6
   .boxBVSB { background-color: var(--color-b); color: var(--color-b-t); }
   .boxPong { background-color: var(--color-a); color: var(--color-a-t); }
 }
-/* computer */
-@media screen and (min-width: 1025px) {
-  .box {
-    border-radius: 5px;
-    padding: 20px;
-    text-align: center;
-  }
-  :root {
-    --cell-size: 15.62vw;
-    --icon-height: 6.248vw;
-  }
-  .grid-container {
-    max-width: 100%;
-    height: auto;
-    display: grid;
-    grid-template-columns: repeat(6, var(--cell-size));
-    grid-template-rows: repeat(5, var(--cell-size));
-    grid-gap: 1vw;
-  }
+/*
+padding 20px
+--cell-size: 15.62vw;
+--icon-height: 6.248vw;
+6 columns
+5 rows
+group a raster
+group b raster
+group a svg
+group b svg
+ */
 
+/* computer */
+
+</style>
+
+<style>
+@media screen and (min-width: 1025px) {
   /* positions */
   .boxSlideshow { grid-area: 1 / 3 / 3 / 5; }
   .boxResume { grid-area: 1 / 2 / 2 / 3; }
@@ -160,70 +157,119 @@ c4b7a6
   .boxOrientation { grid-area: 2 / 6 / 3 / 7; }
   .boxLetters { grid-area: 1 / 6 / 2 / 7; }
   .boxVolume { grid-area: 3 / 6 / 4 / 7; }
-
-  /* box colors */
-  .boxResume,
-  .boxLunacy,
-  .boxVoxel,
-  .boxMage,
-  .boxSoko,
-  .boxGraph,
-  .boxBVSB,
-  .boxMagmic,
-  .boxUndergrads,
-  .boxLetters,
-  .boxVolume
-  {
-    background-color: var(--color-a);
-    color: var(--color-a-t);
-  }
-  .boxResumeA,
-  .boxLettersA,
-  .boxVolumeA
-  { color: var(--color-a-t); }
-  .boxResumeA:hover,
-  .boxLettersA:hover,
-  .boxVolumeA:hover
-  { color: var(--color-ah-t); }
-
-  /* svg masks or raster image (first color group) */
-  .svgResume { background-color: var(--color-a-t); mask: url(icons/resume.svg) no-repeat center; mask-size: 100%; }
-  .svgLetters { background-color: var(--color-a-t); mask: url(icons/letters.svg) no-repeat center; mask-size: 100%; }
-  .svgVolume { background-color: var(--color-a-t); mask: url(icons/volume.svg) no-repeat center; mask-size: 100%; }
-  .svgResume:hover,
-  .svgLetters:hover,
-  .svgVolume:hover
-  { background-color: var(--color-ah-t); }
-
-  .boxCat,
-  .boxJet,
-  .boxRay,
-  .boxMemory,
-  .boxTic,
-  .boxMagic,
-  .boxPong,
-  .boxGameList,
-  .boxFuel,
-  .boxMasters,
-  .boxCollege,
-  .boxOrientation
-  {
-    background-color: var(--color-b);
-    color: var(--color-b-t);
-  }
-  .boxOrientationA,
-  .boxRayA
-  { color: var(--color-b-t); }
-  .boxOrientationA:hover,
-  .boxRayA:hover
-  { color: var(--color-bh-t); }
-  .svgOrientation:hover 
-  { background-color: var(--color-bh-t); }
-
-  /* svg mask or raster image (second color group) */
-  .svgOrientation { background-color: var(--color-b-t); mask: url(icons/orientation.svg) no-repeat center; mask-size: 100%; }
-
 }
+</style>
+
+<script>
+let min_width = "1025px";
+let padding = "20px";
+let cell_size = "15.62vw";
+let icon_height = "6.248vw";
+let column = 6;
+let rows = 5;
+let a = [
+  "Resume",
+  "Lunacy",
+  "Voxel",
+  "Mage",
+  "Soko",
+  "Graph",
+  "BVSB",
+  "Magmic",
+  "Undergrads",
+  "Letters",
+  "Volume",
+];
+let a_svg = [
+  "Resume", "resume.svg",
+  "Letters", "letters.svg",
+  "Volume", "volume.svg",
+];
+let b = [
+  "Cat",
+  "Jet",
+  "Ray",
+  "Memory",
+  "Tic",
+  "Magic",
+  "Pong",
+  "GameList",
+  "Fuel",
+  "Masters",
+  "College",
+  "Orientation",
+];
+let b_svg = [
+  "Orientation", "orientation.svg",
+];
+
+let style = "";
+style += "<style>\n";
+style += "@media screen and (min-width: " + min_width + ") {\n";
+style += "  .box {\n";
+style += "    border-radius: 5px;\n";
+style += "    padding: " + padding + ";\n";
+style += "    text-align: center;\n";
+style += "  }\n";
+style += "  :root {\n";
+style += "    --cell-size: " + cell_size + ";\n";
+style += "    --icon-height: " + icon_height + ";\n";
+style += "  }\n";
+style += "  .grid-container {\n";
+style += "    max-width: 100%;\n";
+style += "    height: auto;\n";
+style += "    display: grid;\n";
+style += "    grid-template-columns: repeat(" + column + ", var(--cell-size));\n";
+style += "    grid-template-rows: repeat(" + rows + ", var(--cell-size));\n";
+style += "    grid-gap: 1vw;\n";
+style += "  }\n";
+
+function style_group(list, list_svg, group) {
+  for (let i = 0; i < list.length; i++) {
+    var id = list[i];
+    style += "  .box" + id + "";
+    if(i != list.length - 1) style += ",";
+    style += "\n";
+  }
+  style += "  {\n";
+  style += "    background-color: var(--color-" + group + ");\n";
+  style += "    color: var(--color-" + group + "-t);\n";
+  style += "  }\n";
+
+  for (let i = 0; i < list.length; i++) {
+    var id = list[i];
+    style += "  .box" + id + "A";
+    if(i != list.length - 1) style += ",";
+    style += "\n";
+  }
+  style += "  { color: var(--color-" + group + "-t); }\n";
+
+  for (let i = 0; i < list.length; i++) {
+    var id = list[i];
+    style += "  .box" + id + "A:hover";
+    if(i != list.length - 1) style += ",";
+    style += "\n";
+  }
+  style += "  { color: var(--color-" + group + "h-t); }\n";
+
+  for (let i = 0; i < list_svg.length; i += 2) {
+    let id = list_svg[i];
+    let src = list_svg[i + 1];
+    style += "  .svg" + id + " { background-color: var(--color-" + group + "-t); mask: url(icons/" + src + ") no-repeat center; mask-size: 100%; }\n";
+    style += "  .svg" + id + ":hover { background-color: var(--color-" + group + "h-t); }\n";
+  }
+}
+
+style_group(a, a_svg, "a");
+style_group(b, b_svg, "b");
+
+style += "}\n";
+style += "</style>\n";
+//alert(style);
+document.write(style);
+</script>
+
+<style>
 .box > table {
   width: 100%;
   height: 100%;
