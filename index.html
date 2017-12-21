@@ -336,8 +336,9 @@ function initializeSlideshow() {
 	if(img.complete) {
 		slide_items.push(new Item(img.src, "david.jpg", null, null, img));
 		var canvas = document.createElement('canvas');
-		canvas.width = img.width;
-		canvas.height = img.height;
+    // note: size up to avoid low rez max filter issues (especially when resizing up the window later)
+		canvas.width = Math.min(img.width * 2, 1024);
+		canvas.height = Math.min(img.height * 2, 1024 * img.height / img.width);
 		canvas.id = "slideshow";
 		splash.innerHTML = null; // remove image
 		splash.appendChild(canvas); // add the canvas instead
@@ -445,7 +446,7 @@ function drawImageToFit(g, image, x, y, w, h) {
 <div class="grid-container">
 
 <div class="box boxSlideshow"><a href="david.jpg" id="splashLink">
-<div id="splash"><img width="100%" height=100%" alt="David Lareau" src="splash.png" id="splashImage"></div>
+<div id="splash"><img width="100%" alt="David Lareau" src="splash.png" id="splashImage"></div>
 <span id="splashLabel">Test</span><br/>
 <span id="splashSubLabel" class="date">test</span>
 </a></div>
