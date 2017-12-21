@@ -162,6 +162,9 @@ let low_a_svg = [
   "Resume", "resume.svg",
   "Letters", "letters.svg",
   "Orientation", "orientation.svg",
+  "Memory", "memory.svg",
+  "Mage", "landscape.svg",
+  "Voxel", "voxel.svg",
 ];
 let low_b = [ "BVSB", "Volume", "Graph", "GameList", "Jet", "Ray", "Soko", "Fuel", "Undergrads", "College", "Lunacy" ];
 let low_b_svg = [
@@ -169,6 +172,9 @@ let low_b_svg = [
   "College", "college.svg",
   "Graph", "graph.svg",
   "Undergrads", "undergrads.svg",
+  "GameList", "games.svg",
+  "Soko", "puzzle.svg",
+  "Jet", "webgl.svg",
 ];
 
 // computer
@@ -179,12 +185,19 @@ let a_svg = [
   "Volume", "volume.svg",
   "Graph", "graph.svg",
   "Undergrads", "undergrads.svg",
+  "Mage", "landscape.svg",
+  "Soko", "puzzle.svg",
+  "Voxel", "voxel.svg",
 ];
 let b = [ "Cat", "Jet", "Ray", "Memory", "Tic", "Magic", "Pong", "GameList", "Fuel", "Masters", "College", "Orientation" ];
 let b_svg = [
   "Orientation", "orientation.svg",
   "College", "college.svg",
+  "Memory", "memory.svg",
+  "GameList", "games.svg",
+  "Jet", "webgl.svg",
 ];
+// TODO svg lists are redundant except the category, which could be deduced.
 
 document.write(style_media("not", "1025px", "5px",  "23.43vw", "9.372vw", 4, 7, low_a, low_a_svg, low_b, low_b_svg));
 document.write(style_media("",    "1025px", "20px", "15.62vw", "6.248vw", 6, 5, a, a_svg, b, b_svg));
@@ -194,6 +207,8 @@ document.write(style_media("",    "1025px", "20px", "15.62vw", "6.248vw", 6, 5, 
 /* layout */
 a > img {
   max-height: var(--icon-height);
+  min-height: var(--icon-height);
+  /* image-rendering: pixelated; */ /* annoying to get cross platform... they use same key, different values. TODO script */
 }
 
 /* mundane styles */
@@ -214,29 +229,29 @@ body { font-family: Comic Sans MS; /* controversy is hilarious */ }
 <div class="box boxSlideshow">Slideshow</div>
 <script>
 let items = [
-  ["Fuel", "html", "fuel.jpg", "Fuel Youth", "2012-12 — 2015-04"],
-  ["Magmic", "html", "magmic.png", "Magmic Games", "2007 — 2008"],
-  ["GameList", "html", "empty.png", "Great Game List", ""],
-  ["Masters", "html", "lenna.jpg", "M.A.Sc. in Biomedical Engineering", "2009 — 2011"],
-  ["Undergrads", "html", "empty.png", "B.Sc. in Computer Science", "2002 — 2006"],
-  ["College", "html", "empty.png", "D.C.S. in Computer Engineering Technology", "1999 — 2002"],
+  ["Fuel", "professional/fuel/index.html", "fuel.jpg", "Fuel Youth", "2012-12 — 2015-04"],
+  ["Magmic", "professional/magmic/index.html", "magmic.png", "Magmic Games", "2007 — 2008"],
+  ["GameList", "projects/gamelist/index.html", "empty.png", "Great Game List", ""],
+  ["Masters", "education/masters/index.html", "lenna.jpg", "M.A.Sc. in Biomedical Engineering", "2009 — 2011"],
+  ["Undergrads", "education/ottawaUniversity/index.html", "empty.png", "B.Sc. in Computer Science", "2002 — 2006"],
+  ["College", "education/laCiteCollegiale/index.html", "empty.png", "D.C.S. in Computer Engineering Technology", "1999 — 2002"],
   ["Resume", "vitae/davidLareau.html", "empty.png", "Resume", "2017"],
   ["Orientation", "projects/blog/index.html", "empty.png", "Orientation", "2012-01-19"],
   ["Letters", "projects/letters/index.html", "empty.png", "Letters", "2009 / 2010"],
   ["Volume", "projects/blog/index.html", "empty.png", "Volume", "2016-12-28"],
-  ["Lunacy", "html", "empty.png", "Moderm Lunacy", "2015"],
-  ["Cat", "html", "empty.png", "Cat Story", "2015"],
-  ["Voxel", "html", "empty.png", "Voxel Engine", "2011"],
+  ["Lunacy", "html", "lunacy.png", "Moderm Lunacy", "2015"],
+  ["Cat", "html", "cat.png", "Cat Story", "2015"],
+  ["Voxel", "projects/voxel/index.html", "empty.png", "Voxel Engine", "2011"],
   ["Ray", "projects/ray/index.html", "cornell.jpg", "Ray Tracer", "2012-Q1"],
-  ["Mage", "html", "empty.png", "Mage Wars", "2006-04-07"],
-  ["Jet", "html", "empty.png", "WebGL Game", "2010-03-23"],
-  ["Soko", "html", "empty.png", "Sokoban", "2005-10-29"],
-  ["Memory", "html", "empty.png", "Memory Game", "2005-07-29"],
-  ["Graph", "html", "empty.png", "Graph Utility", "2003-01-12"],
-  ["Tic", "html", "empty.png", "Tic Tac Toe", "2002-12-09"],
-  ["Magic", "html", "empty.png", "Magic Number", "2002-09-15"],
-  ["BVSB", "html", "empty.png", "Bob VS Bob", "1995 — 1997"],
-  ["Pong", "html", "empty.png", "Pong", "2001"],
+  ["Mage", "projects/magewars/index.html", "empty.png", "Mage Wars", "2006-04-07"],
+  ["Jet", "projects/jet/index.html", "empty.png", "Jet Slalom Clone", "2010-03-23"],
+  ["Soko", "projects/sokoban/index.html", "empty.png", "Sokoban", "2005-10-29"],
+  ["Memory", "projects/memoryGame/index.html", "empty.png", "Memory Game", "2005-07-29"],
+  ["Graph", "projects/graphUtilities/index.html", "empty.png", "Graph Utility", "2003-01-12"],
+  ["Tic", "projects/ticTacToe/index.html", "tictac.png", "Tic Tac Toe", "2002-12-09"],
+  ["Magic", "projects/magicNumber/index.html", "magic.png", "Magic Number", "2002-09-15"],
+  ["BVSB", "projects/past/index.html", "bvsb.png", "Bob VS Bob", "1995 — 1997"],
+  ["Pong", "projects/past/index.html", "pong.png", "Pong", "2001"],
 ];
 for (let item of items) {
   let id = item[0];
