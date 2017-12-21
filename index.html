@@ -44,11 +44,17 @@ html { font-size: 2.3vw; }
   --color-bh-t: #555;
   --color-slide: #e6e2d3; /* goes with black */
   --color-slide-t: #000;
+  --color-slideh-t: #888;
 /* this color could be used too: dac292 goes with white */
 }
 .boxSlideshow {
   background-color: var(--color-slide);
   color: var(--color-slide-t);
+}
+
+.boxSlideshow > a:hover {
+  background-color: var(--color-slide);
+  color: var(--color-slideh-t);
 }
 
 /* vertical centering */
@@ -334,7 +340,7 @@ function initializeSlideshow() {
 	// if splash image is loaded, substitute it with a canvas
 	var img = document.getElementById("splashImage");
 	if(img.complete) {
-		slide_items.push(new Item(img.src, "david.jpg", null, null, img));
+		slide_items.push(new Item(img.src, "david.jpg", "David Lareau", "Computer Programmer", img));
 		var canvas = document.createElement('canvas');
     // note: size up to avoid low rez max filter issues (especially when resizing up the window later)
 		canvas.width = Math.min(img.width * 2, 1024);
@@ -446,7 +452,7 @@ function drawImageToFit(g, image, x, y, w, h) {
 <div class="grid-container">
 
 <div class="box boxSlideshow"><a href="david.jpg" id="splashLink">
-<div id="splash"><img width="100%" alt="David Lareau" src="splash.png" id="splashImage"></div>
+<div id="splash"><img alt="David Lareau" src="splash.png" id="splashImage"></div>
 <span id="splashLabel">Test</span><br/>
 <span id="splashSubLabel" class="date">test</span>
 </a></div>
