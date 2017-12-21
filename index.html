@@ -322,6 +322,7 @@ function preloadImage(index) {
 		}
 		// start loading the image at this index 
 		else {
+      //alert("loading: " + index);
 			loadingIndex = index;
 			toLoad[index].image = document.createElement('img');
 			toLoad[index].image.src = toLoad[index].src;
@@ -333,28 +334,40 @@ function preloadImage(index) {
 }
 
 // Onload: substitute the splash image for a canvas, and begin paint loop
+var initializeSlideshow_obj = null;
 function initializeSlideshow() {
-	var link = document.getElementById("splashLink");
-	var splash = document.getElementById("splash");
-
-	// if splash image is loaded, substitute it with a canvas
-	var img = document.getElementById("splashImage");
-	if(img.complete) {
-		slide_items.push(new Item(img.src, "david.jpg", "David Lareau", "Computer Programmer", img));
-		var canvas = document.createElement('canvas');
-    // note: size up to avoid low rez max filter issues (especially when resizing up the window later)
-		canvas.width = Math.min(img.width * 2, 1024);
-		canvas.height = Math.min(img.height * 2, 1024 * img.height / img.width);
-		canvas.id = "slideshow";
-		splash.innerHTML = null; // remove image
-		splash.appendChild(canvas); // add the canvas instead
-		// start preloading images
-		preloadImages();
-		// initialize paint states
-		t0 = currentTimeMillis();
-		currentItem = 0;
-		startChangeItemAnimation(currentItem, 0);
-		repaintCanvas(function() { paintCanvas(); }); // repaint loop
+  // if splash image is loaded, substitute it with a canvas
+  var img = document.getElementById("splashImage");
+  if(img.complete) {
+    if(initializeSlideshow_obj == null) {
+      //alert("init");
+      // hack: in chrome, passing the preloaded image object causes issues (local rendering states probably). I'm passing null to let it create a different object.
+      initializeSlideshow_obj = new Item(img.src, "david.jpg", "David Lareau", "Computer Programmer", null);
+      toLoad.unshift(initializeSlideshow_obj);
+      // start preloading images
+      preloadImages();
+      setTimeout(function(){ initializeSlideshow(); }, 100);
+    } else {
+      if(initializeSlideshow_obj.image.complete) {
+        //alert("go");
+        var canvas = document.createElement('canvas');
+        // note: size up to avoid low rez max filter issues (especially when resizing up the window later)
+        canvas.width = Math.min(img.width * 2, 1024);
+        canvas.height = Math.min(img.height * 2, 1024 * img.height / img.width);
+        canvas.id = "slideshow";
+        var splash = document.getElementById("splash");
+        splash.innerHTML = null; // remove image
+        splash.appendChild(canvas); // add the canvas instead
+        // initialize paint states
+        t0 = currentTimeMillis();
+        currentItem = 0;
+        startChangeItemAnimation(currentItem, 0);
+        repaintCanvas(function() { paintCanvas(); }); // repaint loop
+      } else {
+        //alert("init loading");
+        setTimeout(function(){ initializeSlideshow(); }, 100);
+      }
+    }
 	} 
 	// else retry later
 	else {
@@ -364,7 +377,6 @@ function initializeSlideshow() {
 
 // SlideShow
 function paintCanvas() {
-	var link = document.getElementById("splashLink");
 	var canvas = document.getElementById("slideshow");
 	var W = canvas.width;
 	var H = canvas.height;
@@ -379,7 +391,10 @@ function paintCanvas() {
 		currentItem = (currentItem + 1) % slide_items.length;
 		t0 = t; // interval aren't precise, they begin when we detect the change
 		// change link behavior
-		if(currentItem < slide_items.length) link.href = slide_items[currentItem].link;
+		if(currentItem < slide_items.length) {
+    	var link = document.getElementById("splashLink");
+      link.href = slide_items[currentItem].link;
+    }
 		// start transition animation
 		startChangeItemAnimation(currentItem, TRANSITION_DURATION);
 	}
