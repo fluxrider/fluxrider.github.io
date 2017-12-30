@@ -187,7 +187,8 @@ void main(void) {
     document.onkeyup = keyReleased;
     canvas.addEventListener('touchstart', touchStart, false);
     canvas.addEventListener('touchend', touchEnd, false);
-		//document.body.addEventListener('touchmove', function(event) { event.preventDefault(); }, false); // disable page scroll
+		document.body.addEventListener('touchmove', function(event) { event.preventDefault(); }, false); // disable page scroll
+		canvas.addEventListener('touchmove', function(event) { event.preventDefault(); }, false); // disable page scroll
 
 		model = new JetModel(64, 128, .4, 200, 1, 2, .5, 10);
 		fps = new FPS();
