@@ -299,6 +299,17 @@ toLoad.push(new Item("projects/magicNumber/magic00.gif", "projects/magicNumber/i
 toLoad.push(new Item("projects/past/pong00.jpg", "projects/past/index.html", "Pong Clone", "2001", null));
 toLoad.push(new Item("projects/past/bvsb307.gif", "projects/past/index.html", "Bob VS Bob III", "1997", null));
 
+// Shuffle Util (not a stdlib, wow js)
+function fy_shuffle(a) {
+    var j, x, i;
+    for (i = a.length - 1; i > 0; i--) {
+        j = Math.floor(Math.random() * (i + 1));
+        x = a[i];
+        a[i] = a[j];
+        a[j] = x;
+    }
+}
+
 // Resource Management (preloads the images of slideshow sequentially)
 var loadingIndex;
 function preloadImages() {
@@ -341,6 +352,7 @@ function initializeSlideshow() {
   if(img.complete) {
     if(initializeSlideshow_obj == null) {
       //alert("init");
+      fy_shuffle(toLoad);
       // hack: in chrome, passing the preloaded image object causes issues (local rendering states probably). I'm passing null to let it create a different object.
       initializeSlideshow_obj = new Item(img.src, "david.jpg", "David Lareau", "Computer Programmer", null);
       toLoad.unshift(initializeSlideshow_obj);
