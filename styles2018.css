@@ -91,3 +91,42 @@ dl.table-display
  font-family: "Courier New", Courier, monospace;
 }
 
+section {
+  margin-top: 1em;
+}
+
+section > header {
+  font-size: 1.5em;
+  margin-left: .5em;
+  margin-right: .5em;
+  text-decoration: underline;
+  text-decoration-style: double;
+  font-family: Palatino;
+  text-align: left;
+  color: #000000;
+}
+
+div.B {
+  padding: 1em;
+  margin: .5em;
+  padding-bottom: .2em;
+}
+
+div.A {
+  padding: 1em;
+  padding-bottom: .2em;
+  margin: 1em;
+}
+
+.first {
+  font-size: 1.5em;
+}
+
+.second {
+  font-style: italic;
+}
+
+ul {
+  margin: .3em;
+  list-style-type: circle;
+}
