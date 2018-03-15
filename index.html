@@ -176,19 +176,21 @@ let low_a_svg = [
   "Mage", "landscape.svg",
   "Voxel", "voxel.svg",
 ];
-let low_b = [ "BVSB", "Volume", "Graph", "GameList", "Jet", "Ray", "Soko", "Fuel", "Undergrads", "College", "Lunacy" ];
+let low_b = [ "BVSB", "Volume", "Graph", "GameList", "MovieList", "GameListOld", "Jet", "Ray", "Soko", "Fuel", "Undergrads", "College", "Lunacy" ];
 let low_b_svg = [
   "Volume", "volume.svg",
   "College", "college.svg",
   "Graph", "graph.svg",
   "Undergrads", "undergrads.svg",
   "GameList", "games.svg",
+  "GameListOld", "games.svg",
   "Soko", "puzzle.svg",
   "Jet", "webgl.svg",
+  "MovieList", "roll.svg",
 ];
 
 // computer
-let a = [ "Resume", "Lunacy", "Voxel", "Mage", "Soko", "Graph", "BVSB", "Magmic", "Undergrads", "Letters", "Volume" ];
+let a = [ "Resume", "Lunacy", "Voxel", "Mage", "Soko", "Graph", "GameListOld", "BVSB", "Magmic", "Undergrads", "Letters", "Volume" ];
 let a_svg = [
   "Resume", "resume.svg",
   "Letters", "letters.svg",
@@ -198,13 +200,15 @@ let a_svg = [
   "Mage", "landscape.svg",
   "Soko", "puzzle.svg",
   "Voxel", "voxel.svg",
+  "GameListOld", "games.svg",
 ];
-let b = [ "Cat", "Jet", "Ray", "Memory", "Tic", "Magic", "Pong", "GameList", "Fuel", "Masters", "College", "Orientation" ];
+let b = [ "Cat", "Jet", "Ray", "Memory", "Tic", "Magic", "Pong", "GameList", "MovieList", "Fuel", "Masters", "College", "Orientation" ];
 let b_svg = [
   "Orientation", "orientation.svg",
   "College", "college.svg",
   "Memory", "memory.svg",
   "GameList", "games.svg",
+  "MovieList", "roll.svg",
   "Jet", "webgl.svg",
 ];
 // TODO svg lists are redundant except the category, which could be deduced.
@@ -488,7 +492,7 @@ function drawImageToFit(g, image, x, y, w, h) {
 let items = [
   ["Fuel", "professional/fuel/index.html", "fuel.jpg", "Fuel Youth", "2012-12 — 2015-04"],
   ["Magmic", "professional/magmic/index.html", "magmic.png", "Magmic Games", "2007 — 2008"],
-  ["GameList", "projects/gamelist/index.html", "empty.png", "Great Games", ""],
+  ["GameList", "projects/blog/2018-03-15_games.html", "empty.png", "Top 10 Video Games", ""],
   ["Masters", "education/masters/index.html", "lenna.jpg", "M.A.Sc. in Biomedical Eng.", "2009 — 2011"],
   ["Undergrads", "education/ottawaUniversity/index.html", "empty.png", "B.Sc. in Computer Science", "2002 — 2006"],
   ["College", "education/laCiteCollegiale/index.html", "empty.png", "D.C.S. in Computer Engineering", "1999 — 2002"],
@@ -509,6 +513,8 @@ let items = [
   ["Magic", "projects/magicNumber/index.html", "magic.png", "Magic Number", "2002-09-15"],
   ["BVSB", "projects/past/index.html#bvsb", "bvsb.png", "Bob VS Bob", "1995 — 1997"],
   ["Pong", "projects/past/index.html", "pong.png", "Pong", "2001"],
+  ["GameListOld", "projects/gamelist/index.html", "empty.png", "Great Games", ""],
+  ["MovieList", "projects/blog/2018-03-15_movies.html", "empty.png", "Top 10 Films", ""],
 ];
 for (let item of items) {
   let id = item[0];
