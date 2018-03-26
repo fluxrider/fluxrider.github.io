@@ -10,101 +10,111 @@
     dl.setBackend('cpu');
     show_value('out_backend', dl.getBackend());
 
-    // read in constants
+    // read in constant parameters
     const hidden_size = parseInt(document.getElementById('in_hidden_size').value);
+    const learning_rate = parseFloat(document.getElementById('in_learning_rate').value);
+    const seq_length = parseInt(document.getElementById('in_seq_length').value);
 
-    // get set of char in data
+    // get set of char in data and build lookup functions
     const data = document.getElementById('in_data').value;
     const chars = new Set(); { let i = data.length; while(i--) { chars.add(data.charAt(i)); } }
     show_value('out_chars_size', chars.size);
     show_value('out_data_size', data.length);
-    
+    // TODO better lookup, and maybe pre-process data string to array of integer
+    function char_to_index(c) {
+      let itr = chars.values();
+      let i = 0;
+      while(itr.next().value != c) i++;
+      return i;
+    }
+    function index_to_char(i) {
+      let itr = chars.values();
+      let value;
+      do {
+        value = itr.next().value;
+      } while(i--);
+      return value;
+    }
+
     // model
     const Wxh = dl.variable(dl.randomNormal([hidden_size, chars.size]).mul(dl.scalar(0.01)));
     const Whh = dl.variable(dl.randomNormal([hidden_size, hidden_size]).mul(dl.scalar(0.01)));
     const Why = dl.variable(dl.randomNormal([chars.size, hidden_size]).mul(dl.scalar(0.01)));
     const bh = dl.variable(dl.zeros([hidden_size, 1]));
     const by = dl.variable(dl.zeros([chars.size, 1]));
-    const hs = dl.variable(dl.zeros([hidden_size, 1]));
+    let hs = dl.variable(dl.zeros([hidden_size, 1])); // is this part of the model?
 
     // predict
     function predict(input) {
-      return dl.tidy(() => {
-        // input could be the index of the first char of the current chunk (I think any index, a stable one or random one, would be better)
-        x = dl.zeros([chars.size, 1]);
-        x[input] = 1;
-        h = dl.tanh((Wxh.matMul(x)).add(Whh.matMul(hs)).add(bh))
-        y = (Why.matMul(h)).add(by);
-        p = y.exp().div(y.exp().sum()).flatten();
+      p = predict_probs(input);
+      //return dl.tidy(() => {
+        p = p.flatten();
         let probs = p.dataSync(); // TODO is this block avoidable?
         index = utils_choice(utils_range(chars.size), probs); // TODO precalc range
         return index;
-      });
+      //});
     }
 
+    function predict_probs(input) {
+      //return dl.tidy(() => {
+        // input could be the index of the first char of the current chunk (I think any index, a stable one or random one, would be better)
+        x = dl.zeros([chars.size, 1]);
+        x[input] = 1;
+        hs = dl.tanh((Wxh.matMul(x)).add(Whh.matMul(hs)).add(bh)); // WARNING hs updates each time this is called. Is hs part of the model then?
+        y = (Why.matMul(hs)).add(by);
+        p = y.exp().div(y.exp().sum());
+        return p;
+      //});
+    }
 
-/*
     // loss
     function loss(prediction, actual) {
-      // Having a good error metric is key for training a machine learning model
-      const error = dl.scalar(actual).sub(prediction).square();
-      return error;
+      // prediction is a prob table
+      // actual is the index of the expected char
+      return dl.scalar(dl.scalar(0).sub(prediction.slice([actual, 0], [1, 1]).log().flatten()));
     }
 
+// TODO change loss and train, such that I do the optimizer manually, since the relation between input and output is too indirect for build-in optimizers
+
     // train
-    const learningRate = 0.01;
-    const optimizer = dl.train.sgd(learningRate);
-    async function train(xs, ys, numIterations, tick, done) {
+    async function train(numIterations, tick, done) {
+      let offset = 0;
       for (let iter = 1; iter <= numIterations; iter++) {
-        for (let i = 0; i < xs.length; i++) {
-          // Minimize is where the magic happens, we must return a
-          // numerical estimate (i.e. loss) of how well we are doing using the
-          // current state of the variables we created at the start.
-
-          // This optimizer does the 'backward' step of our training data
-          // updating variables defined previously in order to minimize the
-          // loss.
-          optimizer.minimize(() => {
-            // Feed the examples into the model
-            const pred = predict(xs[i]);
-            const predLoss = loss(pred, ys[i]);
-
-            return predLoss;
-          });
+        for (let i = 0; i < seq_length; i++) {
+          const pred = predict_probs(char_to_index(data.charAt(offset + i)));
+          const predLoss = loss(pred, char_to_index(data.charAt(offset + i + 1)));
         }
 
-        // Use dl.nextFrame to not block the browser.
         if(iter % ui_get_int('live_iter_interval') == 0 || iter == numIterations) tick(iter);
+
+        // Use dl.nextFrame to not block the browser.
         await dl.nextFrame();
       }
 
       done();
     }
 
-    // test
-    function test(xs, ys) {
-      dl.tidy(() => {
-        const predictedYs = xs.map(predict);
-        //show_value('result1', "Expected: " + ys);
-        show_value('out_predict', predictedYs.map((p) => p.dataSync()[0]));
-      })
+    function show_sample_data() {
+      let out = document.getElementById('out_data');
+      out.value = "";
+      let index = 0;
+      let n = 100;
+      while(n--) {
+        index = predict(index);
+        let c = index_to_char(index);
+        out.value += c;
+      }
     }
 
-    // data
-    const data = {
-      xs: [0, 1, 2, 3],
-      ys: [1.1, 5.9, 16.8, 33.9]
-    };
-
-    //test(data.xs, data.ys);
     const t0 = (new Date()).getTime();
-    train(data.xs, data.ys, 1000, (i) => { 
+    train(5, (i) => { 
       show_value('out_iter', i);
-      test(data.xs, data.ys);
+      //test(data.xs, data.ys);
+      show_sample_data();
       show_value('out_time', ((new Date()).getTime() - t0) + ' ms');
     }, () => {
     });
-*/
+
 
   }
 
@@ -184,6 +194,7 @@ Being a script kiddy when it comes to AI, I first experimented with a small prog
 <input size="10" id="in_learning_rate" value="1e-1"/>Learning Rate<br/>
 <input size="10" id="in_hidden_size" value="10"/>Size of hidden layer of neurons<br/>
 <input size="10" id="in_seq_length" value="25"/>Number of steps to unroll the RNN for<br/>
+<textarea id="out_data" cols="70" rows="20"></textarea>
 <textarea id="in_data" cols="70" rows="20">
 Aaliyah Jolie
 Aaralyn Barra
