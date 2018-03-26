@@ -1,0 +1,132 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+<head>
+  <title>Machine Learning</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="stylesheet" href="../../styles2018.css"> 
+  <script src="https://cdn.jsdelivr.net/npm/deeplearn@latest"></script>
+  <script>
+  function on_load() {
+    dl.setBackend('cpu');
+
+    // model
+    const a = dl.variable(dl.scalar(Math.random()));
+    const b = dl.variable(dl.scalar(Math.random()));
+    const c = dl.variable(dl.scalar(Math.random()));
+
+    // predict
+    function predict(input) {
+      // y = a * x ^ 2 + b * x + c
+      return dl.tidy(() => {
+        const x = dl.scalar(input);
+
+        const ax2 = a.mul(x.square());
+        const bx = b.mul(x);
+        const y = ax2.add(bx).add(c);
+
+        return y;
+      });
+    }
+
+    // loss
+    function loss(prediction, actual) {
+      // Having a good error metric is key for training a machine learning model
+      const error = dl.scalar(actual).sub(prediction).square();
+      return error;
+    }
+
+    // train
+    const learningRate = 0.01;
+    const optimizer = dl.train.sgd(learningRate);
+    async function train(xs, ys, numIterations, tick_interval, tick, done) {
+      let currentIteration = 0;
+
+      for (let iter = 1; iter <= numIterations; iter++) {
+        for (let i = 0; i < xs.length; i++) {
+          // Minimize is where the magic happens, we must return a
+          // numerical estimate (i.e. loss) of how well we are doing using the
+          // current state of the variables we created at the start.
+
+          // This optimizer does the 'backward' step of our training data
+          // updating variables defined previously in order to minimize the
+          // loss.
+          optimizer.minimize(() => {
+            // Feed the examples into the model
+            const pred = predict(xs[i]);
+            const predLoss = loss(pred, ys[i]);
+
+            return predLoss;
+          });
+        }
+
+        // Use dl.nextFrame to not block the browser.
+        if(iter % tick_interval == 0 || iter == numIterations) tick(iter);
+        await dl.nextFrame();
+      }
+
+      done();
+    }
+
+    // test
+    function test(xs, ys) {
+      dl.tidy(() => {
+        const predictedYs = xs.map(predict);
+        show_value('result1', "Expected: " + ys);
+        show_value('result2', "Actual: " + predictedYs.map((p) => p.dataSync()[0]));
+      })
+    }
+
+    // data
+    const data = {
+      xs: [0, 1, 2, 3],
+      ys: [1.1, 5.9, 16.8, 33.9]
+    };
+
+    //test(data.xs, data.ys);
+    const t0 = (new Date()).getTime();
+    train(data.xs, data.ys, 1000, 19, (i) => { 
+      show_value('result3', i);
+      test(data.xs, data.ys);
+      show_value('result4', (new Date()).getTime() - t0);
+    }, () => {
+    });
+
+    //show_value('result1', dl.getBackend());
+    //show_value('result2', '');
+  }
+
+  function show_value(id, value) {
+    const text_field = document.getElementById(id);
+    text_field.value = value;
+  }
+  </script>
+</head>
+<body onLoad="on_load()">
+
+<header>Machine Learning<br/><time>2018-03-26</time></header>
+<article>
+
+<p class="B">
+You may have read in the media that some people out there trained Artificial Intelligences to generate <a href="https://medium.com/@GilFewster/writing-movie-titles-with-a-neural-network-b72273ec30ea">movie titles</a>, <a href="http://digg.com/2018/coachella-lineup-ai-band-names">band names</a>, <a href="http://aiweirdness.com/post/140508739392/the-neural-network-has-weird-ideas-about-what">cooking recipes</a>, or even a <a href="https://en.wikipedia.org/wiki/Sunspring">full screenplay</a>. Everybody and their dog is doing it, so I jumped on the band wagon.</p>
+
+<aside>
+<p>Female Names</p>
+<p>
+Being a script kiddy when it comes to AI, I first experimented with a small program at: <a href="https://gist.github.com/karpathy/d4dee566867f8291f086">https://gist.github.com/karpathy/d4dee566867f8291f086</a></p>
+<p>I scraped female names from a site and ran them through the RNN. Favorite output:</p>
+<p>FRISTINE</p>
+<p>Funny enough, a quick search reveals that some people are actually named that way, even though it wasn't part of my data.</p>
+</aside>
+
+<p class="B">
+<input id="result1" size="70"/><br/>
+<input id="result2" size="70"/><br/>
+<input id="result3" size="70"/><br/>
+<input id="result4" size="70"/>
+</p>
+
+
+
+
+</body>
+</html>
