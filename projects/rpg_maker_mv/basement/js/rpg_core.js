@@ -2389,8 +2389,8 @@ Graphics._makeErrorHtml = function(name, message) {
  * @private
  */
 Graphics._defaultStretchMode = function() {
-    //return Utils.isNwjs() || Utils.isMobileDevice();
-    return true; // DAVE for firefox to stretch
+    // return Utils.isNwjs() || Utils.isMobileDevice();
+    return true; // DAVE for firefox stretch
 };
 
 /**
