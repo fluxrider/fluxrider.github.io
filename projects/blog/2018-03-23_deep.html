@@ -67,27 +67,23 @@
       //});
     }
 
-    // loss
-    function loss(prediction, actual) {
-      // prediction is a prob table
-      // actual is the index of the expected char
-      return dl.scalar(dl.scalar(0).sub(prediction.slice([actual, 0], [1, 1]).log().flatten()));
-    }
-
-// TODO change loss and train, such that I do the optimizer manually, since the relation between input and output is too indirect for build-in optimizers
-
     // train
     async function train(numIterations, tick, done) {
       let offset = 0;
       for (let iter = 1; iter <= numIterations; iter++) {
+        if(offset + seq_length + 1 >= data.length) {
+          hs = dl.variable(dl.zeros([hidden_size, 1]));
+          offset = 0;
+        }
         for (let i = 0; i < seq_length; i++) {
-          const pred = predict_probs(char_to_index(data.charAt(offset + i)));
-          const predLoss = loss(pred, char_to_index(data.charAt(offset + i + 1)));
+          //const pred = predict_probs(char_to_index(data.charAt(offset + i)));
+          //const predLoss = loss(pred, char_to_index(data.charAt(offset + i + 1)));
+          loss, dWxh, dWhh, dWhy, dbh, dby, hprev = lossFun(inputs, targets, hprev)
         }
 
         if(iter % ui_get_int('live_iter_interval') == 0 || iter == numIterations) tick(iter);
 
-        // Use dl.nextFrame to not block the browser.
+        // yield
         await dl.nextFrame();
       }
 
@@ -109,13 +105,10 @@
     const t0 = (new Date()).getTime();
     train(5, (i) => { 
       show_value('out_iter', i);
-      //test(data.xs, data.ys);
       show_sample_data();
       show_value('out_time', ((new Date()).getTime() - t0) + ' ms');
     }, () => {
     });
-
-
   }
 
   function show_value(id, value) {
@@ -129,26 +122,26 @@
   }
 
   function utils_range(start, stop, step) {
-      if (typeof stop == 'undefined') {
-          // one param defined
-          stop = start;
-          start = 0;
-      }
+    if (typeof stop == 'undefined') {
+      // one param defined
+      stop = start;
+      start = 0;
+    }
 
-      if (typeof step == 'undefined') {
-          step = 1;
-      }
+    if (typeof step == 'undefined') {
+      step = 1;
+    }
 
-      if ((step > 0 && start >= stop) || (step < 0 && start <= stop)) {
-          return [];
-      }
+    if ((step > 0 && start >= stop) || (step < 0 && start <= stop)) {
+      return [];
+    }
 
-      var result = [];
-      for (var i = start; step > 0 ? i < stop : i > stop; i += step) {
-          result.push(i);
-      }
+    var result = [];
+    for (var i = start; step > 0 ? i < stop : i > stop; i += step) {
+      result.push(i);
+    }
 
-      return result;
+    return result;
   }
 
   function utils_choice(values, probs) {
