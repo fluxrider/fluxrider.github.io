@@ -37,51 +37,133 @@
     }
 
     // model
-    const Wxh = dl.variable(dl.randomNormal([hidden_size, chars.size]).mul(dl.scalar(0.01)));
-    const Whh = dl.variable(dl.randomNormal([hidden_size, hidden_size]).mul(dl.scalar(0.01)));
-    const Why = dl.variable(dl.randomNormal([chars.size, hidden_size]).mul(dl.scalar(0.01)));
-    const bh = dl.variable(dl.zeros([hidden_size, 1]));
-    const by = dl.variable(dl.zeros([chars.size, 1]));
-    let hs = dl.variable(dl.zeros([hidden_size, 1])); // is this part of the model?
+    let Wxh = dl.variable(dl.randomNormal([hidden_size, chars.size]).mul(dl.scalar(0.01)));
+    let Whh = dl.variable(dl.randomNormal([hidden_size, hidden_size]).mul(dl.scalar(0.01)));
+    let Why = dl.variable(dl.randomNormal([chars.size, hidden_size]).mul(dl.scalar(0.01)));
+    let bh = dl.variable(dl.zeros([hidden_size, 1]));
+    let by = dl.variable(dl.zeros([chars.size, 1]));
+    // is this part of the model?
+    let hs = dl.variable(dl.zeros([hidden_size, 1]));
+    // adagrad memory
+    let mWxh = dl.variable(dl.zeros([hidden_size, chars.size]));
+    let mWhh = dl.variable(dl.zeros([hidden_size, hidden_size]));
+    let mWhy = dl.variable(dl.zeros([chars.size, hidden_size]));
+    let mbh = dl.variable(dl.zeros([hidden_size, 1]));
+    let mby = dl.variable(dl.zeros([chars.size, 1]));
+    // stuff from loss function
+    let dWxh = dl.variable(dl.zeros([hidden_size, chars.size]));
+    let dWhh = dl.variable(dl.zeros([hidden_size, hidden_size]));
+    let dWhy = dl.variable(dl.zeros([chars.size, hidden_size]));
+    let dbh = dl.variable(dl.zeros([hidden_size, 1]));
+    let dby = dl.variable(dl.zeros([chars.size, 1]));
+    let dhnext = dl.variable(dl.zeros([hidden_size, 1]));
 
     // predict
     function predict(input) {
       p = predict_probs(input);
-      //return dl.tidy(() => {
-        p = p.flatten();
-        let probs = p.dataSync(); // TODO is this block avoidable?
-        index = utils_choice(utils_range(chars.size), probs); // TODO precalc range
-        return index;
-      //});
+      p = p.flatten();
+      let probs = p.dataSync(); // TODO is this block avoidable?
+      index = utils_choice(utils_range(chars.size), probs); // TODO precalc range
+      return index;
     }
 
     function predict_probs(input) {
-      //return dl.tidy(() => {
-        // input could be the index of the first char of the current chunk (I think any index, a stable one or random one, would be better)
-        x = dl.zeros([chars.size, 1]);
-        x[input] = 1;
-        hs = dl.tanh((Wxh.matMul(x)).add(Whh.matMul(hs)).add(bh)); // WARNING hs updates each time this is called. Is hs part of the model then?
-        y = (Why.matMul(hs)).add(by);
-        p = y.exp().div(y.exp().sum());
-        return p;
-      //});
+      // input could be the index of the first char of the current chunk (I think any index, a stable one or random one, would be better)
+      x = dl.zeros([chars.size, 1]);
+      x[input] = 1;
+      hs = dl.tanh((Wxh.matMul(x)).add(Whh.matMul(hs)).add(bh)); // WARNING hs updates each time this is called. Is hs part of the model then?
+      y = (Why.matMul(hs)).add(by);
+      p = y.exp().div(y.exp().sum());
+      return p;
+    }
+
+    // loss function
+    function lossFun(inputs, targets) {
+    /*
+      xs = {}
+      hs = {}
+      ys = {}
+      ps = {}
+      hs[-1] = np.copy(hprev)
+      loss = 0
+      # forward pass
+      for t in range(len(inputs)):
+        # encode in 1-of-k representation
+        xs[t] = np.zeros((vocab_size,1))
+        xs[t][inputs[t]] = 1
+        # hidden state
+        hs[t] = np.tanh(np.dot(Wxh, xs[t]) + np.dot(Whh, hs[t-1]) + bh)
+        # unnormalized log probabilities for next chars
+        ys[t] = np.dot(Why, hs[t]) + by
+        # probabilities for next chars
+        ps[t] = np.exp(ys[t]) / np.sum(np.exp(ys[t]))
+        # softmax (cross-entropy loss)
+        loss += -np.log(ps[t][targets[t],0])
+      # backward pass: compute gradients going backwards
+      dWxh = np.zeros_like(Wxh)
+      dWhh = np.zeros_like(Whh)
+      dWhy = np.zeros_like(Why)
+      dbh = np.zeros_like(bh)
+      dby = np.zeros_like(by)
+      dhnext = np.zeros_like(hs[0])
+      for t in reversed(range(len(inputs))):
+        dy = np.copy(ps[t])
+        # backprop into y. see http://cs231n.github.io/neural-networks-case-study/#grad if confused here
+        dy[targets[t]] -= 1
+        dWhy += np.dot(dy, hs[t].T)
+        dby += dy
+        # backprop into h
+        dh = np.dot(Why.T, dy) + dhnext
+        # backprop through tanh nonlinearity
+        dhraw = (1 - hs[t] * hs[t]) * dh
+        dbh += dhraw
+        dWxh += np.dot(dhraw, xs[t].T)
+        dWhh += np.dot(dhraw, hs[t-1].T)
+        dhnext = np.dot(Whh.T, dhraw)
+      for dparam in [dWxh, dWhh, dWhy, dbh, dby]:
+        # clip to mitigate exploding gradients
+        np.clip(dparam, -5, 5, out=dparam)
+      return loss, dWxh, dWhh, dWhy, dbh, dby, hs[len(inputs)-1]
+    */
+      return 0;
     }
 
     // train
     async function train(numIterations, tick, done) {
+
       let offset = 0;
       for (let iter = 1; iter <= numIterations; iter++) {
         if(offset + seq_length + 1 >= data.length) {
           hs = dl.variable(dl.zeros([hidden_size, 1]));
           offset = 0;
         }
-        for (let i = 0; i < seq_length; i++) {
-          //const pred = predict_probs(char_to_index(data.charAt(offset + i)));
-          //const predLoss = loss(pred, char_to_index(data.charAt(offset + i + 1)));
-          loss, dWxh, dWhh, dWhy, dbh, dby, hprev = lossFun(inputs, targets, hprev)
-        }
+
+        let inputs = offset;
+        let targets = offset + 1;
+
+        // forward seq_length characters through the net and fetch gradient
+        let loss = lossFun(inputs, targets);
+
+        // perform parameter update with Adagrad
+        mWxh = mWxh.add(dWxh.mul(dWxh));
+        Wxh = Wxh.add(dWxh.mul(dl.scalar(-learning_rate)).div(mWxh.add(dl.scalar(0.0000001)).sqrt()));
+
+        mWhh = mWhh.add(dWhh.mul(dWhh));
+        Whh = Whh.add(dWhh.mul(dl.scalar(-learning_rate)).div(mWhh.add(dl.scalar(0.0000001)).sqrt()));
+
+        mWhy = mWhy.add(dWhy.mul(dWhy));
+        Why = Why.add(dWhy.mul(dl.scalar(-learning_rate)).div(mWhy.add(dl.scalar(0.0000001)).sqrt()));
+
+        mbh = mbh.add(dbh.mul(dbh));
+        bh = bh.add(dbh.mul(dl.scalar(-learning_rate)).div(mbh.add(dl.scalar(0.0000001)).sqrt()));
+
+        mby = mby.add(dby.mul(dby));
+        by = by.add(dby.mul(dl.scalar(-learning_rate)).div(mby.add(dl.scalar(0.0000001)).sqrt()));
 
         if(iter % ui_get_int('live_iter_interval') == 0 || iter == numIterations) tick(iter);
+
+        // move data pointer
+        offset += seq_length;
 
         // yield
         await dl.nextFrame();
@@ -103,7 +185,7 @@
     }
 
     const t0 = (new Date()).getTime();
-    train(5, (i) => { 
+    train(10, (i) => { 
       show_value('out_iter', i);
       show_sample_data();
       show_value('out_time', ((new Date()).getTime() - t0) + ' ms');
