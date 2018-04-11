@@ -43,7 +43,7 @@
     let bh = dl.variable(dl.zeros([hidden_size, 1]));
     let by = dl.variable(dl.zeros([chars.size, 1]));
     // is this part of the model?
-    let hs = dl.variable(dl.zeros([hidden_size, 1]));
+    let hprev = dl.variable(dl.zeros([hidden_size, 1]));
     // adagrad memory
     let mWxh = dl.variable(dl.zeros([hidden_size, chars.size]));
     let mWhh = dl.variable(dl.zeros([hidden_size, hidden_size]));
@@ -71,37 +71,39 @@
       // input could be the index of the first char of the current chunk (I think any index, a stable one or random one, would be better)
       x = dl.zeros([chars.size, 1]);
       x[input] = 1;
-      hs = dl.tanh((Wxh.matMul(x)).add(Whh.matMul(hs)).add(bh)); // WARNING hs updates each time this is called. Is hs part of the model then?
-      y = (Why.matMul(hs)).add(by);
+      hprev = dl.tanh((Wxh.matMul(x)).add(Whh.matMul(hprev)).add(bh)); // WARNING hs updates each time this is called. Is hs part of the model then?
+      y = (Why.matMul(hprev)).add(by);
       p = y.exp().div(y.exp().sum());
       return p;
     }
 
     // loss function
     function lossFun(inputs, targets) {
-    /*
-      xs = {}
-      hs = {}
-      ys = {}
-      ps = {}
-      hs[-1] = np.copy(hprev)
-    */
-      loss = 0;
+      let loss = 0;
+      let xs = [];
+      let hs = [];
+      let ys = [];
+      let ps = [];
+      hs[seq_length - 1] = hprev;
+
       // forward pass
       for (let t = 0; t < seq_length; t++) {
-    /*
-        # encode in 1-of-k representation
-        xs[t] = np.zeros((vocab_size,1))
-        xs[t][inputs[t]] = 1
-        # hidden state
-        hs[t] = np.tanh(np.dot(Wxh, xs[t]) + np.dot(Whh, hs[t-1]) + bh)
-        # unnormalized log probabilities for next chars
-        ys[t] = np.dot(Why, hs[t]) + by
-        # probabilities for next chars
-        ps[t] = np.exp(ys[t]) / np.sum(np.exp(ys[t]))
-        # softmax (cross-entropy loss)
-        loss += -np.log(ps[t][targets[t],0])
-    */
+        // encode in 1-of-k representation
+        xs[t] = dl.variable(dl.zeros([chars.size, 1]));
+        let index = char_to_index(data[inputs + t]);
+        xs[t][index] = 1;
+        // hidden state
+        let loop_index = t - 1;
+        if(loop_index < 0) loop_index = seq_length - 1;
+        hs[t] = dl.matMul(Wxh, xs[t]).tanh().add(dl.matMul(Whh, hs[loop_index]).add(bh));
+        // unnormalized log probabilities for next chars
+        ys[t] = dl.matMul(Why, hs[t]).add(by);
+        // probabilities for next chars
+        ps[t] = dl.exp(ys[t]).div(dl.sum(dl.exp(ys[t])));
+        // softmax (cross-entropy loss)
+        index = char_to_index(data[targets + t]);
+        ps[t] = ps[t].dataSync();
+        loss += -Math.log(ps[t][index]);
       }
       dWxh = dl.variable(dl.zeros([hidden_size, chars.size]));
       dWhh = dl.variable(dl.zeros([hidden_size, hidden_size]));
@@ -140,7 +142,7 @@
       let offset = 0;
       for (let iter = 1; iter <= numIterations; iter++) {
         if(offset + seq_length + 1 >= data.length) {
-          hs = dl.variable(dl.zeros([hidden_size, 1]));
+          hprev = dl.variable(dl.zeros([hidden_size, 1]));
           offset = 0;
         }
 
