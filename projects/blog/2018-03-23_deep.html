@@ -85,9 +85,11 @@
       ys = {}
       ps = {}
       hs[-1] = np.copy(hprev)
-      loss = 0
-      # forward pass
-      for t in range(len(inputs)):
+    */
+      loss = 0;
+      // forward pass
+      for (let t = 0; t < seq_length; t++) {
+    /*
         # encode in 1-of-k representation
         xs[t] = np.zeros((vocab_size,1))
         xs[t][inputs[t]] = 1
@@ -99,14 +101,17 @@
         ps[t] = np.exp(ys[t]) / np.sum(np.exp(ys[t]))
         # softmax (cross-entropy loss)
         loss += -np.log(ps[t][targets[t],0])
-      # backward pass: compute gradients going backwards
-      dWxh = np.zeros_like(Wxh)
-      dWhh = np.zeros_like(Whh)
-      dWhy = np.zeros_like(Why)
-      dbh = np.zeros_like(bh)
-      dby = np.zeros_like(by)
-      dhnext = np.zeros_like(hs[0])
-      for t in reversed(range(len(inputs))):
+    */
+      }
+      dWxh = dl.variable(dl.zeros([hidden_size, chars.size]));
+      dWhh = dl.variable(dl.zeros([hidden_size, hidden_size]));
+      dWhy = dl.variable(dl.zeros([chars.size, hidden_size]));
+      dbh = dl.variable(dl.zeros([hidden_size, 1]));
+      dby = dl.variable(dl.zeros([chars.size, 1]));
+      dhnext = dl.variable(dl.zeros([hidden_size, 1]));
+      // backward pass: compute gradients going backwards
+      for (let t = seq_length - 1; t >= 0; t--) {
+    /*
         dy = np.copy(ps[t])
         # backprop into y. see http://cs231n.github.io/neural-networks-case-study/#grad if confused here
         dy[targets[t]] -= 1
@@ -123,9 +128,10 @@
       for dparam in [dWxh, dWhh, dWhy, dbh, dby]:
         # clip to mitigate exploding gradients
         np.clip(dparam, -5, 5, out=dparam)
-      return loss, dWxh, dWhh, dWhy, dbh, dby, hs[len(inputs)-1]
     */
-      return 0;
+      }
+      //return loss, dWxh, dWhh, dWhy, dbh, dby, hs[len(inputs)-1]
+      return loss;
     }
 
     // train
