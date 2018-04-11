@@ -113,26 +113,30 @@
       dhnext = dl.variable(dl.zeros([hidden_size, 1]));
       // backward pass: compute gradients going backwards
       for (let t = seq_length - 1; t >= 0; t--) {
-    /*
-        dy = np.copy(ps[t])
-        # backprop into y. see http://cs231n.github.io/neural-networks-case-study/#grad if confused here
-        dy[targets[t]] -= 1
-        dWhy += np.dot(dy, hs[t].T)
-        dby += dy
-        # backprop into h
-        dh = np.dot(Why.T, dy) + dhnext
-        # backprop through tanh nonlinearity
-        dhraw = (1 - hs[t] * hs[t]) * dh
-        dbh += dhraw
-        dWxh += np.dot(dhraw, xs[t].T)
-        dWhh += np.dot(dhraw, hs[t-1].T)
-        dhnext = np.dot(Whh.T, dhraw)
+        let index = char_to_index(data[targets + t]);
+        // backprop into y. see http://cs231n.github.io/neural-networks-case-study/#grad if confused here
+        ps[t][index] -= 1;
+        ps[t] = dl.tensor2d(ps[t], [chars.size, 1]);
+        dWhy = dWhy.add(dl.matMul(ps[t], hs[t], false, true));
+        dby = dby.add(ps[t]);
+        // backprop into h
+        dh = dl.matMul(Why, ps[t], true, false).add(dhnext);
+        // backprop through tanh nonlinearity
+        dhraw = dl.scalar(1).sub(hs[t].mul(hs[t])).mul(dh);
+        dbh = dbh.add(dhraw);
+        dWxh = dWxh.add(dl.matMul(dhraw, xs[t], false, true));
+        let loop_index = t - 1;
+        if(loop_index < 0) loop_index = seq_length - 1;
+        dWhh = dWhh.add(dl.matMul(dhraw, hs[loop_index], false, true));
+        dhnext = dl.matMul(Whh, dhraw, true, false);
+      }
+      /*
       for dparam in [dWxh, dWhh, dWhy, dbh, dby]:
         # clip to mitigate exploding gradients
         np.clip(dparam, -5, 5, out=dparam)
-    */
-      }
-      //return loss, dWxh, dWhh, dWhy, dbh, dby, hs[len(inputs)-1]
+      */
+
+      hprev = hs[seq_length - 1];
       return loss;
     }
 
@@ -168,7 +172,7 @@
         mby = mby.add(dby.mul(dby));
         by = by.add(dby.mul(dl.scalar(-learning_rate)).div(mby.add(dl.scalar(0.0000001)).sqrt()));
 
-        if(iter % ui_get_int('live_iter_interval') == 0 || iter == numIterations) tick(iter);
+        if(iter % ui_get_int('live_iter_interval') == 0 || iter == numIterations) tick(iter, loss);
 
         // move data pointer
         offset += seq_length;
@@ -193,8 +197,9 @@
     }
 
     const t0 = (new Date()).getTime();
-    train(10, (i) => { 
+    train(10, (i, loss) => { 
       show_value('out_iter', i);
+      show_value('out_loss', loss);
       show_sample_data();
       show_value('out_time', ((new Date()).getTime() - t0) + ' ms');
     }, () => {
@@ -273,6 +278,7 @@ Being a script kiddy when it comes to AI, I first experimented with a small prog
 <input size="10" id="live_iter_interval" value="19"/>Iteration interval between UI update<br/>
 <input size="10" id="out_chars_size"/>Number of distinct character in data (vocabulary size)<br/>
 <input size="10" id="out_data_size"/>Number of characters in data<br/>
+<input size="10" id="out_loss"/>Loss<br/>
 <button type="button" onclick="experiment()">Launch Experiment</button><br/>
 <input size="10" id="in_learning_rate" value="1e-1"/>Learning Rate<br/>
 <input size="10" id="in_hidden_size" value="10"/>Size of hidden layer of neurons<br/>
