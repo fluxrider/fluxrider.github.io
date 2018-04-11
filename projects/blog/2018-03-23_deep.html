@@ -130,12 +130,11 @@
         dWhh = dWhh.add(dl.matMul(dhraw, hs[loop_index], false, true));
         dhnext = dl.matMul(Whh, dhraw, true, false);
       }
-      /*
-      for dparam in [dWxh, dWhh, dWhy, dbh, dby]:
-        # clip to mitigate exploding gradients
-        np.clip(dparam, -5, 5, out=dparam)
-      */
-
+      dWxh = dWxh.clipByValue(-5, 5);
+      dWhh = dWhh.clipByValue(-5, 5);
+      dWhy = dWhy.clipByValue(-5, 5);
+      dbh = dbh.clipByValue(-5, 5);
+      dby = dby.clipByValue(-5, 5);
       hprev = hs[seq_length - 1];
       return loss;
     }
