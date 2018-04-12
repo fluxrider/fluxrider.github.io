@@ -1,0 +1,74 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+<head>
+  <title>Machine Learning</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="stylesheet" href="../../styles2018.css"> 
+  <script src="https://wagenaartje.github.io/neataptic/cdn/1.2.34/neataptic.js"></script>
+  <script>
+  function experiment() {
+    // training set
+    var myTrainingSet = [
+      { input: [0,0], output: [0] },
+      { input: [0,1], output: [1] },
+      { input: [1,0], output: [1] },
+      { input: [1,1], output: [0] }
+    ];
+
+    // network
+    myNetwork = neataptic.Architect.Perceptron(2, 3, 1);
+
+    // training
+    myNetwork.train(myTrainingSet, {
+      log: 10,
+      error: 0.01,
+      iterations: 1000,
+      rate: 0.3
+    });
+
+    let s = "" + myNetwork.activate([0,0]) + ", ";
+        s += "" + myNetwork.activate([0,1]) + ", ";
+        s += "" + myNetwork.activate([1,0]) + ", ";
+        s += "" + myNetwork.activate([1,1]) + ", ";
+    document.getElementById('out_predict').value = s;
+  }
+  </script>
+</head>
+<body>
+
+<header>Machine Learning<br/><time>2018-03-26</time></header>
+<article>
+
+<p class="B">
+You may have read in the media that some people out there trained Artificial Intelligences to generate <a href="https://medium.com/@GilFewster/writing-movie-titles-with-a-neural-network-b72273ec30ea">movie titles</a>, <a href="http://digg.com/2018/coachella-lineup-ai-band-names">band names</a>, <a href="http://aiweirdness.com/post/140508739392/the-neural-network-has-weird-ideas-about-what">cooking recipes</a>, or even a <a href="https://en.wikipedia.org/wiki/Sunspring">full screenplay</a>. Everybody and their dog is doing it, so I jumped on the band wagon.</p>
+
+<aside>
+<p>Female Names</p>
+<p>
+Being a script kiddy when it comes to AI, I first experimented with a small program at: <a href="https://gist.github.com/karpathy/d4dee566867f8291f086">https://gist.github.com/karpathy/d4dee566867f8291f086</a></p>
+<p>I scraped female names from a site and ran them through the RNN. Favorite output:</p>
+<p>FRISTINE</p>
+<p>Funny enough, a quick search reveals that some people are actually named that way, even though it wasn't part of my data.</p>
+</aside>
+
+<p class="B">
+<input size="70" id="out_predict"/>Prediction<br/>
+<input size="40" id="out_iter"/>Training Iteration<br/>
+<input size="40" id="out_time"/>Training Duration<br/>
+<input size="40" id="out_backend"/>Deep Learning Backend (cpu or webgl)<br/>
+<input size="10" id="live_iter_interval" value="1"/>Iteration interval between UI update<br/>
+<input size="10" id="out_chars_size"/>Number of distinct character in data (vocabulary size)<br/>
+<input size="10" id="out_data_size"/>Number of characters in data<br/>
+<input size="10" id="out_loss"/>Loss<br/>
+<button type="button" onclick="experiment()">Launch Experiment</button><br/>
+<input size="10" id="in_learning_rate" value="1e-1"/>Learning Rate<br/>
+<input size="10" id="in_hidden_size" value="100"/>Size of hidden layer of neurons<br/>
+<input size="10" id="in_seq_length" value="25"/>Number of steps to unroll the RNN for<br/>
+<textarea id="out_data" cols="70" rows="20"></textarea>
+<textarea id="in_data" cols="70" rows="20">
+</textarea>
+</p>
+
+
+</body>
+</html>

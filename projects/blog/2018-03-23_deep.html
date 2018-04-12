@@ -35,6 +35,14 @@
       } while(i--);
       return value;
     }
+    let lookup_char_to_index = {};
+    for (var c in chars) {
+      lookup_char_to_index[c] = char_to_index(c);
+    }
+    let lookup_index_to_char = [];
+    for (let i = 1; i <= chars.size; i++) {
+      lookup_index_to_char[i] = index_to_char(i);
+    }
 
     // model
     let Wxh = dl.variable(dl.randomNormal([hidden_size, chars.size]).mul(dl.scalar(0.01)));
@@ -90,7 +98,7 @@
       for (let t = 0; t < seq_length; t++) {
         // encode in 1-of-k representation
         xs[t] = dl.variable(dl.zeros([chars.size, 1]));
-        let index = char_to_index(data[inputs + t]);
+        let index = lookup_char_to_index[data[inputs + t]];
         xs[t][index] = 1;
         // hidden state
         let loop_index = t - 1;
@@ -101,8 +109,9 @@
         // probabilities for next chars
         ps[t] = dl.exp(ys[t]).div(dl.sum(dl.exp(ys[t])));
         // softmax (cross-entropy loss)
-        index = char_to_index(data[targets + t]);
+        index = lookup_char_to_index[data[targets + t]];
         ps[t] = ps[t].dataSync();
+        //alert(ps[t]);
         loss += -Math.log(ps[t][index]);
       }
       dWxh = dl.variable(dl.zeros([hidden_size, chars.size]));
@@ -113,7 +122,7 @@
       dhnext = dl.variable(dl.zeros([hidden_size, 1]));
       // backward pass: compute gradients going backwards
       for (let t = seq_length - 1; t >= 0; t--) {
-        let index = char_to_index(data[targets + t]);
+        let index = lookup_char_to_index[data[targets + t]];
         // backprop into y. see http://cs231n.github.io/neural-networks-case-study/#grad if confused here
         ps[t][index] -= 1;
         ps[t] = dl.tensor2d(ps[t], [chars.size, 1]);
@@ -136,6 +145,7 @@
       dbh = dbh.clipByValue(-5, 5);
       dby = dby.clipByValue(-5, 5);
       hprev = hs[seq_length - 1];
+      // TODO release?
       return loss;
     }
 
@@ -157,19 +167,19 @@
 
         // perform parameter update with Adagrad
         mWxh = mWxh.add(dWxh.mul(dWxh));
-        Wxh = Wxh.add(dWxh.mul(dl.scalar(-learning_rate)).div(mWxh.add(dl.scalar(0.0000001)).sqrt()));
+        Wxh = Wxh.add(dWxh.mul(dl.scalar(-learning_rate)).div(mWxh.add(dl.scalar(1e-8)).sqrt()));
 
         mWhh = mWhh.add(dWhh.mul(dWhh));
-        Whh = Whh.add(dWhh.mul(dl.scalar(-learning_rate)).div(mWhh.add(dl.scalar(0.0000001)).sqrt()));
+        Whh = Whh.add(dWhh.mul(dl.scalar(-learning_rate)).div(mWhh.add(dl.scalar(1e-8)).sqrt()));
 
         mWhy = mWhy.add(dWhy.mul(dWhy));
-        Why = Why.add(dWhy.mul(dl.scalar(-learning_rate)).div(mWhy.add(dl.scalar(0.0000001)).sqrt()));
+        Why = Why.add(dWhy.mul(dl.scalar(-learning_rate)).div(mWhy.add(dl.scalar(1e-8)).sqrt()));
 
         mbh = mbh.add(dbh.mul(dbh));
-        bh = bh.add(dbh.mul(dl.scalar(-learning_rate)).div(mbh.add(dl.scalar(0.0000001)).sqrt()));
+        bh = bh.add(dbh.mul(dl.scalar(-learning_rate)).div(mbh.add(dl.scalar(1e-8)).sqrt()));
 
         mby = mby.add(dby.mul(dby));
-        by = by.add(dby.mul(dl.scalar(-learning_rate)).div(mby.add(dl.scalar(0.0000001)).sqrt()));
+        by = by.add(dby.mul(dl.scalar(-learning_rate)).div(mby.add(dl.scalar(1e-8)).sqrt()));
 
         if(iter % ui_get_int('live_iter_interval') == 0 || iter == numIterations) tick(iter, loss);
 
@@ -190,7 +200,7 @@
       let n = 100;
       while(n--) {
         index = predict(index);
-        let c = index_to_char(index);
+        let c = lookup_index_to_char[index];
         out.value += c;
       }
     }
@@ -274,13 +284,13 @@ Being a script kiddy when it comes to AI, I first experimented with a small prog
 <input size="40" id="out_iter"/>Training Iteration<br/>
 <input size="40" id="out_time"/>Training Duration<br/>
 <input size="40" id="out_backend"/>Deep Learning Backend (cpu or webgl)<br/>
-<input size="10" id="live_iter_interval" value="19"/>Iteration interval between UI update<br/>
+<input size="10" id="live_iter_interval" value="1"/>Iteration interval between UI update<br/>
 <input size="10" id="out_chars_size"/>Number of distinct character in data (vocabulary size)<br/>
 <input size="10" id="out_data_size"/>Number of characters in data<br/>
 <input size="10" id="out_loss"/>Loss<br/>
 <button type="button" onclick="experiment()">Launch Experiment</button><br/>
 <input size="10" id="in_learning_rate" value="1e-1"/>Learning Rate<br/>
-<input size="10" id="in_hidden_size" value="10"/>Size of hidden layer of neurons<br/>
+<input size="10" id="in_hidden_size" value="100"/>Size of hidden layer of neurons<br/>
 <input size="10" id="in_seq_length" value="25"/>Number of steps to unroll the RNN for<br/>
 <textarea id="out_data" cols="70" rows="20"></textarea>
 <textarea id="in_data" cols="70" rows="20">
