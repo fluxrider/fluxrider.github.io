@@ -6,21 +6,35 @@
   <link rel="stylesheet" href="../../styles2018.css"> 
   <script src="https://wagenaartje.github.io/neataptic/cdn/1.2.34/neataptic.js"></script>
   <script>
+  function letter_to_data(c) {
+    let code = c.charCodeAt();
+
+    // el-cheepo normalization (very bad)
+    return [code / 255];
+  }
+
+  function data_to_letter(v) {
+    let code;
+
+    // el-cheepo normalization (very bad)
+    code = v[0] * 255;
+
+    return String.fromCharCode(code)
+  }
+
   function experiment() {
     // data
     const text = document.getElementById('in_data').value;
     if(text.length == 0) return;
     let data = [];
     // for each letter, add it as the ouput of the previous letter
-    let previous_v = text[0].charCodeAt();
+    let previous_v = text[0];
     for(let i = 1; i < text.length; i++) {
-      let v = text[i].charCodeAt();
-      //alert("Letter: " + String.fromCharCode(previous_v) + " " + String.fromCharCode(v));
-      //alert("Raw: " + previous_v + " " + v);
+      let v = text[i];
+      //alert("DATA: " + previous_v + " " + v);
       
-      // el-cheepo normalization (instead of using one-hot, I pretend there is a relation between letters)
-      data.push({ input: [previous_v / 255], output: [v / 255] });
-      //alert("Data: " + data[i - 1].input + " " + data[i - 1].output);
+      data.push({ input: letter_to_data(previous_v), output: letter_to_data(v) });
+      //alert("DATA (REAL): " + data[i - 1].input + " " + data[i - 1].output);
 
       previous_v = v;
     }
@@ -40,18 +54,12 @@
     // generate
     document.getElementById('out_data').value = "";
     let output = text[0];
-    for(let i = 0; i < 100; i++) {
-      let input = output.charCodeAt();
-      // el-cheepo normalization
-      //alert("LET predict with input: " + String.fromCharCode(input));
-      //alert("ASC predict with input: " + input);
-      //alert("RAW predict with input: " + (input / 255));
-      output = network.activate(input / 255);
-      //alert("RAW out: " + output);
-      //alert("ASC out: " + (output * 255));
-      //alert("LET out: " + String.fromCharCode(output * 255));
-      output = String.fromCharCode(output * 255);
-
+    for(let i = 0; i < 10; i++) {
+      let input = output;
+      output = network.activate(letter_to_data(input));
+      //alert("GEN (REAL) in: " + letter_to_data(input) + " -> " + " out: " + output);
+      output = data_to_letter(output);
+      //alert("GEN in: " + input + " -> " + " out: " + output);
       document.getElementById('out_data').value += output;
     }
     
