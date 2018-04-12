@@ -7,16 +7,26 @@
   <script src="https://wagenaartje.github.io/neataptic/cdn/1.2.34/neataptic.js"></script>
   <script>
   function experiment() {
-    // training set
-    let data = [
-      { input: [0,0], output: [0] },
-      { input: [0,1], output: [1] },
-      { input: [1,0], output: [1] },
-      { input: [1,1], output: [0] }
-    ];
+    // data
+    const text = document.getElementById('in_data').value;
+    if(text.length == 0) return;
+    let data = [];
+    // for each letter, add it as the ouput of the previous letter
+    let previous_v = text[0].charCodeAt();
+    for(let i = 1; i < text.length; i++) {
+      let v = text[i].charCodeAt();
+      //alert("Letter: " + String.fromCharCode(previous_v) + " " + String.fromCharCode(v));
+      //alert("Raw: " + previous_v + " " + v);
+      
+      // el-cheepo normalization (instead of using one-hot, I pretend there is a relation between letters)
+      data.push({ input: [previous_v / 255], output: [v / 255] });
+      //alert("Data: " + data[i - 1].input + " " + data[i - 1].output);
 
+      previous_v = v;
+    }
+    
     // network
-    let network = new neataptic.Architect.LSTM(2,6,1);
+    let network = new neataptic.Architect.LSTM(1, 4, 4, 4, 1);
 
     // training
     network.train(data, {
@@ -27,6 +37,24 @@
       rate: 0.3,
     });
 
+    // generate
+    document.getElementById('out_data').value = "";
+    let output = text[0];
+    for(let i = 0; i < 100; i++) {
+      let input = output.charCodeAt();
+      // el-cheepo normalization
+      //alert("LET predict with input: " + String.fromCharCode(input));
+      //alert("ASC predict with input: " + input);
+      //alert("RAW predict with input: " + (input / 255));
+      output = network.activate(input / 255);
+      //alert("RAW out: " + output);
+      //alert("ASC out: " + (output * 255));
+      //alert("LET out: " + String.fromCharCode(output * 255));
+      output = String.fromCharCode(output * 255);
+
+      document.getElementById('out_data').value += output;
+    }
+    
     /*
     for(var i in data){
       var input = data[i].input;
@@ -34,10 +62,10 @@
       alert(input + " " + output);
     }
     */
-    alert(network.activate([0,0]));
-    alert(network.activate([0,0]));
-    alert(network.activate([0,0]));
-    alert(network.activate([0,1]));
+    //alert(network.activate([110]));
+    //alert(network.activate([0]));
+    //alert(network.activate([0]));
+    //alert(network.activate([1]));
 
     //document.getElementById('out_predict').value = s;
   }
