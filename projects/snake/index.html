@@ -15,23 +15,8 @@
   <script>
     "use strict";
 
-    var vertexShaderSource = `#version 300 es
-    in vec4 a_position;
-    void main() {
-      gl_Position = a_position;
-    }
-    `;
-
-    var fragmentShaderSource = `#version 300 es
-    precision mediump float;
-    out vec4 outColor;
-    void main() {
-      outColor = vec4(1, 0, 0.5, 1);
-    }
-    `;
-
     function createShader(gl, type, source) {
-      var shader = gl.createShader(type);
+      let shader = gl.createShader(type);
       gl.shaderSource(shader, source);
       gl.compileShader(shader);
       if(gl.getShaderParameter(shader, gl.COMPILE_STATUS)) return shader;
@@ -41,7 +26,7 @@
     }
 
     function createProgram(gl, vertexShader, fragmentShader) {
-      var program = gl.createProgram();
+      let program = gl.createProgram();
       gl.attachShader(program, vertexShader);
       gl.attachShader(program, fragmentShader);
       gl.linkProgram(program);
@@ -53,42 +38,94 @@
 
     function main() {
       // resize canvas (pixel size) to what it really is (css size)
-      var canvas = document.getElementById("c");
+      let canvas = document.getElementById("c");
       canvas.width  = canvas.clientWidth;
       canvas.height = canvas.clientHeight;
 
       // get context
-      var gl = canvas.getContext("webgl2");
+      let gl = canvas.getContext("webgl2");
       if(!gl) return;
       gl.viewport(0, 0, gl.canvas.width, gl.canvas.height);
 
       // shader setup
-      var vertexShader = createShader(gl, gl.VERTEX_SHADER, vertexShaderSource);
-      if(!vertexShader) return;
-      var fragmentShader = createShader(gl, gl.FRAGMENT_SHADER, fragmentShaderSource);
-      if(!fragmentShader) return;
-      var program = createProgram(gl, vertexShader, fragmentShader);
-      if(!program) return;
-      var SHADER_ATTRIB_POSITION = gl.getAttribLocation(program, "a_position");
-
+      let vertexShaderSource = `#version 300 es
+      in vec3 my_position;
+      in vec4 my_color;
+      in vec3 my_normal;
+      out vec4 x_color;
+      out float x_theta;
+      void main() {
+        x_color = my_color;
+        // hardcode light direction vector
+        x_theta = dot(my_normal, vec3(.3,.9055,.3));
+        gl_Position = vec4(my_position, 1.0);
+      }
+      `;
+      let fragmentShaderSource = `#version 300 es
+      precision mediump float;
+      in vec4 x_color;
+      in float x_theta;
+      out vec4 frag_color;
+      void main() {
+        vec4 c = x_color;
+        // keep half of the color as is, and diffuse the rest
+        frag_color = (c * .50) + (c * max(x_theta, .1) * .50);
+      }
+      `;
+      let vertexShader = createShader(gl, gl.VERTEX_SHADER, vertexShaderSource); if(!vertexShader) return;
+      let fragmentShader = createShader(gl, gl.FRAGMENT_SHADER, fragmentShaderSource); if(!fragmentShader) return;
+      let program = createProgram(gl, vertexShader, fragmentShader); if(!program) return;
+      let SHADER_ATTRIB_POSITION = gl.getAttribLocation(program, "my_position");
+      let SHADER_ATTRIB_COLOR = gl.getAttribLocation(program, "my_color");
+      let SHADER_ATTRIB_NORMAL = gl.getAttribLocation(program, "my_normal");
 
       // scene
       gl.clearColor(0, 0, 0, 1);
       gl.clear(gl.COLOR_BUFFER_BIT);
       gl.useProgram(program);
 
-      // in webgl, we must use vertex buffers instead of passing the array as the offset
-      var positionBuffer = gl.createBuffer();
+      // in webgl, we must use vertex buffers instead of passing the array as the offset of vertexAttribPointer
+      let position_buffer = gl.createBuffer();
+      let color_buffer = gl.createBuffer();
+      let normal_buffer = gl.createBuffer();
 
-      var positions = [
-        0, 0,
-        0, 0.5,
-        0.7, 0,
+      // position
+      let positions = [
+        0, 0, 0,
+        0, 0.5, 0,
+        0.7, 0, 0,
       ];
-      gl.bindBuffer(gl.ARRAY_BUFFER, positionBuffer);
+      gl.bindBuffer(gl.ARRAY_BUFFER, position_buffer);
       gl.bufferData(gl.ARRAY_BUFFER, new Float32Array(positions), gl.STATIC_DRAW);
-      gl.vertexAttribPointer(SHADER_ATTRIB_POSITION, 2, gl.FLOAT, false, 0, 0);
+      gl.vertexAttribPointer(SHADER_ATTRIB_POSITION, 3, gl.FLOAT, false, 0, 0);
       gl.enableVertexAttribArray(SHADER_ATTRIB_POSITION);
+
+      // color (as a constant)
+      gl.vertexAttrib4f(SHADER_ATTRIB_COLOR, 0, 1, 0, 1);
+      gl.disableVertexAttribArray(SHADER_ATTRIB_COLOR);
+      // color (per vertex)
+      /*
+      let colors = [
+        1, 0, 0, 1,
+        0, 1, 0, 1,
+        0, 0, 1, 1,
+      ];
+      gl.bindBuffer(gl.ARRAY_BUFFER, color_buffer);
+      gl.bufferData(gl.ARRAY_BUFFER, new Float32Array(colors), gl.STATIC_DRAW);
+      gl.vertexAttribPointer(SHADER_ATTRIB_COLOR, 4, gl.FLOAT, false, 0, 0);
+      gl.enableVertexAttribArray(SHADER_ATTRIB_COLOR);
+      */
+
+      // normal
+      let normals = [
+        0, 1, 0,
+        0, 1, 0,
+        0, 1, 0,
+      ];
+      gl.bindBuffer(gl.ARRAY_BUFFER, normal_buffer);
+      gl.bufferData(gl.ARRAY_BUFFER, new Float32Array(normals), gl.STATIC_DRAW);
+      gl.vertexAttribPointer(SHADER_ATTRIB_NORMAL, 3, gl.FLOAT, false, 0, 0);
+      gl.enableVertexAttribArray(SHADER_ATTRIB_NORMAL);
 
       gl.drawArrays(gl.TRIANGLES, 0, 3);
     }
