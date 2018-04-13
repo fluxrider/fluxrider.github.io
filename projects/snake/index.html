@@ -12,6 +12,7 @@
       display: inline;
     }
   </style>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/gl-matrix/2.4.1/gl-matrix-min.js"></script>
   <script>
     "use strict";
 
@@ -49,6 +50,8 @@
 
       // shader setup
       let vertexShaderSource = `#version 300 es
+      uniform mat4 my_projection;
+      uniform mat4 my_model;
       in vec3 my_position;
       in vec4 my_color;
       in vec3 my_normal;
@@ -58,7 +61,7 @@
         x_color = my_color;
         // hardcode light direction vector
         x_theta = dot(my_normal, vec3(.3,.9055,.3));
-        gl_Position = vec4(my_position, 1.0);
+        gl_Position = my_projection * vec4(my_position, 1.0);
       }
       `;
       let fragmentShaderSource = `#version 300 es
@@ -78,11 +81,40 @@
       let SHADER_ATTRIB_POSITION = gl.getAttribLocation(program, "my_position");
       let SHADER_ATTRIB_COLOR = gl.getAttribLocation(program, "my_color");
       let SHADER_ATTRIB_NORMAL = gl.getAttribLocation(program, "my_normal");
+      let SHADER_UNIFORM_PROJECTION = gl.getUniformLocation(program, "my_projection");
+      let SHADER_UNIFORM_MODEL = gl.getUniformLocation(program, "my_model");
+
+      // settings
+      gl.enable(gl.DEPTH_TEST);
+      gl.depthFunc(gl.LESS);
+      gl.enable(gl.CULL_FACE);
 
       // scene
       gl.clearColor(0, 0, 0, 1);
-      gl.clear(gl.COLOR_BUFFER_BIT);
+      gl.clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT);
       gl.useProgram(program);
+
+      // projection
+      let identity = [
+        1, 0, 0, 0,
+        0, 1, 0, 0,
+        0, 0, 1, 0,
+        0, 0, 0, 1,
+      ];
+      //let projection = m4.projection(gl.canvas.clientWidth, gl.canvas.clientHeight, 400);
+      let eye = vec3.create();
+      let center = vec3.create();
+      let up = vec3.create();
+      let look_at = mat4.create();
+      let perspective = mat4.create();
+      let projection = mat4.create();
+      vec3.set(eye, 0, 0, .4);
+      vec3.set(center, 0, 0, 0);
+      vec3.set(up, 0, -1, 0);
+      mat4.lookAt(look_at, eye, center, up);
+      mat4.perspective(perspective, 60.0, gl.canvas.width / gl.canvas.height, 0.01, 100.0);
+      mat4.mul(projection, perspective, look_at);
+      gl.uniformMatrix4fv(SHADER_UNIFORM_PROJECTION, false, projection);
 
       // in webgl, we must use vertex buffers instead of passing the array as the offset of vertexAttribPointer
       let position_buffer = gl.createBuffer();
@@ -92,8 +124,8 @@
       // position
       let positions = [
         0, 0, 0,
-        0, 0.5, 0,
         0.7, 0, 0,
+        0, 0.5, 0,
       ];
       gl.bindBuffer(gl.ARRAY_BUFFER, position_buffer);
       gl.bufferData(gl.ARRAY_BUFFER, new Float32Array(positions), gl.STATIC_DRAW);
