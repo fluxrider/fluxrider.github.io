@@ -4,14 +4,6 @@
   <meta charset="UTF-8"> 
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Snake</title>
-  <link rel="stylesheet" href="../../styles2018.css">
-  <style>
-    canvas {
-      width: 80vw;
-      height: 60vh;
-      display: inline;
-    }
-  </style>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/gl-matrix/2.4.1/gl-matrix-min.js"></script>
   <script>
     "use strict";
@@ -42,6 +34,13 @@
       let canvas = document.getElementById("c");
       canvas.width  = canvas.clientWidth;
       canvas.height = canvas.clientHeight;
+
+      // put html overlay on top of canvas
+      let overlay = document.getElementById("overlay");
+      overlay.style.top = '0px';
+      overlay.style.left = (((window.innerWidth - canvas.width) / 2) - 23) + 'px'; // TODO why 23?
+      overlay.style.width = canvas.width + 'px';
+      overlay.style.height = canvas.height + 'px';
 
       // get context
       let gl = canvas.getContext("webgl2");
@@ -90,7 +89,7 @@
       gl.enable(gl.CULL_FACE);
 
       // scene
-      gl.clearColor(0, 0, 0, 1);
+      gl.clearColor(.4, 0, .4, 1);
       gl.clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT);
       gl.useProgram(program);
 
@@ -162,6 +161,33 @@
       gl.drawArrays(gl.TRIANGLES, 0, 3);
     }
   </script>
+  <link rel="stylesheet" href="../../styles2018.css">
+  <style>
+    canvas {
+      width: 80vw;
+      height: 60vh;
+      display: inline;
+    }
+    .container {
+      position: relative;
+    }
+    #overlay {
+      position: absolute;
+      /* background-color: rgba(0, 0, 0, .7); */
+      color: white;
+      font-family: monospace;
+      padding: 0em;
+    }
+    .v-center {
+      position: relative;
+      top: 50%;
+      transform: translateY(-50%);
+      padding: 2em;
+    }
+    #menu {
+      visibility: hidden;
+    }
+  </style>
 </head>
 <body onload="main();">
 
@@ -169,7 +195,17 @@
 <article>
 
 <figure class="A">
-  <canvas id="c"></canvas>
+  <div class="container">
+    <canvas id="c"></canvas>
+    <div id="overlay">
+      <div id="menu" class="v-center" style="display: inline-block; background-color: rgba(255, 255, 255, .7);">
+        <header>Snake<br/><time>2018-04</time></header>
+        <button type="button">Click Me!</button><br/>
+        <button type="button">Click Me!</button><br/>
+        <button type="button">Click Me!</button><br/>
+      </div>
+    </div>
+  </div>
   <figcaption>Snake (webgl2)</figcaption>
 </figure>
 
