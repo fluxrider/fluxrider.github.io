@@ -32,6 +32,8 @@ class LineView {
     ];
     this.gl.bindBuffer(gl.ARRAY_BUFFER, this.wall_mesh);
     this.gl.bufferData(gl.ARRAY_BUFFER, new Float32Array(wall_data), gl.STATIC_DRAW);
+
+    Object.preventExtensions(this);
   }
 
 	render() {

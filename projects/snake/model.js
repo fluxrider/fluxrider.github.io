@@ -68,7 +68,11 @@ class Model {
     this.nearCollision = false;
 
     this.points = new Array(max_points * this.POINT_SIZE); // xy (circular array)
-    this.grid = new Grid(this.points, -.5, -.5, .5, .5, 32, 32, this.thickness);
+    this.points[max_points * this.POINT_SIZE - 1] = 0;
+    this.points[max_points * this.POINT_SIZE - 2] = 0;
+    this.grid = new Grid(this, -.5, -.5, .5, .5, 32, 32, this.thickness);
+
+    Object.preventExtensions(this);
   }
 
   getNearThreshold() {
@@ -205,20 +209,22 @@ class Model {
 		}
 
 		// update tip (head section we don't collide with)
-		this.tip_length += this.head_length;
+		this.tip_length += head_length;
 		while (this.tip_length > this.max_tip_length) {
-			let a = tip;
-			let b = tip + POINT_SIZE;
+      //alert("tip");
+      
+			let a = this.tip;
+			let b = this.tip + this.POINT_SIZE;
 			if (b == this.points.length) b = 0;
 			let tail_of_tip_length = G.eucliendian_distance(this.points[b], this.points[b + 1], this.points[a], this.points[a + 1]);
 			// the max is really the min max, I don't want to cut it too short
-			if (this.tip_length - this.tail_of_tip_length <= this.max_tip_length) break;
-			this.tip_pop(this.tail_of_tip_length, false);
+			if (this.tip_length - tail_of_tip_length <= this.max_tip_length) break;
+			this.tip_pop(tail_of_tip_length, false);
       this.grid.register(b);
 		}
 
 		// collision detection (with self)
-    let collides_ret = this.grid.collides(this.head_id, this.getNearThreshold());
+    let collides_ret = this.grid.collides(head_id, this.getNearThreshold());
 		if (collides_ret.collides) {
 			this.dead = true;
 			for (let listener of this.listeners) {
@@ -316,6 +322,7 @@ class Model {
 		if (is_in_tip) {
 			this.tip_pop(this.tail_length, true);
 		} else {
+      this.grid.unregister(b);
 		}
 		// advance tail
 		let tail_lost = this.tail;
