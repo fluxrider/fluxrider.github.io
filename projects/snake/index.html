@@ -7,25 +7,39 @@
   <script src="https://cdnjs.cloudflare.com/ajax/libs/gl-matrix/2.4.1/gl-matrix-min.js"></script>
   <script src="m.js"></script>
   <script src="g.js"></script>
+  <script src="model.js"></script>
   <script src="gl_utils.js"></script>
   <script>
     "use strict";
 
+    let canvas;
+    let overlay;
+    let model;
+    let gl;
+    let SHADER_ATTRIB_POSITION;
+    let SHADER_ATTRIB_COLOR;
+    let SHADER_ATTRIB_NORMAL;
+    let SHADER_UNIFORM_PROJECTION;
+    let SHADER_UNIFORM_MODEL;
+
     function main() {
       // resize canvas (pixel size) to what it really is (css size)
-      let canvas = document.getElementById("c");
+      canvas = document.getElementById("c");
       canvas.width  = canvas.clientWidth;
       canvas.height = canvas.clientHeight;
 
       // put html overlay on top of canvas
-      let overlay = document.getElementById("overlay");
+      overlay = document.getElementById("overlay");
       overlay.style.top = '0px';
       overlay.style.left = (((window.innerWidth - canvas.width) / 2) - 23) + 'px'; // TODO why 23?
       overlay.style.width = canvas.width + 'px';
       overlay.style.height = canvas.height + 'px';
 
+      // model
+      model = new Model(1200);
+
       // get context
-      let gl = canvas.getContext("webgl2");
+      gl = canvas.getContext("webgl2");
       if(!gl) return;
       gl.viewport(0, 0, gl.canvas.width, gl.canvas.height);
 
@@ -59,21 +73,25 @@
       let vertexShader = createShader(gl, gl.VERTEX_SHADER, vertexShaderSource); if(!vertexShader) return;
       let fragmentShader = createShader(gl, gl.FRAGMENT_SHADER, fragmentShaderSource); if(!fragmentShader) return;
       let program = createProgram(gl, vertexShader, fragmentShader); if(!program) return;
-      let SHADER_ATTRIB_POSITION = gl.getAttribLocation(program, "my_position");
-      let SHADER_ATTRIB_COLOR = gl.getAttribLocation(program, "my_color");
-      let SHADER_ATTRIB_NORMAL = gl.getAttribLocation(program, "my_normal");
-      let SHADER_UNIFORM_PROJECTION = gl.getUniformLocation(program, "my_projection");
-      let SHADER_UNIFORM_MODEL = gl.getUniformLocation(program, "my_model");
+      SHADER_ATTRIB_POSITION = gl.getAttribLocation(program, "my_position");
+      SHADER_ATTRIB_COLOR = gl.getAttribLocation(program, "my_color");
+      SHADER_ATTRIB_NORMAL = gl.getAttribLocation(program, "my_normal");
+      SHADER_UNIFORM_PROJECTION = gl.getUniformLocation(program, "my_projection");
+      SHADER_UNIFORM_MODEL = gl.getUniformLocation(program, "my_model");
 
       // settings
       gl.enable(gl.DEPTH_TEST);
       gl.depthFunc(gl.LESS);
       gl.enable(gl.CULL_FACE);
+      gl.useProgram(program);
 
+      tick();
+    }
+
+    function tick() {
       // scene
       gl.clearColor(.4, 0, .4, 1);
       gl.clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT);
-      gl.useProgram(program);
 
       // projection
       let eye = vec3.create();

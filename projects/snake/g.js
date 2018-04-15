@@ -34,8 +34,10 @@ class G {
     y -= cy;
 
     // rotate point and translate back
-    out.x = x * c - y * s + cx;
-    out.y = x * s + y * c + cy;
+    return {
+      x: x * c - y * s + cx,
+      y: x * s + y * c + cy
+    };
   }
 
   static collides_1D(x1, x2, y1, y2) {
