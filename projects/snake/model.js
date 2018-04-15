@@ -66,9 +66,9 @@ class Model {
     this.pickup_y = 0;
 
     this.nearCollision = false;
-    this.nearSelf = false;
 
     this.points = new Array(max_points * this.POINT_SIZE); // xy (circular array)
+    this.grid = new Grid(this.points, -.5, -.5, .5, .5, 32, 32, this.thickness);
   }
 
   getNearThreshold() {
@@ -119,6 +119,8 @@ class Model {
 		this.nearCollision = false;
 
 		this.pickup_exists = false;
+
+    this.grid.reset();
 
 		for (let listener of this.listeners) {
 			listener.onReset();
@@ -212,15 +214,54 @@ class Model {
 			// the max is really the min max, I don't want to cut it too short
 			if (this.tip_length - this.tail_of_tip_length <= this.max_tip_length) break;
 			this.tip_pop(this.tail_of_tip_length, false);
+      this.grid.register(b);
+		}
+
+		// collision detection (with self)
+    let collides_ret = this.grid.collides(this.head_id, this.getNearThreshold());
+		if (collides_ret.collides) {
+			this.dead = true;
+			for (let listener of this.listeners) {
+				listener.onCollision();
+			}
 		}
 
     if(!this.dead) {
+			// collision detection (with walls) (remember arena is -.5 to .5, and walls are at tickness)
 			let thickness_x3 = 3 * this.thickness; // the 2 thickness of the wall + the worms
+			if ((this.px - thickness_x3 < -.5) || (this.px + thickness_x3 > .5) || (this.py - thickness_x3 < -.5) || (this.py + thickness_x3 > .5)) {
+				this.dead = true;
+				for (let listener of this.listeners) {
+					listener.onCollision();
+				}
+			}
+
+			// collision warning (with walls)
+			if (!this.dead) {
+				let nearWall = false;
+				let p2x = this.px - dx + (dx / head_length) * this.getNearThreshold();
+				let p2y = this.py - dy + (dy / head_length) * this.getNearThreshold();
+				if ((p2x - thickness_x3 < -.5) || (p2x + thickness_x3 > .5) || (p2y - thickness_x3 < -.5) || (p2y + thickness_x3 > .5)) {
+					nearWall = true;
+				}
+
+				if (!this.nearCollision && (nearWall || collides_ret.near)) {
+					this.nearCollision = true;
+					for (let listener of this.listeners) {
+						listener.onNear(this.nearCollision);
+					}
+				} else if (this.nearCollision && (!nearWall && !collides_ret.near)) {
+					this.nearCollision = false;
+					for (let listener of this.listeners) {
+						listener.onNear(this.nearCollision);
+					}
+				}
+			}
 
 		  // spawn pickup
 		  if (!this.pickup_exists) {
 			  this.pickup_exists = true;
-			  //do {
+			  do {
 				  do {
 					  do {
 						  this.pickup_x = (Math.random() - .5) * (1 - 2 * thickness_x3);
@@ -230,11 +271,28 @@ class Model {
 					  // spawn without being too close to your neck /*&& distance from head */
 				  } while (G.eucliendian_distance_squared(this.px, this.py, this.pickup_x, this.pickup_y) < this.tip_length * this.tip_length);
 				  // spawn it without colliding with your own body
-			  //} while (grid.collides(pickup_x, pickup_y));
+			  } while (this.grid.collides_pts(this.pickup_x, this.pickup_y));
 			  for (let listener of this.listeners) {
 				  listener.onPickupAppears(this.pickup_x, this.pickup_y);
 			  }
 		  }
+
+			// collision with pickup
+			if (Math.sqrt(G.ptSegDistSq(this.px, this.py, this.px - dx, this.py - dy, this.pickup_x, this.pickup_y)) < 2 * this.thickness) {
+				this.pickup_exists = false;
+				this.score++;
+				if (O_high_score < this.score) {
+					O_high_score++;
+					// TODO O_save();
+				}
+				this.goalSpeed = Math.min(this.INIT_SPEED + this.score * this.scoreSpeedInc, this.FINAL_SPEED);
+				this.goalTurnSpeed = this.INIT_TURN_SPEED + this.score * this.scoreTurnSpeedInc;
+				this.max_length = Math.min(this.INIT_MAX_LENGTH + this.score * this.scoreMaxLengthInc, this.FINAL_MAX_LENGTH);
+				for (let listener of this.listeners) {
+					listener.onPickup(this.pickup_x, this.pickup_y);
+				}
+			}
+
     }
 
 		for (let listener of this.listeners) {
