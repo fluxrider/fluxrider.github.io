@@ -187,6 +187,7 @@ class Model {
 			this.head = 0;
 		}
 		// append new position to mesh
+    //console.log(this.head + ": " + head_length + "     " + this.px + ", " + this.py);
 		let head_id = this.head;
 		this.points[this.head++] = this.px;
 		this.points[this.head++] = this.py;
@@ -275,7 +276,7 @@ class Model {
 						  // spawn it in the circle within the arena box, that should be fair (it's not like I wrote a proof though)
 					  } while (this.pickup_x * this.pickup_x + this.pickup_y * this.pickup_y > .5 * .5);
 					  // spawn without being too close to your neck /*&& distance from head */
-				  } while (G.eucliendian_distance_squared(this.px, this.py, this.pickup_x, this.pickup_y) < this.tip_length * this.tip_length);
+				  } while (Math.sqrt(G.eucliendian_distance_squared(this.px, this.py, this.pickup_x, this.pickup_y)) < this.tip_length);
 				  // spawn it without colliding with your own body
 			  } while (this.grid.collides_pts(this.pickup_x, this.pickup_y));
 			  for (let listener of this.listeners) {
