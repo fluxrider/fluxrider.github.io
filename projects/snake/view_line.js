@@ -62,6 +62,13 @@ class LineView {
         this.gl.disableVertexAttribArray(SHADER_ATTRIB_COLOR);
         this.gl.disableVertexAttribArray(SHADER_ATTRIB_NORMAL);
         this.gl.drawArrays(gl.LINE_STRIP, 0, (this.mesh_data.length - this.mesh_tail) / this.VERTEX_SIZE);
+
+//alert("first");
+//alert("tail: " + this.mesh_tail);
+//alert("x: " + this.mesh_data[this.mesh_tail]);
+//alert("y: " + this.mesh_data[this.mesh_tail+1]);
+//alert("z: " + this.mesh_data[this.mesh_tail+2]);
+
         this.gl.bindBuffer(gl.ARRAY_BUFFER, this.mesh_half);
         this.gl.bufferData(gl.ARRAY_BUFFER, data, gl.STATIC_DRAW);
         this.gl.vertexAttribPointer(SHADER_ATTRIB_POSITION, 3, gl.FLOAT, false, 0, 0);
@@ -71,6 +78,10 @@ class LineView {
         this.gl.disableVertexAttribArray(SHADER_ATTRIB_COLOR);
         this.gl.disableVertexAttribArray(SHADER_ATTRIB_NORMAL);
         this.gl.drawArrays(gl.LINE_STRIP, 0, this.mesh_head / this.VERTEX_SIZE);
+//alert("second");
+//alert("x: " + this.mesh_data[0]);
+//alert("y: " + this.mesh_data[1]);
+//alert("z: " + this.mesh_data[2]);
 			} else {
         this.gl.bindBuffer(gl.ARRAY_BUFFER, this.mesh_half);
         this.gl.bufferData(gl.ARRAY_BUFFER, data, gl.STATIC_DRAW);

@@ -78,15 +78,15 @@ class Model {
   getPoint(id) {
     if ((id < this.tail && id > this.head) || (id > this.head && id < this.tail)) throw "invalid id";
     return {
-      x: points[id],
-      y: points[id + 1]
+      x: this.points[id],
+      y: this.points[id + 1]
     }
   }
 
   getPickup() {
     return {
-      x: pickup_x,
-      y: pickup_y
+      x: this.pickup_x,
+      y: this.pickup_y
     };
   }
 
@@ -120,7 +120,7 @@ class Model {
 
 		this.pickup_exists = false;
 
-		for (let listener in this.listeners) {
+		for (let listener of this.listeners) {
 			listener.onReset();
 		}
 	}
@@ -184,7 +184,7 @@ class Model {
 		let head_id = this.head;
 		this.points[this.head++] = this.px;
 		this.points[this.head++] = this.py;
-		for (let listener in this.listeners) {
+		for (let listener of this.listeners) {
 			listener.onHeadPush(head_id);
 		}
 
@@ -214,7 +214,7 @@ class Model {
 			this.tip_pop(this.tail_of_tip_length, false);
 		}
 
-		for (let listener in this.listeners) {
+		for (let listener of this.listeners) {
 			listener.onTick(monotonic_ms, delta_seconds);
 		}
 
@@ -241,7 +241,7 @@ class Model {
 		this.tail += this.POINT_SIZE;
 		if (this.tail == this.points.length) this.tail = 0;
 
-		for (let listener in this.listeners) {
+		for (let listener of this.listeners) {
 			listener.onTailPop(tail_lost, is_in_tip);
 		}
 	}
@@ -253,7 +253,7 @@ class Model {
 		if (this.tip == this.points.length) {
 			this.tip = 0;
 		}
-		for (let listener in this.listeners) {
+		for (let listener of this.listeners) {
 			listener.onTipPop(tip_lost, is_in_tail);
 		}
 	}

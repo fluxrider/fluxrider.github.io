@@ -95,10 +95,13 @@
       // model
       let half_length = 600;
       model = new Model(half_length * 2);
-      model.reset();
 
       // views
       line_view = new LineView(model, half_length, gl);
+
+      // hook up listeners and reset model
+      model.listeners.push(line_view);
+      model.reset();
 
       // game loop speed
       setInterval(tick, 100);
