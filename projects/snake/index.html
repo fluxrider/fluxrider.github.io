@@ -115,6 +115,8 @@
       let delta_ms = now_ms - previous_ms;
       let delta_s = delta_ms / 1000.0;
       previous_ms = now_ms;
+      // fps
+      document.getElementById("fps").innerHTML = M.round(1 / delta_s);
 
       // model
       //if(delta_s > .2) alert(" ms:" + delta_ms + " s:" + delta_s);
@@ -226,6 +228,9 @@
         <button type="button">Click Me!</button><br/>
         <button type="button">Click Me!</button><br/>
         <button type="button">Click Me!</button><br/>
+      </div>
+      <div id="debug" class="v-center">
+        <p>FPS:<span id="fps"></span></p>
       </div>
     </div>
   </div>
