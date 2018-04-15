@@ -66,7 +66,7 @@ class Model {
     this.nearCollision = false;
     this.nearSelf = false;
 
-    this.points = [max_points * this.POINT_SIZE]; // xy (circular array)
+    this.points = new Array(max_points * this.POINT_SIZE); // xy (circular array)
   }
 
   getNearThreshold() {
@@ -123,7 +123,7 @@ class Model {
 		}
 	}
 
-	tick(monotonic_nano, delta_seconds) {
+	tick(monotonic_ms, delta_seconds) {
 		if (this.dead) return;
 		let max_direction = 2 * Math.PI;
 
@@ -162,7 +162,7 @@ class Model {
 		// serpentine motion
 		let serpentine = 0;
 		if (O_serpentine) {
-			let s = monotonic_nano / 1000000000.0;
+			let s = monotonic_ms / 1000.0;
 			s = s - Math.trunc(s);
 			let F = 20;
 			let A = 10;
@@ -194,7 +194,9 @@ class Model {
 		}
 
 		// cut tail short (because of snake length)
+    let tmp = performance.now();
 		while (this.length > this.max_length) {
+      //alert("Poping cause " + this.length + " > " + this.max_length + " tmp: " + tmp);
 			this.tail_pop();
 		}
 
@@ -211,7 +213,7 @@ class Model {
 		}
 
 		for (let listener in this.listeners) {
-			listener.onTick(monotonic_nano, delta_seconds);
+			listener.onTick(monotonic_ms, delta_seconds);
 		}
 
 		this.leftPressed = false;

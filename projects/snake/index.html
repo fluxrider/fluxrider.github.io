@@ -21,6 +21,9 @@
     let SHADER_ATTRIB_NORMAL;
     let SHADER_UNIFORM_PROJECTION;
     let SHADER_UNIFORM_MODEL;
+    let position_buffer;
+    let color_buffer;
+    let normal_buffer;
 
     function main() {
       // resize canvas (pixel size) to what it really is (css size)
@@ -85,10 +88,28 @@
       gl.enable(gl.CULL_FACE);
       gl.useProgram(program);
 
-      tick();
+      // in webgl, we must use vertex buffers instead of passing the array as the offset of vertexAttribPointer
+      position_buffer = gl.createBuffer();
+      color_buffer = gl.createBuffer();
+      normal_buffer = gl.createBuffer();
+
+      // game loop speed
+      setInterval(tick, 100);
     }
 
+    let previous_ms = undefined;
     function tick() {
+      // time
+      let now_ms = performance.now();
+      if(!previous_ms) previous_ms = now_ms;
+      let delta_ms = now_ms - previous_ms;
+      let delta_s = delta_ms / 1000.0;
+      previous_ms = now_ms;
+
+      // model
+      //if(delta_s > .2) alert(" ms:" + delta_ms + " s:" + delta_s);
+      model.tick(now_ms, delta_s);
+
       // scene
       gl.clearColor(.4, 0, .4, 1);
       gl.clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT);
@@ -108,15 +129,10 @@
       mat4.mul(projection, perspective, look_at);
       gl.uniformMatrix4fv(SHADER_UNIFORM_PROJECTION, false, projection);
 
-      // in webgl, we must use vertex buffers instead of passing the array as the offset of vertexAttribPointer
-      let position_buffer = gl.createBuffer();
-      let color_buffer = gl.createBuffer();
-      let normal_buffer = gl.createBuffer();
-
       // position
       let positions = [
         0, 0, 0,
-        0.7, 0, 0,
+        Math.random(), 0, 0,
         0, 0.5, 0,
       ];
       gl.bindBuffer(gl.ARRAY_BUFFER, position_buffer);
