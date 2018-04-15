@@ -1,3 +1,5 @@
+"use strict";
+
 class G {
 
   // TODO Jonathan Richard Shewchuk robust orientation predicate

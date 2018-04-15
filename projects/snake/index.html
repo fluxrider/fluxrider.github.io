@@ -8,6 +8,7 @@
   <script src="m.js"></script>
   <script src="g.js"></script>
   <script src="model.js"></script>
+  <script src="view_line.js"></script>
   <script src="gl_utils.js"></script>
   <script>
     "use strict";
@@ -15,6 +16,7 @@
     let canvas;
     let overlay;
     let model;
+    let line_view;
     let gl;
     let SHADER_ATTRIB_POSITION;
     let SHADER_ATTRIB_COLOR;
@@ -37,9 +39,6 @@
       overlay.style.left = (((window.innerWidth - canvas.width) / 2) - 23) + 'px'; // TODO why 23?
       overlay.style.width = canvas.width + 'px';
       overlay.style.height = canvas.height + 'px';
-
-      // model
-      model = new Model(1200);
 
       // get context
       gl = canvas.getContext("webgl2");
@@ -93,6 +92,14 @@
       color_buffer = gl.createBuffer();
       normal_buffer = gl.createBuffer();
 
+      // model
+      let half_length = 600;
+      model = new Model(half_length * 2);
+      model.reset();
+
+      // views
+      line_view = new LineView(model, half_length, gl);
+
       // game loop speed
       setInterval(tick, 100);
     }
@@ -121,7 +128,7 @@
       let look_at = mat4.create();
       let perspective = mat4.create();
       let projection = mat4.create();
-      vec3.set(eye, 0, 0, .4);
+      vec3.set(eye, 0, 0, .1);
       vec3.set(center, 0, 0, 0);
       vec3.set(up, 0, -1, 0);
       mat4.lookAt(look_at, eye, center, up);
@@ -129,6 +136,9 @@
       mat4.mul(projection, perspective, look_at);
       gl.uniformMatrix4fv(SHADER_UNIFORM_PROJECTION, false, projection);
 
+      line_view.render();
+
+/*
       // position
       let positions = [
         0, 0, 0,
@@ -155,12 +165,12 @@
       gl.vertexAttribPointer(SHADER_ATTRIB_COLOR, 4, gl.FLOAT, false, 0, 0);
       gl.enableVertexAttribArray(SHADER_ATTRIB_COLOR);
       */
-
+/*
       // normal
       let normals = [
-        0, 1, 0,
-        0, 1, 0,
-        0, 1, 0,
+        0, 0, 1,
+        0, 0, 1,
+        0, 0, 1,
       ];
       gl.bindBuffer(gl.ARRAY_BUFFER, normal_buffer);
       gl.bufferData(gl.ARRAY_BUFFER, new Float32Array(normals), gl.STATIC_DRAW);
@@ -168,6 +178,7 @@
       gl.enableVertexAttribArray(SHADER_ATTRIB_NORMAL);
 
       gl.drawArrays(gl.TRIANGLES, 0, 3);
+*/
     }
   </script>
   <link rel="stylesheet" href="../../styles2018.css">

@@ -1,3 +1,5 @@
+"use strict";
+
 var M_EPSILON = 0.00001;
 
 class M {

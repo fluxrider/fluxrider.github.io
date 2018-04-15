@@ -1,4 +1,4 @@
-// Attributes
+"use strict";
 
 class Grid {
 

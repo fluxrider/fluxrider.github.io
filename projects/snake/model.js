@@ -1,3 +1,5 @@
+"use strict";
+
 let O_show_fps = true;
 let O_apply_slowmo = true;
 let O_show_line_view = true;
@@ -93,7 +95,7 @@ class Model {
 		this.score = 0;
 		this.length = 0;
 		this.tip_length = 0;
-		this.max_tip_length = thickness * 5;
+		this.max_tip_length = this.thickness * 5;
 		this.dead = false;
 		this.goalSpeed = 0;
 		this.goalTurnSpeed = 0;
@@ -106,9 +108,9 @@ class Model {
 		this.px = 0;
 		this.py = 0;
 
-		this.turnSpeed = INIT_TURN_SPEED;
-		this.speed = INIT_SPEED;
-		this.max_length = INIT_MAX_LENGTH;
+		this.turnSpeed = this.INIT_TURN_SPEED;
+		this.speed = this.INIT_SPEED;
+		this.max_length = this.INIT_MAX_LENGTH;
 
 		this.head = 0;
 		this.tail = 0;
