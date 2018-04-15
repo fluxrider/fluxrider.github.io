@@ -214,6 +214,29 @@ class Model {
 			this.tip_pop(this.tail_of_tip_length, false);
 		}
 
+    if(!this.dead) {
+			let thickness_x3 = 3 * this.thickness; // the 2 thickness of the wall + the worms
+
+		  // spawn pickup
+		  if (!this.pickup_exists) {
+			  this.pickup_exists = true;
+			  //do {
+				  do {
+					  do {
+						  this.pickup_x = (Math.random() - .5) * (1 - 2 * thickness_x3);
+						  this.pickup_y = (Math.random() - .5) * (1 - 2 * thickness_x3);
+						  // spawn it in the circle within the arena box, that should be fair (it's not like I wrote a proof though)
+					  } while (this.pickup_x * this.pickup_x + this.pickup_y * this.pickup_y > .5 * .5);
+					  // spawn without being too close to your neck /*&& distance from head */
+				  } while (G.eucliendian_distance_squared(this.px, this.py, this.pickup_x, this.pickup_y) < this.tip_length * this.tip_length);
+				  // spawn it without colliding with your own body
+			  //} while (grid.collides(pickup_x, pickup_y));
+			  for (let listener of this.listeners) {
+				  listener.onPickupAppears(this.pickup_x, this.pickup_y);
+			  }
+		  }
+    }
+
 		for (let listener of this.listeners) {
 			listener.onTick(monotonic_ms, delta_seconds);
 		}
