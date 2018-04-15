@@ -23,7 +23,7 @@ class M {
   }
 
   static round_dx(x, decimals) {
-    p = Math.pow(10.0, decimals);
+    let p = Math.pow(10.0, decimals);
     return M.round(x * p) / p;
   }
 

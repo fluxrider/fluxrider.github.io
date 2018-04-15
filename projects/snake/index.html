@@ -5,6 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Snake</title>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/gl-matrix/2.4.1/gl-matrix-min.js"></script>
+  <script src="input.js"></script>
   <script src="m.js"></script>
   <script src="g.js"></script>
   <script src="model.js"></script>
@@ -27,6 +28,10 @@
     let color_buffer;
     let normal_buffer;
 
+    let polledInput = null;
+    function keyPressed(e) { polledInput.keyPressed(e);	}
+    function keyReleased(e) { polledInput.keyReleased(e);	}
+
     function main() {
       // resize canvas (pixel size) to what it really is (css size)
       canvas = document.getElementById("c");
@@ -40,7 +45,12 @@
       overlay.style.width = canvas.width + 'px';
       overlay.style.height = canvas.height + 'px';
 
-      // get context
+      // setup input
+      polledInput = new PolledInput();
+      document.onkeydown = keyPressed;
+      document.onkeyup = keyReleased;
+
+      // get graphics context
       gl = canvas.getContext("webgl2");
       if(!gl) return;
       gl.viewport(0, 0, gl.canvas.width, gl.canvas.height);
@@ -104,7 +114,7 @@
       model.reset();
 
       // game loop speed
-      setInterval(tick, 100);
+      setInterval(tick, 12);
     }
 
     let previous_ms = undefined;
@@ -116,7 +126,11 @@
       let delta_s = delta_ms / 1000.0;
       previous_ms = now_ms;
       // fps
-      document.getElementById("fps").innerHTML = M.round(1 / delta_s);
+      document.getElementById("fps").innerHTML = M.round_dx(1 / delta_s, 3);
+
+      // input
+      model.setInput(polledInput.held(VK_LEFT) || polledInput.held(VK_A), polledInput.held(VK_RIGHT) || polledInput.held(VK_D));
+      polledInput.polled();
 
       // model
       //if(delta_s > .2) alert(" ms:" + delta_ms + " s:" + delta_s);
@@ -230,7 +244,7 @@
         <button type="button">Click Me!</button><br/>
       </div>
       <div id="debug" class="v-center">
-        <p>FPS:<span id="fps"></span></p>
+        <p align="left">FPS:<span id="fps"></span></p>
       </div>
     </div>
   </div>
