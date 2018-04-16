@@ -67,7 +67,7 @@ class Model {
 
     this.nearCollision = false;
 
-    this.points = new Array(max_points * this.POINT_SIZE); // xy (circular array)
+    this.points = new Float64Array(max_points * this.POINT_SIZE); // xy (circular array)
     this.points[max_points * this.POINT_SIZE - 1] = 0;
     this.points[max_points * this.POINT_SIZE - 2] = 0;
     this.grid = new Grid(this, -.5, -.5, .5, .5, 32, 32, this.thickness);
@@ -187,7 +187,6 @@ class Model {
 			this.head = 0;
 		}
 		// append new position to mesh
-    //console.log(this.head + ": " + head_length + "     " + this.px + ", " + this.py);
 		let head_id = this.head;
 		this.points[this.head++] = this.px;
 		this.points[this.head++] = this.py;

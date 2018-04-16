@@ -11,24 +11,21 @@ class Grid {
     this.cols = cols;
     this.model = model;
     this.thickness = thickness;
-    //this.thickness_x2_square = (thickness + thickness) * (thickness + thickness);
     // TODO currently just use a list of registered points
-    this.registered = {};
+    this.registered = new Set();
     Object.preventExtensions(this);
   }
 
   reset() {
-    this.registered = {};
+    this.registered.clear();
   }
 
   register(id) {
-    //alert("register " + id);
-    this.registered[id] = true;
+    this.registered.add(id);
   }
 
   unregister(id) {
-    //alert("unregister " + id);
-    delete this.registered[id];
+    this.registered.delete(id);
   }
 
 	static sign(x) {
@@ -72,7 +69,7 @@ class Grid {
 		let my = ny + dx;
 		let towards_sign = Grid.sign(G.orient2dfast_non_robust(nx, ny, mx, my, bx, by));
 
-		for (let index in this.registered) {
+		for (let index of this.registered.values()) {
 			let q = index;
 			let p = index - this.model.POINT_SIZE;
 			if (p < 0) p = this.model.points.length - this.model.POINT_SIZE;
@@ -86,20 +83,6 @@ class Grid {
 			// first test if we are moving towards this line (i.e. this is to avoid testing against our neck)
 			if ((Grid.sign(G.orient2dfast_non_robust(nx, ny, mx, my, qx, qy)) == towards_sign) || (Grid.sign(G.orient2dfast_non_robust(nx, ny, mx, my, px, py)) == towards_sign)) {
 				if (Math.sqrt(G.segment_segment_dist_squared_robust(ax, ay, bx, by, px, py, qx, qy)) < this.thickness * 2) {
-          console.log("collision");
-          console.log("Distance: " + Math.sqrt(G.segment_segment_dist_squared_robust(ax, ay, bx, by, px, py, qx, qy)));
-          console.log("Threshold: " + (this.thickness * 2));
-          console.log("P: " + px + ", " + py + " - " + qx + "," + qy); // BUG HUNT: p and q are often very far on weird collision, especially p.y and q.y
-          //console.log("N: " + nx + ", " + ny + " - " + mx + "," + my);
-          console.log("B1: " + ax + ", " + ay + " - " + bx + "," + by);
-          //console.log("B2: " + ax + ", " + ay + " - " + b2x + "," + b2y);
-          //console.log("towards: " + towards_sign);
-          console.log("p: " + p);
-          console.log("q: " + q);
-          console.log("a: " + a);
-          console.log("b: " + b);
-          console.log("points[q]: " + this.model.points[q]);
-          console.log("points[q+1]: " + this.model.points[q + 1]);
 					return {
             collides: true,
             near: near
@@ -107,7 +90,6 @@ class Grid {
 				}
 				if (Math.sqrt(G.segment_segment_dist_squared_robust(ax, ay, b2x, b2y, px, py, qx, qy)) < this.thickness) {
 					near = true;
-          console.log("near");
 				}
 
 			}
@@ -120,7 +102,7 @@ class Grid {
 	}
 
 	collides_pts(x, y) {
-		for (let index in this.registered) {
+		for (let index of this.registered.values()) {
 			let q = index;
 			let p = index - this.model.POINT_SIZE;
 			if (p < 0) p = this.model.points.length - this.model.POINT_SIZE;
