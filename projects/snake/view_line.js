@@ -17,7 +17,7 @@ class LineView {
 
 		this.mesh_full = this.gl.createBuffer();
 		this.mesh_half = this.gl.createBuffer();
-		this.mesh_data = new Array(2 * HALF_LENGTH * this.VERTEX_SIZE);
+		this.mesh_data = new Float32Array(2 * HALF_LENGTH * this.VERTEX_SIZE);
 
 		this.mesh_target = this.gl.createBuffer();
 
@@ -40,11 +40,10 @@ class LineView {
 		if (!this.model.started) return;
     let SIZE_OF_FLOAT = 4;
 		// set mesh data
-    let data = new Float32Array(this.mesh_data); // TODO can I work on this directly instead of re-creating it each time?
 		if (this.mesh_tail < this.mesh_head) {
       // just one continuous array (this is how it starts)
       this.gl.bindBuffer(gl.ARRAY_BUFFER, this.mesh_full);
-      this.gl.bufferData(gl.ARRAY_BUFFER, data, gl.STATIC_DRAW);
+      this.gl.bufferData(gl.ARRAY_BUFFER, this.mesh_data, gl.STATIC_DRAW);
       this.gl.vertexAttribPointer(SHADER_ATTRIB_POSITION, 3, gl.FLOAT, false, 0, this.mesh_tail * SIZE_OF_FLOAT);
       this.gl.vertexAttrib4f(SHADER_ATTRIB_COLOR, 0, 1, 0, 1);
       this.gl.vertexAttrib3f(SHADER_ATTRIB_NORMAL, 0, 1, 0);
@@ -56,7 +55,7 @@ class LineView {
       // circular array is broken in two section (this is the common case)
 			if (this.mesh_tail < this.HALF_LENGTH) {
         this.gl.bindBuffer(gl.ARRAY_BUFFER, this.mesh_full);
-        this.gl.bufferData(gl.ARRAY_BUFFER, data, gl.STATIC_DRAW);
+        this.gl.bufferData(gl.ARRAY_BUFFER, this.mesh_data, gl.STATIC_DRAW);
         this.gl.vertexAttribPointer(SHADER_ATTRIB_POSITION, 3, gl.FLOAT, false, 0, this.mesh_tail * SIZE_OF_FLOAT);
         this.gl.vertexAttrib4f(SHADER_ATTRIB_COLOR, 0, 1, 0, 1);
         this.gl.vertexAttrib3f(SHADER_ATTRIB_NORMAL, 0, 1, 0);
@@ -65,7 +64,7 @@ class LineView {
         this.gl.disableVertexAttribArray(SHADER_ATTRIB_NORMAL);
         this.gl.drawArrays(gl.LINE_STRIP, 0, (this.mesh_data.length - this.mesh_tail) / this.VERTEX_SIZE);
         this.gl.bindBuffer(gl.ARRAY_BUFFER, this.mesh_half);
-        this.gl.bufferData(gl.ARRAY_BUFFER, data, gl.STATIC_DRAW);
+        this.gl.bufferData(gl.ARRAY_BUFFER, this.mesh_data, gl.STATIC_DRAW);
         this.gl.vertexAttribPointer(SHADER_ATTRIB_POSITION, 3, gl.FLOAT, false, 0, 0);
         this.gl.vertexAttrib4f(SHADER_ATTRIB_COLOR, 0, 1, 0, 1);
         this.gl.vertexAttrib3f(SHADER_ATTRIB_NORMAL, 0, 1, 0);
@@ -75,7 +74,7 @@ class LineView {
         this.gl.drawArrays(gl.LINE_STRIP, 0, this.mesh_head / this.VERTEX_SIZE);
 			} else {
         this.gl.bindBuffer(gl.ARRAY_BUFFER, this.mesh_half);
-        this.gl.bufferData(gl.ARRAY_BUFFER, data, gl.STATIC_DRAW);
+        this.gl.bufferData(gl.ARRAY_BUFFER, this.mesh_data, gl.STATIC_DRAW);
         this.gl.vertexAttribPointer(SHADER_ATTRIB_POSITION, 3, gl.FLOAT, false, 0, this.mesh_tail * SIZE_OF_FLOAT);
         this.gl.vertexAttrib4f(SHADER_ATTRIB_COLOR, 0, 1, 0, 1);
         this.gl.vertexAttrib3f(SHADER_ATTRIB_NORMAL, 0, 1, 0);
@@ -84,7 +83,7 @@ class LineView {
         this.gl.disableVertexAttribArray(SHADER_ATTRIB_NORMAL);
         this.gl.drawArrays(gl.LINE_STRIP, 0, (this.mesh_data.length - this.mesh_tail) / this.VERTEX_SIZE);
         this.gl.bindBuffer(gl.ARRAY_BUFFER, this.mesh_full);
-        this.gl.bufferData(gl.ARRAY_BUFFER, data, gl.STATIC_DRAW);
+        this.gl.bufferData(gl.ARRAY_BUFFER, this.mesh_data, gl.STATIC_DRAW);
         this.gl.vertexAttribPointer(SHADER_ATTRIB_POSITION, 3, gl.FLOAT, false, 0, 0);
         this.gl.vertexAttrib4f(SHADER_ATTRIB_COLOR, 0, 1, 0, 1);
         this.gl.vertexAttrib3f(SHADER_ATTRIB_NORMAL, 0, 1, 0);
