@@ -78,8 +78,6 @@ class Grid {
 			let qx = this.model.points[q];
 			let qy = this.model.points[q + 1];
 
-      // BUG HUNT fails to detect collision that are most ovbious graphically
-
 			// first test if we are moving towards this line (i.e. this is to avoid testing against our neck)
 			if ((Grid.sign(G.orient2dfast_non_robust(nx, ny, mx, my, qx, qy)) == towards_sign) || (Grid.sign(G.orient2dfast_non_robust(nx, ny, mx, my, px, py)) == towards_sign)) {
 				if (Math.sqrt(G.segment_segment_dist_squared_robust(ax, ay, bx, by, px, py, qx, qy)) < this.thickness * 2) {
