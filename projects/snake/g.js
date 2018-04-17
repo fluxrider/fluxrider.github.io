@@ -27,7 +27,7 @@ class G {
     return x1 * x2 + y1 * y2;
   }
 
-  static rot_around(cx, cy, x, y, angle_radian, out_p) {
+  static rot_around(cx, cy, x, y, angle_radian) {
     let s = Math.sin(angle_radian);
     let c = Math.cos(angle_radian);
 

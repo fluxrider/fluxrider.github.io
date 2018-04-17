@@ -99,7 +99,7 @@
       // settings
       gl.enable(gl.DEPTH_TEST);
       gl.depthFunc(gl.LESS);
-      gl.enable(gl.CULL_FACE);
+      //gl.enable(gl.CULL_FACE);
       gl.useProgram(program);
 
       // in webgl, we must use vertex buffers instead of passing the array as the offset of vertexAttribPointer
@@ -114,7 +114,7 @@
       // views
       line_view = new LineView(model, half_length, gl);
       hud = new ScoreView(model);
-      view_2d = new View2D(model, half_length, gl);
+      view_2d = new View2D(model, half_length, gl, SHADER_UNIFORM_MODEL);
 
       // hook up listeners and reset model
       model.listeners.push(line_view);

@@ -11,9 +11,6 @@ class LineView {
 	  this.mesh_head = this.VERTEX_SIZE; // in float index, skip first entry, that one is reserved for end/front mesh connection
 	  this.mesh_tail = this.VERTEX_SIZE;
 	  
-	  this.transform = mat4.create();
-    this.worldView = mat4.create();
-
 		this.mesh_full = this.gl.createBuffer();
 		this.mesh_half = this.gl.createBuffer();
 		this.mesh_data = new Float32Array(2 * HALF_LENGTH * this.VERTEX_SIZE);
@@ -75,17 +72,21 @@ class LineView {
 		}
 
     // wall mesh    
+/*
     this.gl.bindBuffer(gl.ARRAY_BUFFER, this.wall_mesh);
     this.gl.vertexAttribPointer(SHADER_ATTRIB_POSITION, 3, gl.FLOAT, false, 0, 0);
     this.gl.drawArrays(gl.LINE_STRIP, 0, 5);
+*/
 
     // target
+/*
     if(this.model.pickup_exists) {
       this.gl.bindBuffer(gl.ARRAY_BUFFER, this.mesh_target);
       this.gl.vertexAttrib3f(SHADER_ATTRIB_POSITION, this.model.pickup_x, this.model.pickup_y, 0);
       this.gl.disableVertexAttribArray(SHADER_ATTRIB_POSITION);
       this.gl.drawArrays(gl.POINTS, 0, 1);
     }
+*/
 	}
 
 	// Model Listener
