@@ -11,6 +11,7 @@
   <script src="grid.js"></script>
   <script src="model.js"></script>
   <script src="view_line.js"></script>
+  <script src="view_2d.js"></script>
   <script src="view_score.js"></script>
   <script src="gl_utils.js"></script>
   <script>
@@ -20,6 +21,7 @@
     let overlay;
     let model;
     let line_view;
+    let view_2d;
     let gl;
     let SHADER_ATTRIB_POSITION;
     let SHADER_ATTRIB_COLOR;
@@ -112,10 +114,12 @@
       // views
       line_view = new LineView(model, half_length, gl);
       hud = new ScoreView(model);
+      view_2d = new View2D(model, half_length, gl);
 
       // hook up listeners and reset model
       model.listeners.push(line_view);
       model.listeners.push(hud);
+      model.listeners.push(view_2d);
       model.reset();
 
       // game loop speed
@@ -162,7 +166,9 @@
       gl.uniformMatrix4fv(SHADER_UNIFORM_PROJECTION, false, projection);
       gl.uniformMatrix4fv(SHADER_UNIFORM_MODEL, false, identity);
 
+      // gfx views
       line_view.render();
+      view_2d.render();
 
 /*
       // position
