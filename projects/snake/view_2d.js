@@ -83,33 +83,40 @@ class View2D {
     this.gl.enableVertexAttribArray(SHADER_ATTRIB_POSITION);
 
 		// snake
-/*
-		if (mesh_tail != mesh_head) {
-			if (mesh_tail < mesh_head) {
-				mesh_full.setVertices(mesh_data, mesh_tail, mesh_head - mesh_tail);
-			} else {
-				if (mesh_tail < HALF_LENGTH) {
-					mesh_full.setVertices(mesh_data, mesh_tail, mesh_data.length - mesh_tail);
-					mesh_half.setVertices(mesh_data, 0, mesh_head);
-				} else {
-					mesh_half.setVertices(mesh_data, mesh_tail, mesh_data.length - mesh_tail);
-					mesh_full.setVertices(mesh_data, 0, mesh_head);
-				}
-			}
-		}
-
-		shader.begin();
-		shader.setUniformMatrix("u_worldView", worldView);
-		if (mesh_tail != mesh_head) {
-			mesh_full.render(shader, GL20.GL_TRIANGLE_STRIP);
-			if (mesh_tail >= mesh_head) {
-				mesh_half.render(shader, GL20.GL_TRIANGLE_STRIP);
-			}
-			mesh_circle_1.render(shader, GL20.GL_TRIANGLE_FAN);
-			mesh_circle_2.render(shader, GL20.GL_TRIANGLE_FAN);
-		}
-*/
+    let SIZE_OF_FLOAT = 4;
 		if (this.mesh_tail != this.mesh_head) {
+
+      // body split in half due to circular array
+		  if (this.mesh_tail < this.mesh_head) {
+        // just one continuous array (this is how it starts)
+        // TODO this.gl???
+        this.gl.bindBuffer(gl.ARRAY_BUFFER, this.mesh_full);
+        this.gl.bufferData(gl.ARRAY_BUFFER, this.mesh_data, gl.STATIC_DRAW);
+        this.gl.vertexAttribPointer(SHADER_ATTRIB_POSITION, 3, gl.FLOAT, false, 0, this.mesh_tail * SIZE_OF_FLOAT);
+        this.gl.drawArrays(gl.TRIANGLE_STRIP, 0, (this.mesh_head - this.mesh_tail) / this.VERTEX_SIZE);
+		  } else {
+			  if (this.mesh_tail < this.HALF_LENGTH) {
+          this.gl.bindBuffer(gl.ARRAY_BUFFER, this.mesh_full);
+          this.gl.bufferData(gl.ARRAY_BUFFER, this.mesh_data, gl.STATIC_DRAW);
+          this.gl.vertexAttribPointer(SHADER_ATTRIB_POSITION, 3, gl.FLOAT, false, 0, this.mesh_tail * SIZE_OF_FLOAT);
+          this.gl.drawArrays(gl.TRIANGLE_STRIP, 0, (this.mesh_data.length - this.mesh_tail) / this.VERTEX_SIZE);
+          this.gl.bindBuffer(gl.ARRAY_BUFFER, this.mesh_half);
+          this.gl.bufferData(gl.ARRAY_BUFFER, this.mesh_data, gl.STATIC_DRAW);
+          this.gl.vertexAttribPointer(SHADER_ATTRIB_POSITION, 3, gl.FLOAT, false, 0, 0);
+          this.gl.drawArrays(gl.TRIANGLE_STRIP, 0, this.mesh_head / this.VERTEX_SIZE);
+			  } else {
+          this.gl.bindBuffer(gl.ARRAY_BUFFER, this.mesh_half);
+          this.gl.bufferData(gl.ARRAY_BUFFER, this.mesh_data, gl.STATIC_DRAW);
+          this.gl.vertexAttribPointer(SHADER_ATTRIB_POSITION, 3, gl.FLOAT, false, 0, this.mesh_tail * SIZE_OF_FLOAT);
+          this.gl.drawArrays(gl.TRIANGLE_STRIP, 0, (this.mesh_data.length - this.mesh_tail) / this.VERTEX_SIZE);
+          this.gl.bindBuffer(gl.ARRAY_BUFFER, this.mesh_full);
+          this.gl.bufferData(gl.ARRAY_BUFFER, this.mesh_data, gl.STATIC_DRAW);
+          this.gl.vertexAttribPointer(SHADER_ATTRIB_POSITION, 3, gl.FLOAT, false, 0, this.mesh_data * SIZE_OF_FLOAT);
+          this.gl.drawArrays(gl.TRIANGLE_STRIP, 0, this.mesh_head / this.VERTEX_SIZE);
+			  }
+		  }
+
+      // tips
       this.gl.bindBuffer(gl.ARRAY_BUFFER, this.mesh_circle_1);
       this.gl.vertexAttribPointer(SHADER_ATTRIB_POSITION, 3, gl.FLOAT, false, 0, 0);
       this.gl.drawArrays(gl.TRIANGLE_FAN, 0, this.half_circle_data.length / this.VERTEX_SIZE);
