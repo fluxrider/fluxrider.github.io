@@ -11,6 +11,7 @@
   <script src="grid.js"></script>
   <script src="model.js"></script>
   <script src="view_line.js"></script>
+  <script src="view_score.js"></script>
   <script src="gl_utils.js"></script>
   <script>
     "use strict";
@@ -110,9 +111,11 @@
 
       // views
       line_view = new LineView(model, half_length, gl);
+      hud = new ScoreView(model);
 
       // hook up listeners and reset model
       model.listeners.push(line_view);
+      model.listeners.push(hud);
       model.reset();
 
       // game loop speed
@@ -249,6 +252,9 @@
       </div>
       <div id="debug" class="v-center">
         <p align="left">FPS:<span id="fps"></span></p>
+      </div>
+      <div id="hud" class="v-center">
+        <p align="left">Score: <span id="score"></span></p>
       </div>
     </div>
   </div>
