@@ -31,6 +31,8 @@
     let position_buffer;
     let color_buffer;
     let normal_buffer;
+    let game_time_factor;
+    let game_time;
 
     let polledInput = null;
     function keyPressed(e) { polledInput.keyPressed(e);	}
@@ -108,6 +110,8 @@
       normal_buffer = gl.createBuffer();
 
       // model
+      game_time = 0;
+      game_time_factor = 1;
       let half_length = 600;
       model = new Model(half_length * 2);
 
@@ -136,6 +140,9 @@
       previous_ms = now_ms;
       // fps
       document.getElementById("fps").innerHTML = M.round_dx(1 / delta_s, 3);
+      // game time
+      let game_delta_ms = delta_ms * game_time_factor;
+      game_time += game_delta_ms;
 
       // input
       model.setInput(polledInput.held(VK_LEFT) || polledInput.held(VK_A), polledInput.held(VK_RIGHT) || polledInput.held(VK_D));
@@ -143,8 +150,7 @@
       polledInput.polled();
 
       // model
-      //if(delta_s > .2) alert(" ms:" + delta_ms + " s:" + delta_s);
-      model.tick(now_ms, delta_s);
+      model.tick(game_time, game_delta_ms / 1000.0);
 
       // scene
       gl.clearColor(.4, 0, .4, 1);
