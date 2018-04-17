@@ -10,7 +10,6 @@ class LineView {
     this.VERTEX_SIZE = 3;
 	  this.mesh_head = this.VERTEX_SIZE; // in float index, skip first entry, that one is reserved for end/front mesh connection
 	  this.mesh_tail = this.VERTEX_SIZE;
-	  this.mesh_tip = this.VERTEX_SIZE;
 	  
 	  this.transform = mat4.create();
     this.worldView = mat4.create();
@@ -140,12 +139,6 @@ class LineView {
 	}
 
 	onTipPop(id_lost, was_in_tail) {
-		// artefact: edge case update index zero
-		this.mesh_tip += this.VERTEX_SIZE;
-		if (this.mesh_tip == this.mesh_data.length) {
-			this.mesh_tip = this.VERTEX_SIZE;
-		}
-    // TODO color management
 	}
 
 	onTick(monotonic_ms, delta_seconds) {
@@ -168,7 +161,6 @@ class LineView {
 	onReset() {
 		this.mesh_head = this.VERTEX_SIZE;
 		this.mesh_tail = this.VERTEX_SIZE;
-		this.mesh_tip = this.VERTEX_SIZE;
 	}
 
 }
