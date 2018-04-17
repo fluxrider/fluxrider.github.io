@@ -91,26 +91,26 @@ class View2D {
         // just one continuous array (this is how it starts)
         // TODO this.gl???
         this.gl.bindBuffer(gl.ARRAY_BUFFER, this.mesh_full);
-        this.gl.bufferData(gl.ARRAY_BUFFER, this.mesh_data, gl.STATIC_DRAW);
+        this.gl.bufferData(gl.ARRAY_BUFFER, this.mesh_data, gl.DYNAMIC_DRAW);
         this.gl.vertexAttribPointer(SHADER_ATTRIB_POSITION, 3, gl.FLOAT, false, 0, this.mesh_tail * SIZE_OF_FLOAT);
         this.gl.drawArrays(gl.TRIANGLE_STRIP, 0, (this.mesh_head - this.mesh_tail) / this.VERTEX_SIZE);
 		  } else {
 			  if (this.mesh_tail < this.HALF_LENGTH) {
           this.gl.bindBuffer(gl.ARRAY_BUFFER, this.mesh_full);
-          this.gl.bufferData(gl.ARRAY_BUFFER, this.mesh_data, gl.STATIC_DRAW);
+          this.gl.bufferData(gl.ARRAY_BUFFER, this.mesh_data, gl.DYNAMIC_DRAW);
           this.gl.vertexAttribPointer(SHADER_ATTRIB_POSITION, 3, gl.FLOAT, false, 0, this.mesh_tail * SIZE_OF_FLOAT);
           this.gl.drawArrays(gl.TRIANGLE_STRIP, 0, (this.mesh_data.length - this.mesh_tail) / this.VERTEX_SIZE);
           this.gl.bindBuffer(gl.ARRAY_BUFFER, this.mesh_half);
-          this.gl.bufferData(gl.ARRAY_BUFFER, this.mesh_data, gl.STATIC_DRAW);
+          this.gl.bufferData(gl.ARRAY_BUFFER, this.mesh_data, gl.DYNAMIC_DRAW);
           this.gl.vertexAttribPointer(SHADER_ATTRIB_POSITION, 3, gl.FLOAT, false, 0, 0);
           this.gl.drawArrays(gl.TRIANGLE_STRIP, 0, this.mesh_head / this.VERTEX_SIZE);
 			  } else {
           this.gl.bindBuffer(gl.ARRAY_BUFFER, this.mesh_half);
-          this.gl.bufferData(gl.ARRAY_BUFFER, this.mesh_data, gl.STATIC_DRAW);
+          this.gl.bufferData(gl.ARRAY_BUFFER, this.mesh_data, gl.DYNAMIC_DRAW);
           this.gl.vertexAttribPointer(SHADER_ATTRIB_POSITION, 3, gl.FLOAT, false, 0, this.mesh_tail * SIZE_OF_FLOAT);
           this.gl.drawArrays(gl.TRIANGLE_STRIP, 0, (this.mesh_data.length - this.mesh_tail) / this.VERTEX_SIZE);
           this.gl.bindBuffer(gl.ARRAY_BUFFER, this.mesh_full);
-          this.gl.bufferData(gl.ARRAY_BUFFER, this.mesh_data, gl.STATIC_DRAW);
+          this.gl.bufferData(gl.ARRAY_BUFFER, this.mesh_data, gl.DYNAMIC_DRAW);
           this.gl.vertexAttribPointer(SHADER_ATTRIB_POSITION, 3, gl.FLOAT, false, 0, this.mesh_data * SIZE_OF_FLOAT);
           this.gl.drawArrays(gl.TRIANGLE_STRIP, 0, this.mesh_head / this.VERTEX_SIZE);
 			  }
@@ -229,7 +229,7 @@ class View2D {
       this.half_circle_data[base++] = p1.y + dy;
       this.half_circle_data[base++] = 0;
       this.gl.bindBuffer(gl.ARRAY_BUFFER, this.mesh_circle_1);
-      this.gl.bufferData(gl.ARRAY_BUFFER, this.half_circle_data, gl.STATIC_DRAW);
+      this.gl.bufferData(gl.ARRAY_BUFFER, this.half_circle_data, gl.DYNAMIC_DRAW);
 		}
 	}
 
@@ -264,7 +264,7 @@ class View2D {
     this.half_circle_data[base++] = this.mesh_data[this.mesh_tail + this.VERTEX_SIZE + 1];
     this.half_circle_data[base++] = 0;
     this.gl.bindBuffer(gl.ARRAY_BUFFER, this.mesh_circle_2);
-    this.gl.bufferData(gl.ARRAY_BUFFER, this.half_circle_data, gl.STATIC_DRAW);
+    this.gl.bufferData(gl.ARRAY_BUFFER, this.half_circle_data, gl.DYNAMIC_DRAW);
 	}
 
 	onTipPop(id_lost, was_in_tail) {

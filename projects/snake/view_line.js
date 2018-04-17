@@ -45,27 +45,27 @@ class LineView {
 		if (this.mesh_tail < this.mesh_head) {
       // just one continuous array (this is how it starts)
       this.gl.bindBuffer(gl.ARRAY_BUFFER, this.mesh_full);
-      this.gl.bufferData(gl.ARRAY_BUFFER, this.mesh_data, gl.STATIC_DRAW);
+      this.gl.bufferData(gl.ARRAY_BUFFER, this.mesh_data, gl.DYNAMIC_DRAW);
       this.gl.vertexAttribPointer(SHADER_ATTRIB_POSITION, 3, gl.FLOAT, false, 0, this.mesh_tail * SIZE_OF_FLOAT);
       this.gl.drawArrays(gl.LINE_STRIP, 0, (this.mesh_head - this.mesh_tail) / this.VERTEX_SIZE);
 		} else {
       // circular array is broken in two section (this is the common case)
 			if (this.mesh_tail < this.HALF_LENGTH) {
         this.gl.bindBuffer(gl.ARRAY_BUFFER, this.mesh_full);
-        this.gl.bufferData(gl.ARRAY_BUFFER, this.mesh_data, gl.STATIC_DRAW);
+        this.gl.bufferData(gl.ARRAY_BUFFER, this.mesh_data, gl.DYNAMIC_DRAW);
         this.gl.vertexAttribPointer(SHADER_ATTRIB_POSITION, 3, gl.FLOAT, false, 0, this.mesh_tail * SIZE_OF_FLOAT);
         this.gl.drawArrays(gl.LINE_STRIP, 0, (this.mesh_data.length - this.mesh_tail) / this.VERTEX_SIZE);
         this.gl.bindBuffer(gl.ARRAY_BUFFER, this.mesh_half);
-        this.gl.bufferData(gl.ARRAY_BUFFER, this.mesh_data, gl.STATIC_DRAW);
+        this.gl.bufferData(gl.ARRAY_BUFFER, this.mesh_data, gl.DYNAMIC_DRAW);
         this.gl.vertexAttribPointer(SHADER_ATTRIB_POSITION, 3, gl.FLOAT, false, 0, 0);
         this.gl.drawArrays(gl.LINE_STRIP, 0, this.mesh_head / this.VERTEX_SIZE);
 			} else {
         this.gl.bindBuffer(gl.ARRAY_BUFFER, this.mesh_half);
-        this.gl.bufferData(gl.ARRAY_BUFFER, this.mesh_data, gl.STATIC_DRAW);
+        this.gl.bufferData(gl.ARRAY_BUFFER, this.mesh_data, gl.DYNAMIC_DRAW);
         this.gl.vertexAttribPointer(SHADER_ATTRIB_POSITION, 3, gl.FLOAT, false, 0, this.mesh_tail * SIZE_OF_FLOAT);
         this.gl.drawArrays(gl.LINE_STRIP, 0, (this.mesh_data.length - this.mesh_tail) / this.VERTEX_SIZE);
         this.gl.bindBuffer(gl.ARRAY_BUFFER, this.mesh_full);
-        this.gl.bufferData(gl.ARRAY_BUFFER, this.mesh_data, gl.STATIC_DRAW);
+        this.gl.bufferData(gl.ARRAY_BUFFER, this.mesh_data, gl.DYNAMIC_DRAW);
         this.gl.vertexAttribPointer(SHADER_ATTRIB_POSITION, 3, gl.FLOAT, false, 0, 0);
         this.gl.drawArrays(gl.LINE_STRIP, 0, this.mesh_head / this.VERTEX_SIZE);
 			}
