@@ -82,6 +82,42 @@ class View2D {
     this.gl.disableVertexAttribArray(SHADER_ATTRIB_NORMAL);
     this.gl.enableVertexAttribArray(SHADER_ATTRIB_POSITION);
 
+		// snake
+/*
+		if (mesh_tail != mesh_head) {
+			if (mesh_tail < mesh_head) {
+				mesh_full.setVertices(mesh_data, mesh_tail, mesh_head - mesh_tail);
+			} else {
+				if (mesh_tail < HALF_LENGTH) {
+					mesh_full.setVertices(mesh_data, mesh_tail, mesh_data.length - mesh_tail);
+					mesh_half.setVertices(mesh_data, 0, mesh_head);
+				} else {
+					mesh_half.setVertices(mesh_data, mesh_tail, mesh_data.length - mesh_tail);
+					mesh_full.setVertices(mesh_data, 0, mesh_head);
+				}
+			}
+		}
+
+		shader.begin();
+		shader.setUniformMatrix("u_worldView", worldView);
+		if (mesh_tail != mesh_head) {
+			mesh_full.render(shader, GL20.GL_TRIANGLE_STRIP);
+			if (mesh_tail >= mesh_head) {
+				mesh_half.render(shader, GL20.GL_TRIANGLE_STRIP);
+			}
+			mesh_circle_1.render(shader, GL20.GL_TRIANGLE_FAN);
+			mesh_circle_2.render(shader, GL20.GL_TRIANGLE_FAN);
+		}
+*/
+		if (this.mesh_tail != this.mesh_head) {
+      this.gl.bindBuffer(gl.ARRAY_BUFFER, this.mesh_circle_1);
+      this.gl.vertexAttribPointer(SHADER_ATTRIB_POSITION, 3, gl.FLOAT, false, 0, 0);
+      this.gl.drawArrays(gl.TRIANGLE_FAN, 0, this.half_circle_data.length / this.VERTEX_SIZE);
+      this.gl.bindBuffer(gl.ARRAY_BUFFER, this.mesh_circle_2);
+      this.gl.vertexAttribPointer(SHADER_ATTRIB_POSITION, 3, gl.FLOAT, false, 0, 0);
+      this.gl.drawArrays(gl.TRIANGLE_FAN, 0, this.half_circle_data.length / this.VERTEX_SIZE);
+    }
+
     // wall mesh
     this.gl.bindBuffer(gl.ARRAY_BUFFER, this.wall_mesh);
     this.gl.vertexAttribPointer(SHADER_ATTRIB_POSITION, 3, gl.FLOAT, false, 0, 0);
@@ -102,9 +138,126 @@ class View2D {
 
 	// Model Listener
 	onHeadPush(id_gained) {
+		// append new position to mesh
+		if (this.previous_head_id == -1) {
+			this.head_start = true;
+			this.previous_head_id = id_gained;
+		} else {
+			// compute the thickness vector from the point to make the two triangle strip points
+			let p1 = this.model.getPoint(id_gained);
+			let p2 = this.model.getPoint(this.previous_head_id);
+			let dy = p2.x - p1.x;
+			let dx = p2.y - p1.y;
+			let factor = this.model.thickness / Math.sqrt(dx * dx + dy * dy);
+			dy *= factor;
+			dx *= factor;
+			this.previous_head_id = id_gained;
+
+			// one shot
+			if (this.head_start) {
+				// add an extra first point that we skipped when we didn't have enough points to make a line
+				this.head_start = false;
+        this.mesh_data[this.mesh_head++] = p2.x - dx;
+        this.mesh_data[this.mesh_head++] = p2.y + dy;
+        this.mesh_data[this.mesh_head++] = 0;
+        this.mesh_data[this.mesh_head++] = p2.x + dx;
+        this.mesh_data[this.mesh_head++] = p2.y - dy;
+        this.mesh_data[this.mesh_head++] = 0;
+
+				// create the tail semi circle
+				this.updateTailSemi(true);
+			}
+
+			// adjust the old head points to average to both lines
+			// this is visible when the turn is very big (like 90 degree turn)
+			let old_head = this.mesh_head - this.INDEX_DELTA;
+			this.mesh_data[old_head] += p2.x - dx;
+			this.mesh_data[old_head] /= 2;
+			this.mesh_data[old_head + 1] += p2.y + dy;
+			this.mesh_data[old_head + 1] /= 2;
+			this.mesh_data[old_head + this.VERTEX_SIZE] += p2.x + dx;
+			this.mesh_data[old_head + this.VERTEX_SIZE] /= 2;
+			this.mesh_data[old_head + this.VERTEX_SIZE + 1] += p2.y - dy;
+			this.mesh_data[old_head + this.VERTEX_SIZE + 1] /= 2;
+			// artefact: adjust end/front so mesh connect
+			if (old_head == 0) {
+				this.mesh_data[this.mesh_data.length - this.INDEX_DELTA] = this.mesh_data[old_head];
+				this.mesh_data[this.mesh_data.length - this.INDEX_DELTA + 1] = this.mesh_data[old_head + 1];
+				this.mesh_data[this.mesh_data.length - this.INDEX_DELTA + this.VERTEX_SIZE] = this.mesh_data[old_head + this.VERTEX_SIZE];
+				this.mesh_data[this.mesh_data.length - this.INDEX_DELTA + this.VERTEX_SIZE + 1] = this.mesh_data[old_head + this.VERTEX_SIZE + 1];
+			}
+
+			// artefact: copy end/front so mesh connect
+			if (this.mesh_head == this.mesh_data.length) {
+				for (this.mesh_head = 0; this.mesh_head < this.INDEX_DELTA; this.mesh_head++) {
+					this.mesh_data[this.mesh_head] = this.mesh_data[this.mesh_data.length - this.INDEX_DELTA + this.mesh_head];
+				}
+			}
+			// add the point
+      this.mesh_data[this.mesh_head++] = p1.x - dx;
+      this.mesh_data[this.mesh_head++] = p1.y + dy;
+      this.mesh_data[this.mesh_head++] = 0;
+      this.mesh_data[this.mesh_head++] = p1.x + dx;
+      this.mesh_data[this.mesh_head++] = p1.y - dy;
+      this.mesh_data[this.mesh_head++] = 0;
+
+			// update head semi circle
+			let base = 0;
+      this.half_circle_data[base++] = p1.x;
+      this.half_circle_data[base++] = p1.y;
+      this.half_circle_data[base++] = 0;
+      this.half_circle_data[base++] =  p1.x + dx;
+      this.half_circle_data[base++] = p1.y - dy;
+      this.half_circle_data[base++] = 0;
+      let delta_angle = Math.PI / (this.half_circle_data.length / this.VERTEX_SIZE - 2);
+			let angle = delta_angle;
+			while (base < this.half_circle_data.length - this.VERTEX_SIZE) {
+				p2 = G.rot_around(p1.x, p1.y, p1.x + dx, p1.y - dy, -angle);
+        this.half_circle_data[base++] = p2.x;
+        this.half_circle_data[base++] = p2.y;
+        this.half_circle_data[base++] = 0;
+				angle += delta_angle;
+			}
+      this.half_circle_data[base++] = p1.x - dx;
+      this.half_circle_data[base++] = p1.y + dy;
+      this.half_circle_data[base++] = 0;
+      this.gl.bindBuffer(gl.ARRAY_BUFFER, this.mesh_circle_1);
+      this.gl.bufferData(gl.ARRAY_BUFFER, this.half_circle_data, gl.STATIC_DRAW);
+		}
 	}
 
 	onTailPop(id_lost, was_in_tip) {
+		// advance tail
+		this.mesh_tail += this.INDEX_DELTA;
+		if (this.mesh_tail == this.mesh_data.length) this.mesh_tail = this.INDEX_DELTA;
+		this.updateTailSemi(was_in_tip);
+	}
+
+	updateTailSemi(in_tip) {
+		// update tail semi circle
+		let p1 = this.model.getPoint(this.model.tail);
+		let base = 0;
+    this.half_circle_data[base++] = p1.x;
+    this.half_circle_data[base++] = p1.y;
+    this.half_circle_data[base++] = 0;
+    this.half_circle_data[base++] = this.mesh_data[this.mesh_tail];
+    this.half_circle_data[base++] = this.mesh_data[this.mesh_tail + 1];
+    this.half_circle_data[base++] = 0;
+		let delta_angle = Math.PI / (this.half_circle_data.length / this.VERTEX_SIZE - 2);
+		let angle = delta_angle;
+
+		while (base < this.half_circle_data.length - this.VERTEX_SIZE) {
+			let p2 = G.rot_around(p1.x, p1.y, this.mesh_data[this.mesh_tail], this.mesh_data[this.mesh_tail + 1], -angle);
+      this.half_circle_data[base++] = p2.x;
+      this.half_circle_data[base++] = p2.y;
+      this.half_circle_data[base++] = 0;
+			angle += delta_angle;
+		}
+    this.half_circle_data[base++] = this.mesh_data[this.mesh_tail + this.VERTEX_SIZE];
+    this.half_circle_data[base++] = this.mesh_data[this.mesh_tail + this.VERTEX_SIZE + 1];
+    this.half_circle_data[base++] = 0;
+    this.gl.bindBuffer(gl.ARRAY_BUFFER, this.mesh_circle_2);
+    this.gl.bufferData(gl.ARRAY_BUFFER, this.half_circle_data, gl.STATIC_DRAW);
 	}
 
 	onTipPop(id_lost, was_in_tail) {
