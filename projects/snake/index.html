@@ -13,6 +13,7 @@
   <script src="view_line.js"></script>
   <script src="view_2d.js"></script>
   <script src="view_score.js"></script>
+  <script src="view_slowmo.js"></script>
   <script src="gl_utils.js"></script>
   <script>
     "use strict";
@@ -117,13 +118,15 @@
 
       // views
       line_view = new LineView(model, half_length, gl);
-      hud = new ScoreView(model);
+      let hud = new ScoreView(model);
       view_2d = new View2D(model, half_length, gl, SHADER_UNIFORM_MODEL);
+      let slowmo = new Slowmo();
 
       // hook up listeners and reset model
       model.listeners.push(line_view);
       model.listeners.push(hud);
       model.listeners.push(view_2d);
+      model.listeners.push(slowmo);
       model.reset();
 
       // game loop speed

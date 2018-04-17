@@ -134,11 +134,6 @@ class Model {
 	tick(monotonic_ms, delta_seconds) {
 		if (this.dead) return;
 
-    // slowmo
-    if(this.nearCollision) {
-      delta_seconds *= .2; // TODO interpolate?
-    }
-
 		let max_direction = 2 * Math.PI;
 
 		// speed up
