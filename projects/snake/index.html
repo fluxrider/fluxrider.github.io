@@ -139,6 +139,7 @@
 
       // input
       model.setInput(polledInput.held(VK_LEFT) || polledInput.held(VK_A), polledInput.held(VK_RIGHT) || polledInput.held(VK_D));
+      if(polledInput.typed(VK_ESCAPE)) model.reset();
       polledInput.polled();
 
       // model
