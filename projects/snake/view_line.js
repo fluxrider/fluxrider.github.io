@@ -38,17 +38,18 @@ class LineView {
 	render() {
 		if (!this.model.started) return;
     let SIZE_OF_FLOAT = 4;
+    this.gl.vertexAttrib4f(SHADER_ATTRIB_COLOR, 1, 1, 1, 1);
+    this.gl.vertexAttrib3f(SHADER_ATTRIB_NORMAL, 0, 1, 0);
+    this.gl.disableVertexAttribArray(SHADER_ATTRIB_COLOR);
+    this.gl.disableVertexAttribArray(SHADER_ATTRIB_NORMAL);
+
 		// set mesh data
 		if (this.mesh_tail < this.mesh_head) {
       // just one continuous array (this is how it starts)
       this.gl.bindBuffer(gl.ARRAY_BUFFER, this.mesh_full);
       this.gl.bufferData(gl.ARRAY_BUFFER, this.mesh_data, gl.STATIC_DRAW);
       this.gl.vertexAttribPointer(SHADER_ATTRIB_POSITION, 3, gl.FLOAT, false, 0, this.mesh_tail * SIZE_OF_FLOAT);
-      this.gl.vertexAttrib4f(SHADER_ATTRIB_COLOR, 0, 1, 0, 1);
-      this.gl.vertexAttrib3f(SHADER_ATTRIB_NORMAL, 0, 1, 0);
       this.gl.enableVertexAttribArray(SHADER_ATTRIB_POSITION);
-      this.gl.disableVertexAttribArray(SHADER_ATTRIB_COLOR);
-      this.gl.disableVertexAttribArray(SHADER_ATTRIB_NORMAL);
       this.gl.drawArrays(gl.LINE_STRIP, 0, (this.mesh_head - this.mesh_tail) / this.VERTEX_SIZE);
 		} else {
       // circular array is broken in two section (this is the common case)
@@ -56,39 +57,23 @@ class LineView {
         this.gl.bindBuffer(gl.ARRAY_BUFFER, this.mesh_full);
         this.gl.bufferData(gl.ARRAY_BUFFER, this.mesh_data, gl.STATIC_DRAW);
         this.gl.vertexAttribPointer(SHADER_ATTRIB_POSITION, 3, gl.FLOAT, false, 0, this.mesh_tail * SIZE_OF_FLOAT);
-        this.gl.vertexAttrib4f(SHADER_ATTRIB_COLOR, 0, 1, 0, 1);
-        this.gl.vertexAttrib3f(SHADER_ATTRIB_NORMAL, 0, 1, 0);
         this.gl.enableVertexAttribArray(SHADER_ATTRIB_POSITION);
-        this.gl.disableVertexAttribArray(SHADER_ATTRIB_COLOR);
-        this.gl.disableVertexAttribArray(SHADER_ATTRIB_NORMAL);
         this.gl.drawArrays(gl.LINE_STRIP, 0, (this.mesh_data.length - this.mesh_tail) / this.VERTEX_SIZE);
         this.gl.bindBuffer(gl.ARRAY_BUFFER, this.mesh_half);
         this.gl.bufferData(gl.ARRAY_BUFFER, this.mesh_data, gl.STATIC_DRAW);
         this.gl.vertexAttribPointer(SHADER_ATTRIB_POSITION, 3, gl.FLOAT, false, 0, 0);
-        this.gl.vertexAttrib4f(SHADER_ATTRIB_COLOR, 0, 1, 0, 1);
-        this.gl.vertexAttrib3f(SHADER_ATTRIB_NORMAL, 0, 1, 0);
         this.gl.enableVertexAttribArray(SHADER_ATTRIB_POSITION);
-        this.gl.disableVertexAttribArray(SHADER_ATTRIB_COLOR);
-        this.gl.disableVertexAttribArray(SHADER_ATTRIB_NORMAL);
         this.gl.drawArrays(gl.LINE_STRIP, 0, this.mesh_head / this.VERTEX_SIZE);
 			} else {
         this.gl.bindBuffer(gl.ARRAY_BUFFER, this.mesh_half);
         this.gl.bufferData(gl.ARRAY_BUFFER, this.mesh_data, gl.STATIC_DRAW);
         this.gl.vertexAttribPointer(SHADER_ATTRIB_POSITION, 3, gl.FLOAT, false, 0, this.mesh_tail * SIZE_OF_FLOAT);
-        this.gl.vertexAttrib4f(SHADER_ATTRIB_COLOR, 0, 1, 0, 1);
-        this.gl.vertexAttrib3f(SHADER_ATTRIB_NORMAL, 0, 1, 0);
         this.gl.enableVertexAttribArray(SHADER_ATTRIB_POSITION);
-        this.gl.disableVertexAttribArray(SHADER_ATTRIB_COLOR);
-        this.gl.disableVertexAttribArray(SHADER_ATTRIB_NORMAL);
         this.gl.drawArrays(gl.LINE_STRIP, 0, (this.mesh_data.length - this.mesh_tail) / this.VERTEX_SIZE);
         this.gl.bindBuffer(gl.ARRAY_BUFFER, this.mesh_full);
         this.gl.bufferData(gl.ARRAY_BUFFER, this.mesh_data, gl.STATIC_DRAW);
         this.gl.vertexAttribPointer(SHADER_ATTRIB_POSITION, 3, gl.FLOAT, false, 0, 0);
-        this.gl.vertexAttrib4f(SHADER_ATTRIB_COLOR, 0, 1, 0, 1);
-        this.gl.vertexAttrib3f(SHADER_ATTRIB_NORMAL, 0, 1, 0);
         this.gl.enableVertexAttribArray(SHADER_ATTRIB_POSITION);
-        this.gl.disableVertexAttribArray(SHADER_ATTRIB_COLOR);
-        this.gl.disableVertexAttribArray(SHADER_ATTRIB_NORMAL);
         this.gl.drawArrays(gl.LINE_STRIP, 0, this.mesh_head / this.VERTEX_SIZE);
 			}
 		}
@@ -96,23 +81,14 @@ class LineView {
     // wall mesh    
     this.gl.bindBuffer(gl.ARRAY_BUFFER, this.wall_mesh);
     this.gl.vertexAttribPointer(SHADER_ATTRIB_POSITION, 3, gl.FLOAT, false, 0, 0);
-    this.gl.vertexAttrib4f(SHADER_ATTRIB_COLOR, 0, 1, 0, 1);
-    this.gl.vertexAttrib3f(SHADER_ATTRIB_NORMAL, 0, 1, 0);
     this.gl.enableVertexAttribArray(SHADER_ATTRIB_POSITION);
-    this.gl.disableVertexAttribArray(SHADER_ATTRIB_COLOR);
-    this.gl.disableVertexAttribArray(SHADER_ATTRIB_NORMAL);
     this.gl.drawArrays(gl.LINE_STRIP, 0, 5);
 
     // target
     if(this.model.pickup_exists) {
       this.gl.bindBuffer(gl.ARRAY_BUFFER, this.mesh_target);
-      //alert(this.model.pickup_x + " " + this.model.pickup_y);
       this.gl.vertexAttrib3f(SHADER_ATTRIB_POSITION, this.model.pickup_x, this.model.pickup_y, 0);
-      this.gl.vertexAttrib4f(SHADER_ATTRIB_COLOR, 1, 1, 1, 1);
-      this.gl.vertexAttrib3f(SHADER_ATTRIB_NORMAL, 0, 1, 0);
       this.gl.disableVertexAttribArray(SHADER_ATTRIB_POSITION);
-      this.gl.disableVertexAttribArray(SHADER_ATTRIB_COLOR);
-      this.gl.disableVertexAttribArray(SHADER_ATTRIB_NORMAL);
       this.gl.drawArrays(gl.POINTS, 0, 1);
     }
 	}
@@ -154,8 +130,6 @@ class LineView {
 	}
 
 	onPickupAppears(x, y) {
-		//transform.set(worldView);
-		//transform.translate((float) x, (float) y, 0);
 	}
 
 	onReset() {
