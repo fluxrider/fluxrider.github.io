@@ -14,6 +14,7 @@
   <script src="view_2d.js"></script>
   <script src="view_score.js"></script>
   <script src="view_slowmo.js"></script>
+  <script src="view_audio.js"></script>
   <script src="gl_utils.js"></script>
   <script>
     "use strict";
@@ -121,12 +122,14 @@
       let hud = new ScoreView(model);
       view_2d = new View2D(model, half_length, gl, SHADER_UNIFORM_MODEL);
       let slowmo = new Slowmo();
+      let audio = new SnakeAudio();
 
       // hook up listeners and reset model
       model.listeners.push(line_view);
       model.listeners.push(hud);
       model.listeners.push(view_2d);
       model.listeners.push(slowmo);
+      model.listeners.push(audio);
       model.reset();
 
       // game loop speed
