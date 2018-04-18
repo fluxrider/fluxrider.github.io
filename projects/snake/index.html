@@ -40,31 +40,29 @@
     function keyPressed(e) { polledInput.keyPressed(e);	}
     function keyReleased(e) { polledInput.keyReleased(e);	}
 	  function touchStart(e) {
-      canvas = document.getElementById("c");
-      var W = canvas.width;
-      var H = canvas.height;
-      for(var  i = 0; i < e.changedTouches.length; i++) {
-        var touch = e.changedTouches[i];
-        var x = touch.pageX - canvas.offsetLeft;
-        var y = touch.pageY - canvas.offsetTop;
-        if (x < W/2 && y < H/2)  polledInput.setKey(VK_TOUCH_UPPER_LEFT_QUADRANT, true);
-        if (x > W/2 && y < H/2)  polledInput.setKey(VK_TOUCH_UPPER_RIGHT_QUADRANT, true);
-        if (x < W/2 && y > H/2)  polledInput.setKey(VK_TOUCH_LOWER_LEFT_QUADRANT, true);
-        if (x > W/2 && y > H/2)  polledInput.setKey(VK_TOUCH_LOWER_RIGHT_QUADRANT, true);
+      let W = canvas.width;
+      let H = canvas.height;
+      for(let i = 0; i < e.changedTouches.length; i++) {
+        let touch = e.changedTouches[i];
+        let x = touch.pageX - canvas.offsetLeft;
+        let y = touch.pageY - canvas.offsetTop;
+        if (x < W/2 && y < H/2) polledInput.setKey(VK_TOUCH_UPPER_LEFT_QUADRANT, true);
+        if (x > W/2 && y < H/2) polledInput.setKey(VK_TOUCH_UPPER_RIGHT_QUADRANT, true);
+        if (x < W/2 && y > H/2) polledInput.setKey(VK_TOUCH_LOWER_LEFT_QUADRANT, true);
+        if (x > W/2 && y > H/2) polledInput.setKey(VK_TOUCH_LOWER_RIGHT_QUADRANT, true);
       }
     }
 	  function touchEnd(e) { 
-      canvas = document.getElementById("c");
-      var W = canvas.width;
-      var H = canvas.height;
-      for(var  i = 0; i < e.changedTouches.length; i++) {
-        var touch = e.changedTouches[i];
-        var x = touch.pageX - canvas.offsetLeft;
-        var y = touch.pageY - canvas.offsetTop;
-        if (x < W/2 && y < H/2)  polledInput.setKey(VK_TOUCH_UPPER_LEFT_QUADRANT, false);
-        if (x > W/2 && y < H/2)  polledInput.setKey(VK_TOUCH_UPPER_RIGHT_QUADRANT, false);
-        if (x < W/2 && y > H/2)  polledInput.setKey(VK_TOUCH_LOWER_LEFT_QUADRANT, false);
-        if (x > W/2 && y > H/2)  polledInput.setKey(VK_TOUCH_LOWER_RIGHT_QUADRANT, false);
+      let W = canvas.width;
+      let H = canvas.height;
+      for(let i = 0; i < e.changedTouches.length; i++) {
+        let touch = e.changedTouches[i];
+        let x = touch.pageX - canvas.offsetLeft;
+        let y = touch.pageY - canvas.offsetTop;
+        if (x < W/2 && y < H/2) polledInput.setKey(VK_TOUCH_UPPER_LEFT_QUADRANT, false);
+        if (x > W/2 && y < H/2) polledInput.setKey(VK_TOUCH_UPPER_RIGHT_QUADRANT, false);
+        if (x < W/2 && y > H/2) polledInput.setKey(VK_TOUCH_LOWER_LEFT_QUADRANT, false);
+        if (x > W/2 && y > H/2) polledInput.setKey(VK_TOUCH_LOWER_RIGHT_QUADRANT, false);
       }
     }
 
@@ -76,10 +74,12 @@
 
       // put html overlay on top of canvas
       overlay = document.getElementById("overlay");
-      overlay.style.top = '0px';
-      overlay.style.left = (((window.innerWidth - canvas.width) / 2) - 23) + 'px'; // TODO why 23?
-      overlay.style.width = canvas.width + 'px';
-      overlay.style.height = canvas.height + 'px';
+      if(overlay) {
+        overlay.style.top = '0px';
+        overlay.style.left = (((window.innerWidth - canvas.width) / 2) - 23) + 'px'; // TODO why 23?
+        overlay.style.width = canvas.width + 'px';
+        overlay.style.height = canvas.height + 'px';
+      }
 
       // setup input
       polledInput = new PolledInput();
@@ -177,7 +177,8 @@
       let delta_s = delta_ms / 1000.0;
       previous_ms = now_ms;
       // fps
-      document.getElementById("fps").innerHTML = M.round_dx(1 / delta_s, 3);
+      let fps = document.getElementById("fps");
+      if(fps) fps.innerHTML = M.round_dx(1 / delta_s, 3);
       // game time
       let game_delta_ms = delta_ms * game_time_factor;
       game_time += game_delta_ms;
@@ -297,6 +298,7 @@
 <figure class="A">
   <div class="container">
     <canvas id="c"></canvas>
+ <!--
     <div id="overlay">
       <div id="menu" class="v-center" style="display: inline-block; background-color: rgba(255, 255, 255, .7);">
         <header>Snake<br/><time>2018-04</time></header>
@@ -311,6 +313,7 @@
         <p align="left">Score: <span id="score"></span></p>
       </div>
     </div>
+ -->
   </div>
   <figcaption>Snake (webgl2)</figcaption>
 </figure>

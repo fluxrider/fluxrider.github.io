@@ -28,14 +28,14 @@ class ScoreView {
 	}
 
 	onPickup(x, y) {
-    this.score.innerHTML = this.model.score;
+    if(this.score) this.score.innerHTML = this.model.score;
 	}
 
 	onPickupAppears(x, y) {
 	}
 
 	onReset() {
-    this.score.innerHTML = this.model.score;
+    if(this.score) this.score.innerHTML = this.model.score;
 	}
 
 }
