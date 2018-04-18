@@ -39,6 +39,34 @@
     let polledInput = null;
     function keyPressed(e) { polledInput.keyPressed(e);	}
     function keyReleased(e) { polledInput.keyReleased(e);	}
+	  function touchStart(e) {
+      canvas = document.getElementById("c");
+      var W = canvas.width;
+      var H = canvas.height;
+      for(var  i = 0; i < e.changedTouches.length; i++) {
+        var touch = e.changedTouches[i];
+        var x = touch.pageX - canvas.offsetLeft;
+        var y = touch.pageY - canvas.offsetTop;
+        if (x < W/2 && y < H/2)  polledInput.setKey(VK_TOUCH_UPPER_LEFT_QUADRANT, true);
+        if (x > W/2 && y < H/2)  polledInput.setKey(VK_TOUCH_UPPER_RIGHT_QUADRANT, true);
+        if (x < W/2 && y > H/2)  polledInput.setKey(VK_TOUCH_LOWER_LEFT_QUADRANT, true);
+        if (x > W/2 && y > H/2)  polledInput.setKey(VK_TOUCH_LOWER_RIGHT_QUADRANT, true);
+      }
+    }
+	  function touchEnd(e) { 
+      canvas = document.getElementById("c");
+      var W = canvas.width;
+      var H = canvas.height;
+      for(var  i = 0; i < e.changedTouches.length; i++) {
+        var touch = e.changedTouches[i];
+        var x = touch.pageX - canvas.offsetLeft;
+        var y = touch.pageY - canvas.offsetTop;
+        if (x < W/2 && y < H/2)  polledInput.setKey(VK_TOUCH_UPPER_LEFT_QUADRANT, false);
+        if (x > W/2 && y < H/2)  polledInput.setKey(VK_TOUCH_UPPER_RIGHT_QUADRANT, false);
+        if (x < W/2 && y > H/2)  polledInput.setKey(VK_TOUCH_LOWER_LEFT_QUADRANT, false);
+        if (x > W/2 && y > H/2)  polledInput.setKey(VK_TOUCH_LOWER_RIGHT_QUADRANT, false);
+      }
+    }
 
     function main() {
       // resize canvas (pixel size) to what it really is (css size)
@@ -57,6 +85,10 @@
       polledInput = new PolledInput();
       document.onkeydown = keyPressed;
       document.onkeyup = keyReleased;
+      canvas.addEventListener('touchstart', touchStart, false);
+      canvas.addEventListener('touchend', touchEnd, false);
+		  document.body.addEventListener('touchmove', function(event) { event.preventDefault(); }, false); // disable page scroll
+		  canvas.addEventListener('touchmove', function(event) { event.preventDefault(); }, false); // disable page scroll
 
       // get graphics context
       gl = canvas.getContext("webgl2");
@@ -151,8 +183,11 @@
       game_time += game_delta_ms;
 
       // input
-      model.setInput(polledInput.held(VK_LEFT) || polledInput.held(VK_A), polledInput.held(VK_RIGHT) || polledInput.held(VK_D));
-      if(polledInput.typed(VK_ESCAPE)) model.reset();
+      model.setInput(
+        polledInput.held(VK_LEFT) || polledInput.held(VK_A) || polledInput.held(VK_TOUCH_LOWER_LEFT_QUADRANT),
+        polledInput.held(VK_RIGHT) || polledInput.held(VK_D) || polledInput.held(VK_TOUCH_LOWER_RIGHT_QUADRANT)
+      );
+      if(polledInput.typed(VK_ESCAPE) || polledInput.typed(VK_TOUCH_UPPER_LEFT_QUADRANT)) model.reset();
       polledInput.polled();
 
       // model
