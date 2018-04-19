@@ -39,6 +39,7 @@ class SnakeAudio {
   }
 
   play(key) {
+    if(!O_play_sound) return;
     if(this.buffers[key]) {
       let source = this.context.createBufferSource();
       source.buffer = this.buffers[key];

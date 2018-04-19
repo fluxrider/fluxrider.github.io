@@ -35,7 +35,7 @@ class LineView {
 	render() {
 		if (!this.model.started) return;
     let SIZE_OF_FLOAT = 4;
-    this.gl.vertexAttrib4f(SHADER_ATTRIB_COLOR, 1, 1, 1, 1);
+    this.gl.vertexAttrib4f(SHADER_ATTRIB_COLOR, 0, .5, 0, 1);
     this.gl.vertexAttrib3f(SHADER_ATTRIB_NORMAL, 0, 1, 0);
     this.gl.disableVertexAttribArray(SHADER_ATTRIB_COLOR);
     this.gl.disableVertexAttribArray(SHADER_ATTRIB_NORMAL);
@@ -72,11 +72,9 @@ class LineView {
 		}
 
     // wall mesh    
-/*
     this.gl.bindBuffer(gl.ARRAY_BUFFER, this.wall_mesh);
     this.gl.vertexAttribPointer(SHADER_ATTRIB_POSITION, 3, gl.FLOAT, false, 0, 0);
     this.gl.drawArrays(gl.LINE_STRIP, 0, 5);
-*/
 
     // target
 /*

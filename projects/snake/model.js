@@ -107,7 +107,7 @@ class Model {
 		if (O_continuous) {
 			this.direction = Math.random() * 2 * Math.PI;
 		} else {
-			this.direction = (int) (Math.random() * 4) * (Math.PI / 2);
+			this.direction = Math.trunc(Math.random() * 4) * (Math.PI / 2);
 		}
 		this.px = 0;
 		this.py = 0;
