@@ -91,7 +91,7 @@
 		  document.body.addEventListener('touchmove', function(event) { event.preventDefault(); }, false); // disable page scroll
 		  canvas.addEventListener('touchmove', function(event) { event.preventDefault(); }, false); // disable page scroll
       // disable long touch context menu
-      window.oncontextmenu = function(event) { event.preventDefault(); event.stopPropagation(); return false; };
+      //window.oncontextmenu = function(event) { event.preventDefault(); event.stopPropagation(); return false; };
 
       // get graphics context
       gl = canvas.getContext("webgl2");
@@ -295,7 +295,7 @@
 </head>
 <body onload="main();">
 
-<header>Snake<br/><time>2018-04</time></header>
+<header style="user-select: none;">Snake<br/><time>2018-04</time></header>
 <article>
 
 <figure class="A">
@@ -318,7 +318,7 @@
     </div>
  -->
   </div>
-  <figcaption>Snake (webgl2)</figcaption>
+  <figcaption style="user-select: none;">Snake (webgl2)</figcaption>
 </figure>
 
 </body>
