@@ -35,7 +35,6 @@
     let normal_buffer;
     let game_time_factor;
     let game_time;
-    let menu;
 
     let polledInput = null;
     function keyPressed(e) { polledInput.keyPressed(e);	}
@@ -82,7 +81,6 @@
         overlay.style.width = canvas.width + 'px';
         overlay.style.height = canvas.height + 'px';
       }
-      menu = document.getElementById('menu');
 
       // setup input
       polledInput = new PolledInput();
@@ -201,13 +199,13 @@
         polledInput.held(VK_RIGHT) || polledInput.held(VK_D) || polledInput.held(VK_TOUCH_LOWER_RIGHT_QUADRANT)
       );
       if(model.started && polledInput.typed(VK_ESCAPE) || polledInput.typed(VK_TOUCH_UPPER_LEFT_QUADRANT)) {
-        if(menu.style.visibility == "hidden") menu.style.visibility = "visible";
-        else menu.style.visibility = "hidden";
+        if(overlay.style.visibility == "hidden") overlay.style.visibility = "visible";
+        else overlay.style.visibility = "hidden";
       }
       polledInput.polled();
 
       // model
-      if(menu.style.visibility == "hidden") {
+      if(overlay.style.visibility == "hidden") {
         model.tick(game_time, game_delta_ms / 1000.0);
       }
 
@@ -295,15 +293,13 @@
       color: white;
       font-family: monospace;
       padding: 0em;
+      visibility: visible;
     }
     .v-center {
       position: relative;
       top: 50%;
       transform: translateY(-50%);
       padding: 2em;
-    }
-    #menu {
-      visibility: visible;
     }
   </style>
 </head>
@@ -316,14 +312,15 @@
   <div class="container">
     <canvas id="c"></canvas>
     <div id="overlay">
-      <div id="menu" class="v-center" style="display: inline-block; background-color: rgba(255, 255, 255, .7);">
+      <div class="v-center" style="display: inline-block; background-color: rgba(255, 255, 255, .7);">
         <header>Snake<br/><time>2018-04</time></header>
-        <button type="button" onclick="model.reset(); document.getElementById('menu').style.visibility = 'hidden';">Start</button><br/>
+        <button type="button" onclick="model.reset(); overlay.style.visibility = 'hidden';">Start</button><br/>
         <input id="serpentine" type="checkbox" onclick="O_serpentine = this.checked;">Serpentine</input><br/>
         <input id="continuous" type="checkbox" onclick="O_continuous = !this.checked;">90 degrees</input><br/>
         <input id="line_view" type="checkbox" onclick="O_show_line_view = this.checked;">line view</input><br/>
         <input id="thick_view" type="checkbox" onclick="O_show_thickness_view = this.checked;">2D view</input><br/>
         <input id="sound" type="checkbox" onclick="O_play_sound = this.checked;">sound</input><br/>
+        <audio src="res/music.ogg" type="audio/ogg" autoplay="true" loop="true" controls="true"></audio>  
       </div>
  <!--
       document.getElementById("serpentine").checked = ;
