@@ -179,6 +179,7 @@
     }
 
     let previous_ms = undefined;
+    let previous_fps = undefined;
     function tick() {
       // time
       let now_ms = performance.now();
@@ -188,7 +189,14 @@
       previous_ms = now_ms;
       // fps
       let fps = document.getElementById("fps");
-      if(fps) fps.innerHTML = M.round_dx(1 / delta_s, 3);
+      if(fps) {
+        if(!previous_fps) previous_fps = 0;
+        let factor = .05;
+        let moving_fps = M.round((1 / delta_s) * factor + previous_fps * (1 - factor));
+        if(moving_fps > 1000) moving_fps = 0;
+        fps.innerHTML = moving_fps;
+        previous_fps = moving_fps;
+      }
       // game time
       let game_delta_ms = delta_ms * game_time_factor;
       game_time += game_delta_ms;
@@ -320,7 +328,7 @@
         <input id="line_view" type="checkbox" onclick="O_show_line_view = this.checked;">line view</input><br/>
         <input id="thick_view" type="checkbox" onclick="O_show_thickness_view = this.checked;">2D view</input><br/>
         <input id="sound" type="checkbox" onclick="O_play_sound = this.checked;">sound</input><br/>
-        <audio src="res/music.ogg" type="audio/ogg" autoplay="true" loop="true" controls="true"></audio>  
+        <audio src="res/music.ogg" type="audio/ogg" autoplay="false" loop="true" controls="true"></audio>  
       </div>
  <!--
       document.getElementById("serpentine").checked = ;
@@ -332,13 +340,10 @@
       <div id="debug" class="v-center">
         <p align="left">FPS:<span id="fps"></span></p>
       </div>
-      <div id="hud" class="v-center">
-        <p align="left">Score: <span id="score"></span></p>
-      </div>
  -->
     </div>
   </div>
-  <figcaption style="user-select: none;">Snake (webgl2)</figcaption>
+  <figcaption style="user-select: none;">Score: <span id="score"></span><br/>FPS: <span id="fps"></span></figcaption>
 </figure>
 
 </body>
