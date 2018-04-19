@@ -25,7 +25,7 @@ class Slowmo {
 	onNear(near) {
     // slowmo  // TODO interpolate
     if(near) {
-      game_time_factor = .2;
+      if(O_apply_slowmo) game_time_factor = .2;
     } else {
       game_time_factor = 1;
     }

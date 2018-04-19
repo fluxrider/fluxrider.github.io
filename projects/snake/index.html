@@ -98,6 +98,7 @@
       document.getElementById("continuous").checked = !O_continuous;
       document.getElementById("line_view").checked = O_show_line_view;
       document.getElementById("thick_view").checked = O_show_thickness_view;
+      document.getElementById("slowmo").checked = O_apply_slowmo;
       document.getElementById("sound").checked = O_play_sound;
 
       // get graphics context
@@ -325,25 +326,15 @@
         <button type="button" onclick="model.reset(); overlay.style.visibility = 'hidden';">Start</button><br/>
         <input id="serpentine" type="checkbox" onclick="O_serpentine = this.checked;">Serpentine</input><br/>
         <input id="continuous" type="checkbox" onclick="O_continuous = !this.checked;">90 degrees</input><br/>
+        <input id="slowmo" type="checkbox" onclick="O_apply_slowmo = this.checked;">Slowmo</input><br/>
         <input id="line_view" type="checkbox" onclick="O_show_line_view = this.checked;">line view</input><br/>
         <input id="thick_view" type="checkbox" onclick="O_show_thickness_view = this.checked;">2D view</input><br/>
         <input id="sound" type="checkbox" onclick="O_play_sound = this.checked;">sound</input><br/>
-        <audio src="res/music.ogg" type="audio/ogg" autoplay="false" loop="true" controls="true"></audio>  
+        <audio src="res/music.ogg" type="audio/ogg" loop="true" controls="true"></audio>  
       </div>
- <!--
-      document.getElementById("serpentine").checked = ;
-      document.getElementById("continuous").checked = !;
-      document.getElementById("line_view").checked = ;
-      document.getElementById("thick_view").checked = ;
-      document.getElementById("sound").checked = ;
-
-      <div id="debug" class="v-center">
-        <p align="left">FPS:<span id="fps"></span></p>
-      </div>
- -->
     </div>
   </div>
-  <figcaption style="user-select: none;">Score: <span id="score"></span><br/>FPS: <span id="fps"></span></figcaption>
+  <figcaption style="user-select: none;">Score: <span id="score">0</span> FPS: <span id="fps"></span></figcaption>
 </figure>
 
 </body>
