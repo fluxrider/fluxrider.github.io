@@ -198,9 +198,6 @@
         fps.innerHTML = moving_fps;
         previous_fps = moving_fps;
       }
-      // game time
-      let game_delta_ms = delta_ms * game_time_factor;
-      game_time += game_delta_ms;
 
       // input
       model.setInput(
@@ -215,6 +212,10 @@
 
       // model
       if(overlay.style.visibility == "hidden") {
+        // game time
+        let game_delta_ms = delta_ms * game_time_factor;
+        game_time += game_delta_ms;
+        // tick
         model.tick(game_time, game_delta_ms / 1000.0);
       }
 
