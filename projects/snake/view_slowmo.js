@@ -3,6 +3,7 @@
 class Slowmo {
 
   constructor() {
+    this.go_back = false;
     Object.preventExtensions(this);
   }
 
@@ -17,17 +18,24 @@ class Slowmo {
 	}
 
 	onTick(monotonic_ms, delta_seconds) {
+    // slowly move back towards speed of 1
+    if(this.go_back) {
+      let t = 1 * delta_seconds;
+      game_time_factor = game_time_factor * (1 - t) + t;
+    }
 	}
 
 	onCollision() {
 	}
 
 	onNear(near) {
-    // slowmo  // TODO interpolate
+    if(!O_apply_slowmo) return;
+    // slowmo
     if(near) {
-      if(O_apply_slowmo) game_time_factor = .2;
+       game_time_factor = .2;
     } else {
-      game_time_factor = 1;
+      // go back to regular speed gradually
+      this.go_back = true;
     }
 	}
 
@@ -38,6 +46,7 @@ class Slowmo {
 	}
 
 	onReset() {
+    this.go_back = false;
     game_time_factor = 1;
 	}
 
