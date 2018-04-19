@@ -52,7 +52,8 @@
         if (x > W/2 && y > H/2) polledInput.setKey(VK_TOUCH_LOWER_RIGHT_QUADRANT, true);
       }
     }
-	  function touchEnd(e) { 
+	  function touchEnd(e) {
+      // TODO set to false the one that was set to true by the same finger id!
       let W = canvas.width;
       let H = canvas.height;
       for(let i = 0; i < e.changedTouches.length; i++) {
@@ -89,6 +90,8 @@
       canvas.addEventListener('touchend', touchEnd, false);
 		  document.body.addEventListener('touchmove', function(event) { event.preventDefault(); }, false); // disable page scroll
 		  canvas.addEventListener('touchmove', function(event) { event.preventDefault(); }, false); // disable page scroll
+      // disable long touch context menu
+      window.oncontextmenu = function(event) { event.preventDefault(); event.stopPropagation(); return false; };
 
       // get graphics context
       gl = canvas.getContext("webgl2");
