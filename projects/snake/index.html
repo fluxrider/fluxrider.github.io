@@ -214,6 +214,7 @@
       if(overlay.style.visibility == "hidden") {
         // game time
         let game_delta_ms = delta_ms * game_time_factor;
+        if(game_delta_ms > 50) game_delta_ms = 50;
         game_time += game_delta_ms;
         // tick
         model.tick(game_time, game_delta_ms / 1000.0);
