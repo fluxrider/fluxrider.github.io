@@ -77,14 +77,14 @@ class LineView {
     this.gl.drawArrays(gl.LINE_STRIP, 0, 5);
 
     // target
-/*
-    if(this.model.pickup_exists) {
-      this.gl.bindBuffer(gl.ARRAY_BUFFER, this.mesh_target);
-      this.gl.vertexAttrib3f(SHADER_ATTRIB_POSITION, this.model.pickup_x, this.model.pickup_y, 0);
-      this.gl.disableVertexAttribArray(SHADER_ATTRIB_POSITION);
-      this.gl.drawArrays(gl.POINTS, 0, 1);
+    if(!O_show_thickness_view) {
+      if(this.model.pickup_exists) {
+        this.gl.bindBuffer(gl.ARRAY_BUFFER, this.mesh_target);
+        this.gl.vertexAttrib3f(SHADER_ATTRIB_POSITION, this.model.pickup_x, this.model.pickup_y, 0);
+        this.gl.disableVertexAttribArray(SHADER_ATTRIB_POSITION);
+        this.gl.drawArrays(gl.POINTS, 0, 1);
+      }
     }
-*/
 	}
 
 	// Model Listener
