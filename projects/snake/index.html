@@ -98,6 +98,7 @@
       document.getElementById("continuous").checked = !O_continuous;
       document.getElementById("line_view").checked = O_show_line_view;
       document.getElementById("thick_view").checked = O_show_thickness_view;
+      document.getElementById("three_dee_view").checked = O_show_3d_view;
       document.getElementById("slowmo").checked = O_apply_slowmo;
       document.getElementById("sound").checked = O_play_sound;
 
@@ -232,12 +233,25 @@
       let perspective = mat4.create();
       let projection = mat4.create();
       let identity = mat4.create();
-      vec3.set(eye, 0, 0, .1);
-      vec3.set(center, 0, 0, 0);
-      vec3.set(up, 0, -1, 0);
-      mat4.lookAt(look_at, eye, center, up);
-      mat4.perspective(perspective, 60.0, gl.canvas.width / gl.canvas.height, 0.01, 100.0);
-      mat4.mul(projection, perspective, look_at);
+      if(O_show_3d_view) {
+        let distance = 1;
+        let height = .1;
+        let dx = Math.cos(model.direction) * model.speed * distance;
+        let dy = Math.sin(model.direction) * model.speed * distance;
+        vec3.set(eye, model.px - dx, model.py - dy, height);
+        vec3.set(center, model.px, model.py, 0);
+        vec3.set(up, 0, 0, 1); // TODO get the tilted up vector
+        mat4.lookAt(look_at, eye, center, up);
+        mat4.perspective(perspective, 60.0 / 180 * Math.PI, gl.canvas.width / gl.canvas.height, 0.001, 10.0);
+        mat4.mul(projection, perspective, look_at);
+      } else {
+        vec3.set(eye, 0, 0, 1);
+        vec3.set(center, 0, 0, 0);
+        vec3.set(up, 0, -1, 0);
+        mat4.lookAt(look_at, eye, center, up);
+        mat4.perspective(perspective, 60.0 / 180 * Math.PI, gl.canvas.width / gl.canvas.height, 0.01, 100.0);
+        mat4.mul(projection, perspective, look_at);
+      }
       gl.uniformMatrix4fv(SHADER_UNIFORM_PROJECTION, false, projection);
       gl.uniformMatrix4fv(SHADER_UNIFORM_MODEL, false, identity);
 
@@ -320,7 +334,7 @@
   <div class="container">
     <canvas id="c"></canvas>
     <div id="overlay">
-      <div class="v-center" style="display: inline-block; background-color: rgba(255, 255, 255, .7);">
+      <div class="v-center" style="display: inline-block; background-color: rgba(0, 255, 0, .7);">
         <header>Snake<br/><time>2018-04</time></header>
         <button type="button" onclick="model.reset(); overlay.style.visibility = 'hidden';">Start</button><br/>
         <input id="serpentine" type="checkbox" onclick="O_serpentine = this.checked;">Serpentine</input><br/>
@@ -328,6 +342,7 @@
         <input id="slowmo" type="checkbox" onclick="O_apply_slowmo = this.checked;">Slowmo</input><br/>
         <input id="line_view" type="checkbox" onclick="O_show_line_view = this.checked;">line view</input><br/>
         <input id="thick_view" type="checkbox" onclick="O_show_thickness_view = this.checked;">2D view</input><br/>
+        <input id="three_dee_view" type="checkbox" onclick="O_show_3d_view = this.checked;">3D view</input><br/>
         <input id="sound" type="checkbox" onclick="O_play_sound = this.checked;">sound</input><br/>
         <audio src="res/music.ogg" type="audio/ogg" loop="true" controls="true"></audio>  
       </div>

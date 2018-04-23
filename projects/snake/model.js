@@ -4,6 +4,7 @@ let O_show_fps = true;
 let O_apply_slowmo = true;
 let O_show_line_view = true;
 let O_show_thickness_view = true;
+let O_show_3d_view = true;
 let O_play_music = true;
 let O_play_sound = true;
 let O_show_pickup_score = true;
