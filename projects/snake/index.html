@@ -236,8 +236,8 @@
       if(O_show_3d_view) {
         let distance = 1;
         let height = .1;
-        let dx = Math.cos(model.direction) * model.speed * distance;
-        let dy = Math.sin(model.direction) * model.speed * distance;
+        let dx = Math.cos(model.direction) * .2 * distance;
+        let dy = Math.sin(model.direction) * .2 * distance;
         vec3.set(eye, model.px - dx, model.py - dy, height);
         vec3.set(center, model.px, model.py, 0);
         // get the tilted up vector
