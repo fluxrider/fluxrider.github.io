@@ -176,15 +176,15 @@
       model.listeners.push(audio);
       //model.reset();
 
-      // game loop speed
-      setInterval(tick, 12);
+      // game loop
+      window.requestAnimationFrame(tick);
     }
 
     let previous_ms = undefined;
     let previous_fps = undefined;
-    function tick() {
+    function tick(timestamp) {
       // time
-      let now_ms = performance.now();
+      let now_ms = timestamp;
       if(!previous_ms) previous_ms = now_ms;
       let delta_ms = now_ms - previous_ms;
       let delta_s = delta_ms / 1000.0;
@@ -305,6 +305,8 @@
 
       gl.drawArrays(gl.TRIANGLES, 0, 3);
 */
+      // game loop
+      window.requestAnimationFrame(tick);
     }
   </script>
   <link rel="stylesheet" href="../../styles2018.css">
