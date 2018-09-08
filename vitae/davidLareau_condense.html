@@ -6,22 +6,31 @@
 </head>
 <style>
 header {
-  text-align: center;
+  text-align: left;
+  position: relative;
+  display:block;
+}
+.phone {
+  position: absolute;
+  top: 0px;
+  right: 0px;
+  font-family: monospace;
+  font-size: 1.3em;
 }
 
 section > header {
   text-align: left;
   border-bottom: 1px solid black;
-  font-size: 1.5em;
-  margin-top: .5em;
+  font-size: 1.3em;
+  margin-top: .3em;
 }
 
 .e_item {
   position: relative;
   display:block;
   padding-left: 5em;
-  margin-top: .5em;
-  margin-bottom: .5em;
+  margin-top: .3em;
+  margin-bottom: .3em;
 }
 .e_when {
   position: absolute;
@@ -49,8 +58,8 @@ section > header {
   position: relative;
   display:block;
   padding-left: 5em;
-  margin-top: .5em;
-  margin-bottom: .5em;
+  margin-top: .3em;
+  margin-bottom: .3em;
 }
 .w_when {
   position: absolute;
@@ -92,7 +101,7 @@ section > header {
 }
 .c_when {
   position: absolute;
-  top: .4em;
+  top: .2em;
   left: 0px;
   font-size: .8em;
 }
@@ -113,8 +122,8 @@ section > header {
   position: relative;
   display:block;
   padding-left: 5em;
-  margin-top: .5em;
-  margin-bottom: .5em;
+  margin-top: .3em;
+  margin-bottom: .3em;
 }
 .s_title {
   position: relative;
@@ -130,8 +139,11 @@ section > header {
 
 <header>
 David Lareau<br/>
-lareau.david@gmail.com<br/>
-613-327-4426
+lareau.david@gmail.com
+<span class="phone">
+(cell) 613-327-4426<br/>
+(home) 613-482-8155
+</span>
 </header>
 
 <section><header>Work History (12 years)</header>
