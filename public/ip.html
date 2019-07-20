@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<title>MyDynDNS</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<script>
+window.sodium = {
+  onload: function(sodium) {
+    var output = document.getElementById("output");
+    const urlParams = new URLSearchParams(window.location.search);
+    const key_base64 = urlParams.get('key');
+    if(!key_base64) {
+      output.innerHTML = "please provide the key in the query string";
+    }
+
+    // convert base64 encoded key and base64 encrypted message to binary
+    const key = sodium.from_base64(key_base64, sodium.base64_variants.URLSAFE);
+    const encrypted_and_salt = sodium.from_base64(document.getElementById("encrypted").innerHTML, sodium.base64_variants.URLSAFE);
+    const salt = encrypted_and_salt.slice(0, 24);
+    const encrypted = encrypted_and_salt.slice(24);
+
+    // decrypt
+    const decrypted = sodium.crypto_secretbox_open_easy(encrypted, salt, key);
+
+    // assume message was utf-8, convert it back to a string
+    // this version isn't bulletproof but whatever
+    const decrypted_string = String.fromCharCode.apply(null, new Uint8Array(decrypted));
+
+    output.innerHTML = decrypted_string;
+  }
+};
+</script>
+<script src="sodium.js" async></script>
+</head>
+<body>
+<span id="encrypted">wZ9J3-VKjHTd4MDcUPE26ManYiU-EoexXswt1cVCP_g52Ld4lC_ur7xkee9mKg32SyzP</span><br/>
+<span id="output">Decrypting</span>
+</body>
+</html>
