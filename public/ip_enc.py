@@ -1,5 +1,5 @@
 #!/usr/bin/python
-# ./ip_enc.py $(echo -n "password" | hmac256 --binary "app_name" | base64) "$(curl ifconfig.me)
+# ./ip_enc.py $(echo -n "password" | hmac256 --binary "app_name" | base64) "$(curl ifconfig.me)"
 
 import sys
 import nacl.secret
