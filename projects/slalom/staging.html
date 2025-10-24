@@ -64,6 +64,8 @@ function on_touch_move(e) {
 }
 function on_touch_cancel(e) {
   e.preventDefault();
+  const canvas_element = document.getElementById("canvas");
+  let canvas_rect = canvas_element.getBoundingClientRect();
   for(let i = 0; i < e.changedTouches.length; i++) {
     t = e.changedTouches.item(i);
     let id = t.identifier;
@@ -360,7 +362,7 @@ function draw_scene(canvas, width, height) {
 </script>
 </head>
 <body onload="app_start();">
-<p><button onclick="go_fullscreen();">Go Fullscreen</button>&emsp;<a href="https://github.com/fluxrider/jetslalom">Github</a>&emsp;Staging Version 3</p>
+<p><button onclick="go_fullscreen();">Go Fullscreen</button>&emsp;<a href="https://github.com/fluxrider/jetslalom">Github</a>&emsp;Staging Version 4</p>
 <canvas id="canvas" width="1280" height="800" style="border: 3px solid black; image-rendering: pixelated;" tabindex="1"></canvas>
 <!-- hack to disable anti-alias drawing: https://stackoverflow.com/questions/4261090/html5-canvas-and-anti-aliasing -->
 <svg width="0" height="0" style="position:absolute;z-index:-1;"><defs><filter id="remove-alpha" x="0" y="0" width="100%" height="100%"><feComponentTransfer><feFuncA type="discrete" tableValues="0 1"></feFuncA></feComponentTransfer></filter></defs></svg>
