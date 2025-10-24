@@ -172,10 +172,14 @@ async function app_start() {
   canvas_element.onmousemove = on_mouse_move;
   canvas_element.onkeydown = on_key_down; // the key events only work if the html canvas has a tabindex
   canvas_element.onkeyup = on_key_up;
-  canvas_element.touchstart = on_touch_start;
-  canvas_element.touchmove = on_touch_move;
-  canvas_element.touchcancel = on_touch_cancel;
-  canvas_element.touchend = on_touch_end;
+  canvas_element.addEventListener('touchstart', on_touch_start, false);
+  canvas_element.addEventListener('touchmove', on_touch_move, false);
+  canvas_element.addEventListener('touchcancel', on_touch_cancel, false);
+  canvas_element.addEventListener('touchend', on_touch_end, false);
+  //canvas_element.touchstart = on_touch_start;
+  //canvas_element.touchmove = on_touch_move;
+  //canvas_element.touchcancel = on_touch_cancel;
+  //canvas_element.touchend = on_touch_end;
   canvas_element.focus();
   const canvas = canvas_element.getContext("2d");
   original_filter = canvas.filter;
