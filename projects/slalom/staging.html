@@ -40,6 +40,7 @@ function on_mouse_move(e) {
 
 var touches_x = new Map();
 function on_touch_start(e) {
+  console.log(e);
   e.preventDefault();
   const canvas_element = document.getElementById("canvas");
   let canvas_rect = canvas_element.getBoundingClientRect();
@@ -172,6 +173,7 @@ async function app_start() {
   canvas_element.onmousemove = on_mouse_move;
   canvas_element.onkeydown = on_key_down; // the key events only work if the html canvas has a tabindex
   canvas_element.onkeyup = on_key_up;
+  console.log('app start');
   canvas_element.addEventListener('touchstart', on_touch_start, false);
   canvas_element.addEventListener('touchmove', on_touch_move, false);
   canvas_element.addEventListener('touchcancel', on_touch_cancel, false);
@@ -358,7 +360,7 @@ function draw_scene(canvas, width, height) {
 </script>
 </head>
 <body onload="app_start();">
-<p><button onclick="go_fullscreen();">Go Fullscreen</button>&emsp;<a href="https://github.com/fluxrider/jetslalom">Github</a></p>
+<p><button onclick="go_fullscreen();">Go Fullscreen</button>&emsp;<a href="https://github.com/fluxrider/jetslalom">Github</a>&emsp;Staging Version 3</p>
 <canvas id="canvas" width="1280" height="800" style="border: 3px solid black; image-rendering: pixelated;" tabindex="1"></canvas>
 <!-- hack to disable anti-alias drawing: https://stackoverflow.com/questions/4261090/html5-canvas-and-anti-aliasing -->
 <svg width="0" height="0" style="position:absolute;z-index:-1;"><defs><filter id="remove-alpha" x="0" y="0" width="100%" height="100%"><feComponentTransfer><feFuncA type="discrete" tableValues="0 1"></feFuncA></feComponentTransfer></filter></defs></svg>
