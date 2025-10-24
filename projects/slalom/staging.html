@@ -39,46 +39,31 @@ function on_mouse_move(e) {
 }
 
 var touches_x = new Map();
-function on_touch_start(e) {
-  console.log(e);
-  e.preventDefault();
+function on_touch_start(e) { e.preventDefault();
   const canvas_element = document.getElementById("canvas");
-  let canvas_rect = canvas_element.getBoundingClientRect();
-  for(let i = 0; i < e.changedTouches.length; i++) {
-    t = e.changedTouches.item(i);
-    let id = t.identifier;
-    let x = t.clientX - canvas_rect.left
-    touches_x.set(id, x);
+  for(let i = 0; i < e.changedTouches.length; i++) { let touch = e.changedTouches[i];
+    let x = touch.pageX - canvas_element.offsetLeft;
+    console.log(x);
+    touches_x.set(touch.identifier, x);
   }
 }
-function on_touch_move(e) {
-  e.preventDefault();
+function on_touch_move(e) { e.preventDefault();
   const canvas_element = document.getElementById("canvas");
   let canvas_rect = canvas_element.getBoundingClientRect();
-  for(let i = 0; i < e.changedTouches.length; i++) {
-    t = e.changedTouches.item(i);
-    let id = t.identifier;
-    let x = t.clientX - canvas_rect.left
-    touches_x.set(id, x);
+  for(let i = 0; i < e.changedTouches.length; i++) { let touch = e.changedTouches[i];
+    let x = touch.pageX - canvas_element.offsetLeft;
+    touches_x.set(touch.identifier, x);
   }
 }
-function on_touch_cancel(e) {
-  e.preventDefault();
+function on_touch_cancel(e) { e.preventDefault();
   const canvas_element = document.getElementById("canvas");
-  let canvas_rect = canvas_element.getBoundingClientRect();
-  for(let i = 0; i < e.changedTouches.length; i++) {
-    t = e.changedTouches.item(i);
-    let id = t.identifier;
-    let x = t.clientX - canvas_rect.left
-    touches_x.delete(id);
-    if(game.title_mode) {
-      game.startGame(true, x > canvas_rect.width/2);
-    }
+  for(let i = 0; i < e.changedTouches.length; i++) { let touch = e.changedTouches[i];
+    let x = touch.pageX - canvas_element.offsetLeft;
+    if(game.title_mode) game.startGame(true, x > canvas_element.width/2);
+    touches_x.delete(touch.identifier);
   }
 }
-function on_touch_end(e) {
-  on_touch_cancel(e);
-}
+function on_touch_end(e) { on_touch_cancel(e); }
 
 var key_left = false, key_right = false;
 var key_a = false, key_d = false;
@@ -362,7 +347,7 @@ function draw_scene(canvas, width, height) {
 </script>
 </head>
 <body onload="app_start();">
-<p><button onclick="go_fullscreen();">Go Fullscreen</button>&emsp;<a href="https://github.com/fluxrider/jetslalom">Github</a>&emsp;Staging Version 4</p>
+<p><button onclick="go_fullscreen();">Go Fullscreen</button>&emsp;<a href="https://github.com/fluxrider/jetslalom">Github</a>&emsp;Staging Version 6</p>
 <canvas id="canvas" width="1280" height="800" style="border: 3px solid black; image-rendering: pixelated;" tabindex="1"></canvas>
 <!-- hack to disable anti-alias drawing: https://stackoverflow.com/questions/4261090/html5-canvas-and-anti-aliasing -->
 <svg width="0" height="0" style="position:absolute;z-index:-1;"><defs><filter id="remove-alpha" x="0" y="0" width="100%" height="100%"><feComponentTransfer><feFuncA type="discrete" tableValues="0 1"></feFuncA></feComponentTransfer></filter></defs></svg>
