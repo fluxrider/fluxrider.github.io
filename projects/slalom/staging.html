@@ -43,7 +43,6 @@ function on_touch_start(e) { e.preventDefault();
   const canvas_element = document.getElementById("canvas");
   for(let i = 0; i < e.changedTouches.length; i++) { let touch = e.changedTouches[i];
     let x = touch.pageX - canvas_element.offsetLeft;
-    console.log(x);
     touches_x.set(touch.identifier, x);
   }
 }
@@ -160,15 +159,10 @@ async function app_start() {
   canvas_element.onmousemove = on_mouse_move;
   canvas_element.onkeydown = on_key_down; // the key events only work if the html canvas has a tabindex
   canvas_element.onkeyup = on_key_up;
-  console.log('app start');
-  canvas_element.addEventListener('touchstart', on_touch_start, false);
+  canvas_element.addEventListener('touchstart', on_touch_start, false); // note that event won't trigger if I register without addEventListener()
   canvas_element.addEventListener('touchmove', on_touch_move, false);
   canvas_element.addEventListener('touchcancel', on_touch_cancel, false);
   canvas_element.addEventListener('touchend', on_touch_end, false);
-  //canvas_element.touchstart = on_touch_start;
-  //canvas_element.touchmove = on_touch_move;
-  //canvas_element.touchcancel = on_touch_cancel;
-  //canvas_element.touchend = on_touch_end;
   canvas_element.focus();
   const canvas = canvas_element.getContext("2d");
   original_filter = canvas.filter;
@@ -214,12 +208,12 @@ function app_draw() {
   }
   
   let touch_left = false, touch_right = false;
-  for (const [key, value] of touches_x) {
+  for(const [key, value] of touches_x) {
     if(value < width/2) touch_left = true;
     if(value > width/2) touch_right = true;
   }
-  let ship_left = key_a || key_j || key_left || (mouse_held && mouse_x < width / 2) || gamepad.left || gamepad.left_shoulder || gamepad.lx < -dead_zone || gamepad.rx < -dead_zone || gamepad.left_trigger > dead_zone;
-  let ship_right = key_d || key_l || key_right || (mouse_held && mouse_x > width / 2) || gamepad.right || gamepad.right_shoulder || gamepad.lx > dead_zone || gamepad.rx > dead_zone || gamepad.right_trigger > dead_zone;
+  let ship_left = touch_left || key_a || key_j || key_left || (mouse_held && mouse_x < width / 2) || gamepad.left || gamepad.left_shoulder || gamepad.lx < -dead_zone || gamepad.rx < -dead_zone || gamepad.left_trigger > dead_zone;
+  let ship_right = touch_right || key_d || key_l || key_right || (mouse_held && mouse_x > width / 2) || gamepad.right || gamepad.right_shoulder || gamepad.lx > dead_zone || gamepad.rx > dead_zone || gamepad.right_trigger > dead_zone;
 
   if(game.title_mode && paused) paused = false;
   if(!paused) {
@@ -347,7 +341,7 @@ function draw_scene(canvas, width, height) {
 </script>
 </head>
 <body onload="app_start();">
-<p><button onclick="go_fullscreen();">Go Fullscreen</button>&emsp;<a href="https://github.com/fluxrider/jetslalom">Github</a>&emsp;Staging Version 6</p>
+<p><button onclick="go_fullscreen();">Go Fullscreen</button>&emsp;<a href="https://github.com/fluxrider/jetslalom">Github</a>&emsp;Staging Version 7</p>
 <canvas id="canvas" width="1280" height="800" style="border: 3px solid black; image-rendering: pixelated;" tabindex="1"></canvas>
 <!-- hack to disable anti-alias drawing: https://stackoverflow.com/questions/4261090/html5-canvas-and-anti-aliasing -->
 <svg width="0" height="0" style="position:absolute;z-index:-1;"><defs><filter id="remove-alpha" x="0" y="0" width="100%" height="100%"><feComponentTransfer><feFuncA type="discrete" tableValues="0 1"></feFuncA></feComponentTransfer></filter></defs></svg>
