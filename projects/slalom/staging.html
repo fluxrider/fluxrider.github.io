@@ -43,6 +43,7 @@ function on_touch_start(e) { e.preventDefault();
   const canvas_element = document.getElementById("canvas");
   for(let i = 0; i < e.changedTouches.length; i++) { let touch = e.changedTouches[i];
     let x = touch.pageX - canvas_element.offsetLeft;
+    consol.log(touch.pageX + ", " + touch.clientX + ", " + canvas_element.offsetLeft);
     touches_x.set(touch.identifier, x);
   }
 }
@@ -209,6 +210,7 @@ function app_draw() {
   
   let touch_left = false, touch_right = false;
   for(const [key, value] of touches_x) {
+    consol.log(value + " vs " + width);
     if(value < width/2) touch_left = true;
     if(value > width/2) touch_right = true;
   }
@@ -341,7 +343,7 @@ function draw_scene(canvas, width, height) {
 </script>
 </head>
 <body onload="app_start();">
-<p><button onclick="go_fullscreen();">Go Fullscreen</button>&emsp;<a href="https://github.com/fluxrider/jetslalom">Github</a>&emsp;Staging Version 7</p>
+<p><button onclick="go_fullscreen();">Go Fullscreen</button>&emsp;<a href="https://github.com/fluxrider/jetslalom">Github</a>&emsp;Staging Version 8</p>
 <canvas id="canvas" width="1280" height="800" style="border: 3px solid black; image-rendering: pixelated;" tabindex="1"></canvas>
 <!-- hack to disable anti-alias drawing: https://stackoverflow.com/questions/4261090/html5-canvas-and-anti-aliasing -->
 <svg width="0" height="0" style="position:absolute;z-index:-1;"><defs><filter id="remove-alpha" x="0" y="0" width="100%" height="100%"><feComponentTransfer><feFuncA type="discrete" tableValues="0 1"></feFuncA></feComponentTransfer></filter></defs></svg>
